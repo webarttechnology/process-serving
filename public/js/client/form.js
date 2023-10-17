@@ -243,7 +243,7 @@ function leadClientChange(elm, e, id) {
 }
 
 $(document).ready(function () {
-  var addressVal = 1;
+  var addressVal = 50;
 
   $("#change_party_form").on("submit", function (e) {
     e.preventDefault();
@@ -269,16 +269,21 @@ $(document).ready(function () {
 
     $("#address_wrapper_" + id).append(`
       <div class="d-flex align-items-center justify-content-between">
+        <input type="text" name="s_add_business_name[${id}][]"
+        class="form-control my-2 col-sm-4"
+        id="address_business_name_${id}_${addressVal}"
+        placeholder="Business Name">
+
         <input type="text" name="s_add[${id}][]"
         oninput="addressVal('#address_${id}_${addressVal}')"
-        class="form-control my-2 col-sm-5"
+        class="form-control my-2 ml-2 col-sm-5"
         id="address_${id}_${addressVal}"
         placeholder="Address">
-        <select name="business_type[[${id}][]" class="ml-2 col-sm-5 form-control" id="business_type_${id}_${addressVal}">
+        <select name="business_type[${id}][]" class="ml-2 col-sm-2 form-control" id="business_type_${id}_${addressVal}">
             <option value="Business">Business</option>
             <option value="Residence">Residence</option>
         </select>
-        <a href="#!" class="col-sm-2 text-right" onclick="removeAddress(this, event)" style="color: #000">Remove</a>
+        <a href="#!" class="col-sm-1 text-right" onclick="removeAddress(this, event)" style="color: #000"><i class="fa fa-times" aria-hidden="true"></i></a>
       </div>
     `);
 
@@ -356,6 +361,13 @@ $(document).ready(function () {
 
     // $(currentElm).parent().after(divHTML);
     $(currentElm).val(str);
+
+    if ($("#addressType").val() != "Residence") {
+      $(currentElm).prev().val($("#businessName").val());
+    } else {
+      $(currentElm).prev().val("");
+    }
+
     $(currentElm).next().val($("#addressType").val());
     $("#edit_address_modal").modal("hide");
     $("#edit_address_form")[0].reset();
@@ -889,26 +901,30 @@ $(document).ready(function (e) {
       processData: false,
       success: (response) => {
         if (response.status) {
-          $("#add_party_form")[0].reset();
-          resetModalFields();
-          $("#no_pa").hide();
-          $("#party_tbody").append(
-            "<tr class='brdrrbtm text-center' id='pa_" +
-              response.data.id +
-              "'><td><input type='checkbox' " +
-              (response.data.l_client === "yes" ? "checked disabled" : "") +
-              "></td><td>" +
-              response.data.name +
-              "</td><td>" +
-              response.data.role +
-              "</td><td><div class='btnsct'><a href='javascript:void(0)' onclick='edit_party(" +
-              response.data.id +
-              ")' class='pencl'><i class='fa fa-pencil' ></i></a><a href='javascript:void(0)' class='crss' onclick='del_party(" +
-              response.data.id +
-              ")'><i class='fa fa-times'></i></a></div></td></tr>"
-          );
+          // $("#add_party_form")[0].reset();
+          // resetModalFields();
+          // $("#no_pa").hide();
+          // $("#party_tbody").append(
+          //   "<tr class='brdrrbtm text-center' id='pa_" +
+          //     response.data.id +
+          //     "'><td><input  onclick='leadClientChange(this, event, " +
+          //     response.data.id +
+          //     ")' type='checkbox' " +
+          //     (response.data.l_client === "yes" ? "checked disabled" : "") +
+          //     "></td><td>" +
+          //     response.data.name +
+          //     "</td><td>" +
+          //     response.data.role +
+          //     "</td><td><div class='btnsct'><a href='javascript:void(0)' onclick='edit_party(" +
+          //     response.data.id +
+          //     ")' class='pencl'><i class='fa fa-pencil' ></i></a><a href='javascript:void(0)' class='crss' onclick='del_party(" +
+          //     response.data.id +
+          //     ")'><i class='fa fa-times'></i></a></div></td></tr>"
+          // );
 
           toastr.success("Party Added");
+
+          window.location.reload();
         } else {
           var str = "";
           $.each(response.errors, function (fieldName, errorMessages) {
@@ -942,7 +958,9 @@ $(document).ready(function (e) {
         if (response.status) {
           $("#editpartyp").modal("toggle");
           $("#party_tbody").append(
-            "<tr class='text-center'><td><input type='checkbox' " +
+            "<tr class='text-center'><td><input onclick='leadClientChange(this, event, " +
+              response.data.id +
+              ")' type='checkbox' " +
               (response.data.l_client === "yes" ? "checked disabled" : "") +
               "></td><td>" +
               response.data.name +
@@ -977,21 +995,25 @@ $(document).ready(function (e) {
       success: (response) => {
         console.log(response);
         if (response.status) {
-          $("#editpartyo").modal("toggle");
-          $("#party_tbody").append(
-            "<tr class='text-center'><td><input type='checkbox' " +
-              (response.data.l_client === "yes" ? "checked disabled" : "") +
-              "></td><td>" +
-              response.data.name +
-              "</td><td>" +
-              response.data.role +
-              "</td><td><div class='btnsct'><a href='javascript:void(0)' onclick='edit_party(" +
-              response.data.id +
-              ")' class='pencl'><i class='fa fa-pencil' ></i></a><a href='javascript:void(0)' class='crss' onclick='del_party(" +
-              response.data.id +
-              ")'><i class='fa fa-times'></i></a></div></td></tr>"
-          );
+          // $("#editpartyo").modal("toggle");
+          // $("#party_tbody").append(
+          //   "<tr class='text-center'><td><input onclick='leadClientChange(this, event, " +
+          //     response.data.id +
+          //     ")' type='checkbox' " +
+          //     (response.data.l_client === "yes" ? "checked disabled" : "") +
+          //     "></td><td>" +
+          //     response.data.name +
+          //     "</td><td>" +
+          //     response.data.role +
+          //     "</td><td><div class='btnsct'><a href='javascript:void(0)' onclick='edit_party(" +
+          //     response.data.id +
+          //     ")' class='pencl'><i class='fa fa-pencil' ></i></a><a href='javascript:void(0)' class='crss' onclick='del_party(" +
+          //     response.data.id +
+          //     ")'><i class='fa fa-times'></i></a></div></td></tr>"
+          // );
           toastr.success("Party Updated");
+
+          window.location.reload();
         } else {
           var str = "";
           $.each(response.errors, function (fieldName, errorMessages) {

@@ -17,7 +17,7 @@ class ServeController extends Controller
 
         $order = order::find(session('order_id'));
         $order->step = 3;
-        $order->save();
+        
         
         // DB::table('orders')
         //         ->where('order_id', session('order_id'))
@@ -28,14 +28,20 @@ class ServeController extends Controller
         $insertedData = [];
         if ($req->input('doc_check') === 'yes') {
             $req->session()->put('doc_check', true);
+            $order->doc_check = 1;
         } else {
             $req->session()->forget('doc_check');
+            $order->doc_check = 0;
         }
         if ($req->input('add_check') === 'yes') {
             $req->session()->put('add_check', true);
+            $order->add_check = 1;
         } else {
             $req->session()->forget('add_check', true);
+            $order->add_check = 0;
         }
+
+        $order->save();
         foreach ($req->input('party') as $index => $value) {
             
             $checkNewParty = party::where('order_id', session('order_id'))
@@ -118,6 +124,8 @@ class ServeController extends Controller
         // Retrieve the data from the form inputs
         $sIdArray = $request->input('s_id_s');
         $sAddArray = $request->input('s_add');
+        $sNameArray = $request->input('s_add_business_name');
+        $sTypeArray = $request->input('business_type');
         $sTzArray = $request->input('s_t_z');
         $hTimeArray = $request->input('h_time');
         $dptArray = $request->input('dpt');
@@ -131,6 +139,8 @@ class ServeController extends Controller
                 if ($record) {
 
                     $record->address = json_encode($sAddArray[$sId]);
+                    $record->type = json_encode($sTypeArray[$sId]);
+                    $record->business_name = json_encode($sNameArray[$sId]);
                     $record->timezone = $sTzArray[$index];
                     $record->h_date = $hTimeArray[$index];
                     $record->dept = $dptArray[$index];
@@ -154,6 +164,8 @@ class ServeController extends Controller
                         'order_id' => session('order_id'),
                         'case_no' => session('case_id'),
                         'address' => json_encode($sAddArray[session('order_id')]),
+                        'type' => json_encode($sTypeArray[session('order_id')]),
+                        'business_name' => json_encode($sNameArray[session('order_id')]),
                         'timezone' => $sTzArray,
                         'h_date' => $hTimeArray,
                         'dept' => $dptArray,
@@ -167,6 +179,8 @@ class ServeController extends Controller
                     'order_id' => session('order_id'),
                     'case_no' => session('case_id'),
                     'address' => json_encode($sAddArray[session('order_id')]),
+                    'type' => json_encode($sTypeArray[session('order_id')]),
+                    'business_name' => json_encode($sNameArray[session('order_id')]),
                     'timezone' => $sTzArray,
                     'h_date' => $hTimeArray,
                     'dept' => $dptArray,

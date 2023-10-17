@@ -52,6 +52,21 @@ class PartyController extends Controller
             $model->b_code = $req->input('p_bcode');
             $model->save();
 
+            if( $req->p_lclient == 'yes' )
+            {
+                party::where('case_no', session('case_id'))
+                    ->whereNotIn('id', [$model->id])
+                    ->update([
+                        'l_client' => 'no',
+                        'b_code' => '',
+                    ]);
+
+                $order = order::find(session('order_id'));
+                $order->l_client = $model->id;
+                $order->b_code = $req->p_bcode;
+                $order->save();
+            }
+
             // if( $req->input('p_lclient') == 'yes' )
             // {
             //     party::where('order_id', session('order_id'))
@@ -161,6 +176,21 @@ class PartyController extends Controller
             $model->l_client = $req->input('pe_lclient');
             $model->b_code = $req->input('pe_bcode');
             $model->save();
+
+            if( $req->pe_lclient == 'yes' )
+            {
+                party::where('case_no', session('case_id'))
+                    ->whereNotIn('id', [$model->id])
+                    ->update([
+                        'l_client' => 'no',
+                        'b_code' => '',
+                    ]);
+
+                $order = order::find(session('order_id'));
+                $order->l_client = $model->id;
+                $order->b_code = $req->pe_bcode;
+                $order->save();
+            }
             
             return response()->json([
                 'status' => true,

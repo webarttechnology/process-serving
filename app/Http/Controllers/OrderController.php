@@ -14,8 +14,16 @@ class OrderController extends Controller
         $order = order::with('case')->where('status', 'draft')->find($id);
 
         session()->put('order_id', $id);
-        session()->put('case_no', $order->case->case_no);
+        session()->put('case_id', $order->case->case_no);
         session()->put('step', $order->step);
+
+        if( $order->doc_check ) {
+            session()->put('doc_check', true);
+        }
+        
+        if( $order->add_check ) {
+            session()->put('add_check', true);
+        }
 
         return redirect('place-order');
     }

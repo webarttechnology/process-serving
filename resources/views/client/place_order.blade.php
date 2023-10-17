@@ -1570,24 +1570,29 @@
                                                                                 @foreach (json_decode($c_d->address) as $index => $address)
                                                                                     <div
                                                                                         class="d-flex align-items-center justify-content-start">
+
+                                                                                        <input type="text"
+                                                                                            name="s_add_business_name[{{ session('order_id') }}][]"
+                                                                                            class="form-control my-2 col-sm-4"
+                                                                                            id="address_business_name_{{ session('order_id') }}_{{ $index }}"
+                                                                                            value="{{ json_decode($c_d->business_name)[$index] }}"
+                                                                                            placeholder="Business Name">
+
                                                                                         <input type="text"
                                                                                             name="s_add[{{ session('order_id') }}][]"
-                                                                                            oninput="addressVal('#address_{{ session('order_id') }}_{{ $index }}')"
-                                                                                            class="form-control my-2 col-sm-5"
+                                                                                            class="form-control my-2 ml-2 col-sm-5"
                                                                                             id="address_{{ session('order_id') }}_{{ $index }}"
                                                                                             value="{{ $address }}"
                                                                                             placeholder="Address">
 
-                                                                                        <select class="form-control col-sm-5 ml-2" name="business_type[{{ session('order_id') }}][]" id="business_type_{{ session('order_id') }}_{{ $index }}">
-                                                                                            <option value="Business">Business</option>
-                                                                                            <option value="Residence">Residence</option>
-                                                                                        </select>
+                                                                                        <option {{ json_decode($c_d->type)[$index] == 'Business' ? 'selected' : '' }} value="Business">Business</option>
+                                                                                        <option {{ json_decode($c_d->type)[$index] == 'Residence' ? 'selected' : '' }} value="Residence">Residence</option>
 
                                                                                         @if ($index > 0)
                                                                                             <a href="#!"
-                                                                                                class="col-sm-2 text-right"
+                                                                                                class="col-sm-1 text-right"
                                                                                                 onclick="removeAddress(this, event)"
-                                                                                                style="color: #000">Remove</a>
+                                                                                                style="color: #000"><i class="fa fa-times" aria-hidden="true"></i></a>
                                                                                         @endif
                                                                                     </div>
                                                                                 @endforeach
@@ -1595,13 +1600,19 @@
                                                                                 <div
                                                                                     class="d-flex align-items-center justify-content-start">
                                                                                     <input type="text"
+                                                                                            name="s_add_business_name[{{ session('order_id') }}][]"
+                                                                                            class="form-control my-2 col-sm-4"
+                                                                                            id="address_business_name_{{ session('order_id') }}"
+                                                                                            placeholder="Business Name">
+
+                                                                                    <input type="text"
                                                                                         name="s_add[{{ session('order_id') }}][]"
                                                                                         oninput="addressVal('#address_{{ session('order_id') }}')"
-                                                                                        class="form-control my-2 col-sm-5"
+                                                                                        class="form-control my-2 ml-2 col-sm-5"
                                                                                         id="address_{{ session('order_id') }}"
                                                                                         placeholder="Address">
 
-                                                                                    <select class="form-control col-sm-5 ml-2" name="business_type[{{ session('order_id') }}][]" id="business_type_{{ session('order_id') }}">
+                                                                                    <select class="form-control col-sm-2 ml-2" name="business_type[{{ session('order_id') }}][]" id="business_type_{{ session('order_id') }}">
                                                                                             <option value="Business">Business</option>
                                                                                             <option value="Residence">Residence</option>
                                                                                         </select>
@@ -1610,10 +1621,10 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <div class="col-md-6">
+                                                                    <div class="col-md-5">
                                                                         <div class="formprt mb-3">
                                                                             <label for="timezone">Time Zone :</label>
-                                                                            <select class="form-control" name="s_t_z">
+                                                                            <select class="form-control" required name="s_t_z">
                                                                                 <option
                                                                                     <?php if (isset($c_d->timezone) == 'Eastern Standard Time') {
                                                                                         echo 'selected';
@@ -1652,11 +1663,11 @@
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-6">
+                                                                    <div class="col-md-5">
                                                                         <div class="formprt mb-3">
                                                                             <label for="datetime">Hearing Date/Time
                                                                                 :</label>
-                                                                            <input type="datetime-local" name="h_time"
+                                                                            <input required type="datetime-local" name="h_time"
                                                                                 value=" <?php if (isset($c_d->h_date)) {
                                                                                     echo $c_d->h_date;
                                                                                 } else {
@@ -1665,10 +1676,10 @@
                                                                                 class="form-control">
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-12">
+                                                                    <div class="col-md-2">
                                                                         <div class="formprt mb-3">
                                                                             <label for="dept">Dept/Div :</label>
-                                                                            <input type="text" class="form-control"
+                                                                            <input required type="text" class="form-control"
                                                                                 name="dpt"
                                                                                 value=" <?php if (isset($c_d->dept)) {
                                                                                     echo $c_d->dept;
@@ -1682,8 +1693,7 @@
                                                                         <div class="formprt mb-3">
                                                                             <label class="form-label">Advance Witness
                                                                                 Fees:</label>
-                                                                            <div class="d-flex px-4"
-                                                                                style="justify-content: space-evenly;">
+                                                                            <div class="d-flex px-4 flex-column">
                                                                                 <div class="form-check">
                                                                                     <input class="form-check-input"
                                                                                         type="radio" name="w_fee"
@@ -1714,7 +1724,7 @@
                                                                         <div class="formprt mb-3">
                                                                             <label class="form-label">Proof:</label>
                                                                             <div
-                                                                                class="d-flex justify-content-between p-4">
+                                                                                class="d-flex flex-column ">
                                                                                 <div class="form-check">
                                                                                     <input class="form-check-input"
                                                                                         type="checkbox" name="proof"
@@ -1798,37 +1808,51 @@
                                                                                     @foreach (json_decode($item->address) as $index => $address)
                                                                                         <div
                                                                                             class="d-flex align-items-center justify-content-start">
+
+                                                                                            <input type="text"
+                                                                                                name="s_add_business_name[{{ $item->id }}][]"
+                                                                                                class="form-control my-2 col-sm-4"
+                                                                                                id="address_business_name_{{ $item->id }}_{{ $index }}"
+                                                                                                value="{{ json_decode($item->business_name)[$index] }}"
+                                                                                                placeholder="Business Name">
+
                                                                                             <input type="text"
                                                                                             name="s_add[{{ $item->id }}][]"
                                                                                             oninput="addressVal('#address_{{ $item->id }}_{{ $index }}')"
-                                                                                            class="form-control my-2 col-sm-5"
+                                                                                            class="form-control my-2 ml-2 col-sm-5"
                                                                                             id="address_{{ $item->id }}_{{ $index }}"
                                                                                             value="{{ $address }}"
                                                                                             placeholder="Address">
 
-                                                                                            <select class="form-control col-sm-5 ml-2" name="business_type[{{ session('order_id') }}][]" id="business_type_{{ session('order_id') }}_{{ $index }}">
-                                                                                                <option value="Business">Business</option>
-                                                                                                <option value="Residence">Residence</option>
+                                                                                            <select class="form-control col-sm-2 ml-2" name="business_type[{{ $item->id }}][]" id="business_type_{{ session('order_id') }}_{{ $index }}">
+                                                                                                <option {{ json_decode($item->type)[$index] == 'Business' ? 'selected' : '' }} value="Business">Business</option>
+                                                                                                <option {{ json_decode($item->type)[$index] == 'Residence' ? 'selected' : '' }} value="Residence">Residence</option>
                                                                                             </select>
 
                                                                                             @if ($index > 0)
                                                                                                 <a href="#!"
-                                                                                                    class="col-sm-2 text-right"
+                                                                                                    class="col-sm-1 text-right"
                                                                                                     onclick="removeAddress(this, event)"
-                                                                                                    style="color: #000">Remove</a>
+                                                                                                    style="color: #000"><i class="fa fa-times" aria-hidden="true"></i></a>
                                                                                             @endif
                                                                                         </div>
                                                                                     @endforeach
                                                                                 @else
                                                                                     <div class="d-flex align-items-center justify-content-start">
                                                                                         <input type="text"
+                                                                                            name="s_add_business_name[{{ $item->id }}][]"
+                                                                                            class="form-control my-2 col-sm-4"
+                                                                                            id="address_business_name_{{ $item->id }}"
+                                                                                            placeholder="Business Name">
+
+                                                                                        <input type="text"
                                                                                         name="s_add[{{ $item->id }}][]"
                                                                                         oninput="addressVal('#address_{{ $item->id }}')"
-                                                                                        class="form-control my-2 col-sm-5"
+                                                                                        class="form-control my-2 ml-2 col-sm-5"
                                                                                         id="address_{{ $item->id }}"
                                                                                         placeholder="Address">
 
-                                                                                        <select class="form-control col-sm-5 ml-2" name="business_type[{{ session('order_id') }}][]" id="business_type_{{ session('order_id') }}">
+                                                                                        <select class="form-control col-sm-2 ml-2" name="business_type[{{ $item->id }}][]" id="business_type_{{ session('order_id') }}">
                                                                                             <option value="Business">Business</option>
                                                                                             <option value="Residence">Residence</option>
                                                                                         </select>
@@ -1836,10 +1860,10 @@
                                                                                 @endif
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-6">
+                                                                        <div class="col-md-5">
                                                                             <div class="formprt mb-3">
                                                                                 <label for="timezone">Time Zone :</label>
-                                                                                <select class="form-control"
+                                                                                <select required class="form-control"
                                                                                     name="s_t_z[]">
                                                                                     <option
                                                                                         <?php if ($item->timezone == 'Eastern Standard Time') {
@@ -1879,20 +1903,20 @@
                                                                                 </select>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-6">
+                                                                        <div class="col-md-5">
                                                                             <div class="formprt mb-3">
                                                                                 <label for="datetime">Hearing Date/Time
                                                                                     :</label>
-                                                                                <input type="datetime-local"
+                                                                                <input required type="datetime-local"
                                                                                     name="h_time[]"
                                                                                     value="{{ $item->h_date }}"
                                                                                     class="form-control">
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-12">
+                                                                        <div class="col-md-2">
                                                                             <div class="formprt mb-3">
                                                                                 <label for="dept">Dept/Div :</label>
-                                                                                <input type="text"
+                                                                                <input required type="text"
                                                                                     class="form-control" name="dpt[]"
                                                                                     value="{{ $item->dept }}"
                                                                                     placeholder="Dept/Div">
@@ -1902,8 +1926,7 @@
                                                                             <div class="formprt mb-3">
                                                                                 <label class="form-label">Advance Witness
                                                                                     Fees:</label>
-                                                                                <div class="d-flex px-4"
-                                                                                    style="justify-content: space-evenly;">
+                                                                                <div class="d-flex px-4 flex-column">
                                                                                     <div class="form-check">
                                                                                         <input class="form-check-input"
                                                                                             type="radio"
@@ -1937,8 +1960,7 @@
                                                                         <div class="col-md-6">
                                                                             <div class="formprt mb-3">
                                                                                 <label class="form-label">Proof:</label>
-                                                                                <div class="d-flex px-4"
-                                                                                    style="justify-content: space-evenly;">
+                                                                                <div class="d-flex px-4 flex-column">
                                                                                     <div class="form-check">
                                                                                         <input class="form-check-input"
                                                                                             type="checkbox"
@@ -2067,28 +2089,28 @@
                                             <ul class="rediolist">
                                                 <li>
                                                     <label class="radio">
-                                                        <input data-type="routine" type="radio" class="mr-1" name="optradio"
+                                                        <input required data-type="routine" type="radio" class="mr-1" name="optradio"
                                                             value="{{ date('d-m-Y g:i a', strtotime("+ 72 hours")) }}">
                                                         <strong>Routine Service</strong> Attempt by <strong>{{ date('l g:i a', strtotime("+ 72 hours")) }}</strong> for $75
                                                     </label>
                                                 </li>
                                                 <li>
                                                     <label class="radio">
-                                                        <input data-type="priority" type="radio" class="mr-1" name="optradio"
+                                                        <input required data-type="priority" type="radio" class="mr-1" name="optradio"
                                                             value="{{ date('d-m-Y g:i a', strtotime("+ 48 hours")) }}">
                                                         <strong>Priority Service</strong> Attempt by <strong>{{ date('l g:i a', strtotime("+ 48 hours")) }}</strong> for $100
                                                     </label>
                                                 </li>
                                                 <li>
                                                     <label class="radio">
-                                                        <input data-type="urgent" type="radio" class="mr-1" name="optradio"
+                                                        <input requireddata-type="urgent" type="radio" class="mr-1" name="optradio"
                                                             value="{{ date('d-m-Y g:i a', strtotime("+ 24 hours")) }}">
                                                         <strong>Urgent Service</strong> Attempt by <strong>{{ date('l g:i a', strtotime("+ 24 hours")) }}</strong> for $125
                                                     </label>
                                                 </li>
                                                 <li>
                                                     <label class="radio">
-                                                        <input data-type="on demand" type="radio" class="mr-1" name="optradio"
+                                                        <input required data-type="on demand" type="radio" class="mr-1" name="optradio"
                                                             value="{{ date('d-m-Y g:i a', strtotime("+ 4 hours")) }}">
                                                         <strong>On Demand Service</strong> Attempt by <strong>{{ date('l g:i a', strtotime("+ 4 hours")) }}</strong> for $175
                                                     </label>
