@@ -674,7 +674,8 @@
                                                 <td>
                                                     @if (isset($orderInfo) && $orderInfo->l_client == $item->id)
                                                         <input type="checkbox"
-                                                            onclick="leadClientChange(this, event, {{ $item->id }})" disabled checked>
+                                                            onclick="leadClientChange(this, event, {{ $item->id }})"
+                                                            disabled checked>
                                                     @else
                                                         <input type="checkbox"
                                                             onclick="leadClientChange(this, event, {{ $item->id }})">
@@ -1196,11 +1197,10 @@
                                                                             id="sd_d_file_{{ $item->id }}">
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-1 text-right">
-                                                                    <a href="javascript:void(0)" class="ptrbtn w-100 mt-4"
-                                                                        id="sd_d_upload_{{ $item->id }}"
-                                                                        onclick="sd_d_upload({{ $item->id }})"><i
-                                                                            class="fa fa-cloud-upload mr-1"
+                                                                <div class="col-md-1 text-center">
+                                                                    <a href="javascript:void(0)" class="ptrbtn w-100 mt-4 p-0"
+                                                                        id="sd_d_upload_{{ $item->id }}" onclick="sd_d_upload({{ $item->id }})">
+                                                                        <i class="fa fa-cloud-upload"
                                                                             aria-hidden="true"></i>
                                                                     </a>
                                                                 </div>
@@ -1561,7 +1561,7 @@
                                                                                 <a data-id="{{ session('order_id') }}"
                                                                                     href="#!"
                                                                                     class="float-right add-more-address"
-                                                                                    style="color: black">   
+                                                                                    style="color: black">
                                                                                     <i class="fa fa-plus"
                                                                                         aria-hidden="true"></i>
                                                                                 </a>
@@ -1585,14 +1585,22 @@
                                                                                             value="{{ $address }}"
                                                                                             placeholder="Address">
 
-                                                                                        <option {{ json_decode($c_d->type)[$index] == 'Business' ? 'selected' : '' }} value="Business">Business</option>
-                                                                                        <option {{ json_decode($c_d->type)[$index] == 'Residence' ? 'selected' : '' }} value="Residence">Residence</option>
+                                                                                        <option
+                                                                                            {{ json_decode($c_d->type)[$index] == 'Business' ? 'selected' : '' }}
+                                                                                            value="Business">Business
+                                                                                        </option>
+                                                                                        <option
+                                                                                            {{ json_decode($c_d->type)[$index] == 'Residence' ? 'selected' : '' }}
+                                                                                            value="Residence">Residence
+                                                                                        </option>
 
                                                                                         @if ($index > 0)
                                                                                             <a href="#!"
                                                                                                 class="col-sm-1 text-right"
                                                                                                 onclick="removeAddress(this, event)"
-                                                                                                style="color: #000"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                                                                style="color: #000"><i
+                                                                                                    class="fa fa-times"
+                                                                                                    aria-hidden="true"></i></a>
                                                                                         @endif
                                                                                     </div>
                                                                                 @endforeach
@@ -1600,10 +1608,10 @@
                                                                                 <div
                                                                                     class="d-flex align-items-center justify-content-start">
                                                                                     <input type="text"
-                                                                                            name="s_add_business_name[{{ session('order_id') }}][]"
-                                                                                            class="form-control my-2 col-sm-4"
-                                                                                            id="address_business_name_{{ session('order_id') }}"
-                                                                                            placeholder="Business Name">
+                                                                                        name="s_add_business_name[{{ session('order_id') }}][]"
+                                                                                        class="form-control my-2 col-sm-4"
+                                                                                        id="address_business_name_{{ session('order_id') }}"
+                                                                                        placeholder="Business Name">
 
                                                                                     <input type="text"
                                                                                         name="s_add[{{ session('order_id') }}][]"
@@ -1612,10 +1620,15 @@
                                                                                         id="address_{{ session('order_id') }}"
                                                                                         placeholder="Address">
 
-                                                                                    <select class="form-control col-sm-2 ml-2" name="business_type[{{ session('order_id') }}][]" id="business_type_{{ session('order_id') }}">
-                                                                                            <option value="Business">Business</option>
-                                                                                            <option value="Residence">Residence</option>
-                                                                                        </select>
+                                                                                    <select
+                                                                                        class="form-control col-sm-2 ml-2"
+                                                                                        name="business_type[{{ session('order_id') }}][]"
+                                                                                        id="business_type_{{ session('order_id') }}">
+                                                                                        <option value="Business">Business
+                                                                                        </option>
+                                                                                        <option value="Residence">
+                                                                                            Residence</option>
+                                                                                    </select>
                                                                                 </div>
                                                                             @endif
                                                                         </div>
@@ -1624,7 +1637,8 @@
                                                                     <div class="col-md-5">
                                                                         <div class="formprt mb-3">
                                                                             <label for="timezone">Time Zone :</label>
-                                                                            <select class="form-control" required name="s_t_z">
+                                                                            <select class="form-control" required
+                                                                                name="s_t_z">
                                                                                 <option
                                                                                     <?php if (isset($c_d->timezone) == 'Eastern Standard Time') {
                                                                                         echo 'selected';
@@ -1667,7 +1681,8 @@
                                                                         <div class="formprt mb-3">
                                                                             <label for="datetime">Hearing Date/Time
                                                                                 :</label>
-                                                                            <input required type="datetime-local" name="h_time"
+                                                                            <input required type="datetime-local"
+                                                                                name="h_time"
                                                                                 value=" <?php if (isset($c_d->h_date)) {
                                                                                     echo $c_d->h_date;
                                                                                 } else {
@@ -1679,8 +1694,8 @@
                                                                     <div class="col-md-2">
                                                                         <div class="formprt mb-3">
                                                                             <label for="dept">Dept/Div :</label>
-                                                                            <input required type="text" class="form-control"
-                                                                                name="dpt"
+                                                                            <input required type="text"
+                                                                                class="form-control" name="dpt"
                                                                                 value=" <?php if (isset($c_d->dept)) {
                                                                                     echo $c_d->dept;
                                                                                 } else {
@@ -1723,8 +1738,7 @@
                                                                     <div class="col-md-6">
                                                                         <div class="formprt mb-3">
                                                                             <label class="form-label">Proof:</label>
-                                                                            <div
-                                                                                class="d-flex flex-column ">
+                                                                            <div class="d-flex flex-column ">
                                                                                 <div class="form-check">
                                                                                     <input class="form-check-input"
                                                                                         type="checkbox" name="proof"
@@ -1817,28 +1831,40 @@
                                                                                                 placeholder="Business Name">
 
                                                                                             <input type="text"
-                                                                                            name="s_add[{{ $item->id }}][]"
-                                                                                            oninput="addressVal('#address_{{ $item->id }}_{{ $index }}')"
-                                                                                            class="form-control my-2 ml-2 col-sm-5"
-                                                                                            id="address_{{ $item->id }}_{{ $index }}"
-                                                                                            value="{{ $address }}"
-                                                                                            placeholder="Address">
+                                                                                                name="s_add[{{ $item->id }}][]"
+                                                                                                oninput="addressVal('#address_{{ $item->id }}_{{ $index }}')"
+                                                                                                class="form-control my-2 ml-2 col-sm-5"
+                                                                                                id="address_{{ $item->id }}_{{ $index }}"
+                                                                                                value="{{ $address }}"
+                                                                                                placeholder="Address">
 
-                                                                                            <select class="form-control col-sm-2 ml-2" name="business_type[{{ $item->id }}][]" id="business_type_{{ session('order_id') }}_{{ $index }}">
-                                                                                                <option {{ json_decode($item->type)[$index] == 'Business' ? 'selected' : '' }} value="Business">Business</option>
-                                                                                                <option {{ json_decode($item->type)[$index] == 'Residence' ? 'selected' : '' }} value="Residence">Residence</option>
+                                                                                            <select
+                                                                                                class="form-control col-sm-2 ml-2"
+                                                                                                name="business_type[{{ $item->id }}][]"
+                                                                                                id="business_type_{{ session('order_id') }}_{{ $index }}">
+                                                                                                <option
+                                                                                                    {{ json_decode($item->type)[$index] == 'Business' ? 'selected' : '' }}
+                                                                                                    value="Business">
+                                                                                                    Business</option>
+                                                                                                <option
+                                                                                                    {{ json_decode($item->type)[$index] == 'Residence' ? 'selected' : '' }}
+                                                                                                    value="Residence">
+                                                                                                    Residence</option>
                                                                                             </select>
 
                                                                                             @if ($index > 0)
                                                                                                 <a href="#!"
                                                                                                     class="col-sm-1 text-right"
                                                                                                     onclick="removeAddress(this, event)"
-                                                                                                    style="color: #000"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                                                                    style="color: #000"><i
+                                                                                                        class="fa fa-times"
+                                                                                                        aria-hidden="true"></i></a>
                                                                                             @endif
                                                                                         </div>
                                                                                     @endforeach
                                                                                 @else
-                                                                                    <div class="d-flex align-items-center justify-content-start">
+                                                                                    <div
+                                                                                        class="d-flex align-items-center justify-content-start">
                                                                                         <input type="text"
                                                                                             name="s_add_business_name[{{ $item->id }}][]"
                                                                                             class="form-control my-2 col-sm-4"
@@ -1846,15 +1872,20 @@
                                                                                             placeholder="Business Name">
 
                                                                                         <input type="text"
-                                                                                        name="s_add[{{ $item->id }}][]"
-                                                                                        oninput="addressVal('#address_{{ $item->id }}')"
-                                                                                        class="form-control my-2 ml-2 col-sm-5"
-                                                                                        id="address_{{ $item->id }}"
-                                                                                        placeholder="Address">
+                                                                                            name="s_add[{{ $item->id }}][]"
+                                                                                            oninput="addressVal('#address_{{ $item->id }}')"
+                                                                                            class="form-control my-2 ml-2 col-sm-5"
+                                                                                            id="address_{{ $item->id }}"
+                                                                                            placeholder="Address">
 
-                                                                                        <select class="form-control col-sm-2 ml-2" name="business_type[{{ $item->id }}][]" id="business_type_{{ session('order_id') }}">
-                                                                                            <option value="Business">Business</option>
-                                                                                            <option value="Residence">Residence</option>
+                                                                                        <select
+                                                                                            class="form-control col-sm-2 ml-2"
+                                                                                            name="business_type[{{ $item->id }}][]"
+                                                                                            id="business_type_{{ session('order_id') }}">
+                                                                                            <option value="Business">
+                                                                                                Business</option>
+                                                                                            <option value="Residence">
+                                                                                                Residence</option>
                                                                                         </select>
                                                                                     </div>
                                                                                 @endif
@@ -2089,30 +2120,42 @@
                                             <ul class="rediolist">
                                                 <li>
                                                     <label class="radio">
-                                                        <input required data-type="routine" type="radio" class="mr-1" name="optradio"
-                                                            value="{{ date('d-m-Y g:i a', strtotime("+ 72 hours")) }}">
-                                                        <strong>Routine Service</strong> Attempt by <strong>{{ date('l g:i a', strtotime("+ 72 hours")) }}</strong> for $75
+                                                        <input required data-type="routine" type="radio"
+                                                            class="mr-1" name="optradio"
+                                                            value="{{ date('d-m-Y g:i a', strtotime('+ 72 hours')) }}">
+                                                        <strong>Routine Service</strong> Attempt by
+                                                        <strong>{{ date('l g:i a', strtotime('+ 72 hours')) }}</strong>
+                                                        for $75
                                                     </label>
                                                 </li>
                                                 <li>
                                                     <label class="radio">
-                                                        <input required data-type="priority" type="radio" class="mr-1" name="optradio"
-                                                            value="{{ date('d-m-Y g:i a', strtotime("+ 48 hours")) }}">
-                                                        <strong>Priority Service</strong> Attempt by <strong>{{ date('l g:i a', strtotime("+ 48 hours")) }}</strong> for $100
+                                                        <input required data-type="priority" type="radio"
+                                                            class="mr-1" name="optradio"
+                                                            value="{{ date('d-m-Y g:i a', strtotime('+ 48 hours')) }}">
+                                                        <strong>Priority Service</strong> Attempt by
+                                                        <strong>{{ date('l g:i a', strtotime('+ 48 hours')) }}</strong>
+                                                        for $100
                                                     </label>
                                                 </li>
                                                 <li>
                                                     <label class="radio">
-                                                        <input requireddata-type="urgent" type="radio" class="mr-1" name="optradio"
-                                                            value="{{ date('d-m-Y g:i a', strtotime("+ 24 hours")) }}">
-                                                        <strong>Urgent Service</strong> Attempt by <strong>{{ date('l g:i a', strtotime("+ 24 hours")) }}</strong> for $125
+                                                        <input requireddata-type="urgent" type="radio"
+                                                            class="mr-1" name="optradio"
+                                                            value="{{ date('d-m-Y g:i a', strtotime('+ 24 hours')) }}">
+                                                        <strong>Urgent Service</strong> Attempt by
+                                                        <strong>{{ date('l g:i a', strtotime('+ 24 hours')) }}</strong>
+                                                        for $125
                                                     </label>
                                                 </li>
                                                 <li>
                                                     <label class="radio">
-                                                        <input required data-type="on demand" type="radio" class="mr-1" name="optradio"
-                                                            value="{{ date('d-m-Y g:i a', strtotime("+ 4 hours")) }}">
-                                                        <strong>On Demand Service</strong> Attempt by <strong>{{ date('l g:i a', strtotime("+ 4 hours")) }}</strong> for $175
+                                                        <input required data-type="on demand" type="radio"
+                                                            class="mr-1" name="optradio"
+                                                            value="{{ date('d-m-Y g:i a', strtotime('+ 4 hours')) }}">
+                                                        <strong>On Demand Service</strong> Attempt by
+                                                        <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong> for
+                                                        $175
                                                     </label>
                                                 </li>
                                             </ul>
@@ -2317,7 +2360,7 @@
                                 <!-- Add more options as needed -->
                             </select>
                         </div>
-<!-- Business Name (Text Field) -->
+                        <!-- Business Name (Text Field) -->
                         <div class="formprt mb-1 " id="business-name-wrapper">
                             <label for="businessName">Business Name:</label>
                             <input type="text" class="form-control" id="businessName">
@@ -2404,7 +2447,7 @@
                             <input type="text" class="form-control" required id="zipAddress">
                         </div>
 
-                        
+
                     </div>
 
                     <!-- Modal Footer -->
@@ -2444,12 +2487,12 @@
                                     <div class="d-inline-block">
 
                                         <label class="radio-inline mr-3">
-                                            <input checked type="radio" class="mr-1" name="change_lead" id="p_lclient_change_no"
-                                                value="no" >For this order only
+                                            <input checked type="radio" class="mr-1" name="change_lead"
+                                                id="p_lclient_change_no" value="no">For this order only
                                         </label>
                                         <label class="radio-inline mr-3">
                                             <input type="radio" class="mr-1" value="yes" name="change_lead"
-                                                id="p_lclient_change" >For this and All Orders Following
+                                                id="p_lclient_change">For this and All Orders Following
                                         </label>
 
                                     </div>
@@ -2465,12 +2508,13 @@
                                     <div class="d-inline-block">
 
                                         <label class="radio-inline mr-3">
-                                            <input checked type="radio" class="mr-1" name="change_billing" id="p_lclient_no_change"
-                                                value="no"> For this order only
+                                            <input checked type="radio" class="mr-1" name="change_billing"
+                                                id="p_lclient_no_change" value="no"> For this order only
                                         </label>
                                         <label class="radio-inline mr-3">
-                                            <input type="radio" class="mr-1" value="yes" name="change_billing"
-                                                id="p_lclient_change" >For this and All Orders Following
+                                            <input type="radio" class="mr-1" value="yes"
+                                                name="change_billing" id="p_lclient_change">For this and All Orders
+                                            Following
                                         </label>
 
                                     </div>
