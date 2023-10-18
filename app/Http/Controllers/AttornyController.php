@@ -72,7 +72,18 @@ class AttornyController extends Controller
             'state' => $req->state,
             'zip' => $req->zip,
         ]);
-        $data['name'] = $req->input('fname') . ' ' . $req->input('lname');
+
+        $data = [
+            'name' => $req->input('fname') . ' ' . $req->input('lname'),
+            'email' => $req->input('email'),
+            'phone' => $req->input('phone'),
+            'b_id' => $req->input('b_id'),
+            'firm_name' => $req->firm_name,
+            'street_address' => $req->street_address,
+            'city' => $req->city,
+            'state' => $req->state,
+            'zip' => $req->zip,
+        ];
         return response()->json([
             'status'=> true,
             'data' => $data 

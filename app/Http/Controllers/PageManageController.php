@@ -19,6 +19,8 @@ class PageManageController extends Controller
     {
         $ca_at = null;
         $orderInfo = null;
+        $parties = [];
+        $par = [];
 
         $step = !empty(session('step')) ? session('step') : 1;
 
@@ -27,11 +29,19 @@ class PageManageController extends Controller
             $orderInfo = order::find(session('order_id'));
         }
 
-        $parties = DB::table('parties')
-            ->where(['case_no' => session('case_id')])
-            ->whereNotNull('type')
-            ->whereNotNull('role')
-            ->get();
+        if( !empty(session('case_id')) )
+        {
+            $par = DB::table('parties')
+                ->where('case_no', session('case_id'))
+                ->get();
+
+            $parties = DB::table('parties')
+                ->where(['case_no' => session('case_id')])
+                ->whereNotNull('type')
+                ->whereNotNull('role')
+                ->get();
+        }
+
 
         $s_d = DB::table('serves')
             ->where(['order_id' => session('order_id')])
@@ -56,7 +66,7 @@ class PageManageController extends Controller
 
         $jur = DB::table('court_details')->get();
 
-        return view('client.place_order', compact('orderInfo', 'parties', 'ca', 'jur', 'ca_at', 'att', 'step', 's_d', 'serve'));
+        return view('client.place_order', compact('orderInfo', 'par', 'parties', 'ca', 'jur', 'ca_at', 'att', 'step', 's_d', 'serve'));
     }
 
     public function step1()

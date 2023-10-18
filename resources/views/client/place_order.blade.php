@@ -13,23 +13,23 @@
                 <!-- Tabs nav -->
                 <div class="nav flex-column nav-pills nav-pills-custom p-2" id="v-pills-tab" role="tablist"
                     aria-orientation="vertical">
-                    <a class="nav-link {{ $step == 1 ? 'active' : '' }}" id="step1s" href="#step1" data-toggle="pill"
+                    <a class="nav-link {{ $step == 1 ? 'active' : '' }}" id="step1s" href="#step1" 
                         role="tab" aria-controls="v-pills-profile" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">CASE INFO</span>
                     </a>
-                    <a class="nav-link {{ $step == 2 ? 'active' : '' }}" id="step2s" href="#step2" data-toggle="pill"
+                    <a class="nav-link {{ $step == 2 ? 'active' : '' }}" id="step2s" href="#step2" 
                         role="tab" aria-controls="v-pills-messages" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">CASE PARTICIPANTS</span>
                     </a>
-                    <a class="nav-link {{ $step == 3 ? 'active' : '' }}" id="step3s" href="#step3" data-toggle="pill"
+                    <a class="nav-link {{ $step == 3 ? 'active' : '' }}" id="step3s" href="#step3" 
                         role="tab" aria-controls="v-pills-settings" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">DOCUMENTS</span>
                     </a>
-                    <a class="nav-link {{ $step == 4 ? 'active' : '' }}" id="step4s" href="#step4" data-toggle="pill"
+                    <a class="nav-link {{ $step == 4 ? 'active' : '' }}" id="step4s" href="#step4" 
                         role="tab" aria-controls="v-serve-settings" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">SERVE INFO</span>
                     </a>
-                    <a class="nav-link {{ $step == 5 ? 'active' : '' }}" id="step5s" href="#step5" data-toggle="pill"
+                    <a class="nav-link {{ $step == 5 ? 'active' : '' }}" id="step5s" href="#step5" 
                         role="tab" aria-controls="v-details-settings" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">ORDER DETAILS</span>
                     </a>
@@ -844,12 +844,8 @@
                                                                 class="form-control serve-party-name" name="party[]">
                                                                 <option value="-">Select...</option>
                                                                 {{-- <option value="new">New</option> --}}
-                                                                @php
-                                                                    $par = DB::table('parties')
-                                                                        ->where('case_no', session('case_id'))
-                                                                        ->get();
-                                                                @endphp
                                                                 @foreach ($par as $pars)
+                                                                    {{-- @php var_dump($item->p_t_serve, session('order_id'));exit; @endphp --}}
                                                                     <option
                                                                         {{ $pars->name == $item->p_t_serve ? 'selected' : '' }}
                                                                         value="{{ $pars->name }}">
@@ -1198,8 +1194,10 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-1 text-center">
-                                                                    <a href="javascript:void(0)" class="ptrbtn w-100 mt-4 p-0"
-                                                                        id="sd_d_upload_{{ $item->id }}" onclick="sd_d_upload({{ $item->id }})">
+                                                                    <a href="javascript:void(0)"
+                                                                        class="ptrbtn w-100 mt-4 p-0"
+                                                                        id="sd_d_upload_{{ $item->id }}"
+                                                                        onclick="sd_d_upload({{ $item->id }})">
                                                                         <i class="fa fa-cloud-upload"
                                                                             aria-hidden="true"></i>
                                                                     </a>
@@ -1571,9 +1569,24 @@
                                                                                     <div
                                                                                         class="d-flex align-items-center justify-content-start">
 
+                                                                                        <select
+                                                                                            onchange="addressTypeUpdate(this)"
+                                                                                            class="form-control col-sm-2 "
+                                                                                            name="business_type[{{ session('order_id') }}][]"
+                                                                                            id="business_type_{{ session('order_id') }}__{{ $index }}">
+                                                                                            <option
+                                                                                                {{ json_decode($c_d->type)[$index] == 'Residence' ? 'selected' : '' }}
+                                                                                                value="Residence">Residence
+                                                                                            </option>
+                                                                                            <option
+                                                                                                {{ json_decode($c_d->type)[$index] == 'Business' ? 'selected' : '' }}
+                                                                                                value="Business">Business
+                                                                                            </option>
+                                                                                        </select>
+
                                                                                         <input type="text"
                                                                                             name="s_add_business_name[{{ session('order_id') }}][]"
-                                                                                            class="form-control my-2 col-sm-4"
+                                                                                            class="form-control ml-2 my-2 col-sm-4 {{ json_decode($item->type)[$index] != 'Business' ? 'd-none' : '' }}"
                                                                                             id="address_business_name_{{ session('order_id') }}_{{ $index }}"
                                                                                             value="{{ json_decode($c_d->business_name)[$index] }}"
                                                                                             placeholder="Business Name">
@@ -1585,18 +1598,9 @@
                                                                                             value="{{ $address }}"
                                                                                             placeholder="Address">
 
-                                                                                        <option
-                                                                                            {{ json_decode($c_d->type)[$index] == 'Business' ? 'selected' : '' }}
-                                                                                            value="Business">Business
-                                                                                        </option>
-                                                                                        <option
-                                                                                            {{ json_decode($c_d->type)[$index] == 'Residence' ? 'selected' : '' }}
-                                                                                            value="Residence">Residence
-                                                                                        </option>
-
                                                                                         @if ($index > 0)
                                                                                             <a href="#!"
-                                                                                                class="col-sm-1 text-right"
+                                                                                                class="col-sm-1 text-right ml-auto"
                                                                                                 onclick="removeAddress(this, event)"
                                                                                                 style="color: #000"><i
                                                                                                     class="fa fa-times"
@@ -1607,9 +1611,20 @@
                                                                             @else
                                                                                 <div
                                                                                     class="d-flex align-items-center justify-content-start">
+
+                                                                                    <select
+                                                                                        class="form-control col-sm-2 " onchange="addressTypeUpdate(this)"
+                                                                                        name="business_type[{{ session('order_id') }}][]"
+                                                                                        id="business_type_{{ session('order_id') }}">
+                                                                                        <option value="Residence">
+                                                                                            Residence</option>
+                                                                                        <option value="Business">Business
+                                                                                        </option>
+                                                                                    </select>
+
                                                                                     <input type="text"
                                                                                         name="s_add_business_name[{{ session('order_id') }}][]"
-                                                                                        class="form-control my-2 col-sm-4"
+                                                                                        class="form-control ml-2 my-2 col-sm-4 d-none"
                                                                                         id="address_business_name_{{ session('order_id') }}"
                                                                                         placeholder="Business Name">
 
@@ -1619,16 +1634,6 @@
                                                                                         class="form-control my-2 ml-2 col-sm-5"
                                                                                         id="address_{{ session('order_id') }}"
                                                                                         placeholder="Address">
-
-                                                                                    <select
-                                                                                        class="form-control col-sm-2 ml-2"
-                                                                                        name="business_type[{{ session('order_id') }}][]"
-                                                                                        id="business_type_{{ session('order_id') }}">
-                                                                                        <option value="Business">Business
-                                                                                        </option>
-                                                                                        <option value="Residence">
-                                                                                            Residence</option>
-                                                                                    </select>
                                                                                 </div>
                                                                             @endif
                                                                         </div>
@@ -1681,8 +1686,7 @@
                                                                         <div class="formprt mb-3">
                                                                             <label for="datetime">Hearing Date/Time
                                                                                 :</label>
-                                                                            <input required type="datetime-local"
-                                                                                name="h_time"
+                                                                            <input type="datetime-local" name="h_time"
                                                                                 value=" <?php if (isset($c_d->h_date)) {
                                                                                     echo $c_d->h_date;
                                                                                 } else {
@@ -1818,14 +1822,28 @@
                                                                                             aria-hidden="true"></i>
                                                                                     </a>
                                                                                 </label>
-                                                                                @if (!empty($item->address))
+                                                                                @if (!empty($item->address) && is_array(json_decode($item->address)))
                                                                                     @foreach (json_decode($item->address) as $index => $address)
                                                                                         <div
                                                                                             class="d-flex align-items-center justify-content-start">
+                                                                                            <select
+                                                                                                onchange="addressTypeUpdate(this)"
+                                                                                                class="form-control col-sm-2 "
+                                                                                                name="business_type[{{ $item->id }}][]"
+                                                                                                id="business_type_{{ session('order_id') }}_{{ $index }}">
+                                                                                                <option
+                                                                                                    {{ json_decode($item->type)[$index] == 'Residence' ? 'selected' : '' }}
+                                                                                                    value="Residence">
+                                                                                                    Residence</option>
+                                                                                                <option
+                                                                                                    {{ json_decode($item->type)[$index] == 'Business' ? 'selected' : '' }}
+                                                                                                    value="Business">
+                                                                                                    Business</option>
+                                                                                            </select>
 
                                                                                             <input type="text"
                                                                                                 name="s_add_business_name[{{ $item->id }}][]"
-                                                                                                class="form-control my-2 col-sm-4"
+                                                                                                class="form-control my-2 ml-2 col-sm-4 {{ json_decode($item->type)[$index] != 'Business' ? 'd-none' : '' }}"
                                                                                                 id="address_business_name_{{ $item->id }}_{{ $index }}"
                                                                                                 value="{{ json_decode($item->business_name)[$index] }}"
                                                                                                 placeholder="Business Name">
@@ -1833,28 +1851,15 @@
                                                                                             <input type="text"
                                                                                                 name="s_add[{{ $item->id }}][]"
                                                                                                 oninput="addressVal('#address_{{ $item->id }}_{{ $index }}')"
-                                                                                                class="form-control my-2 ml-2 col-sm-5"
+                                                                                                class="form-control my-2 ml-2 col-sm-5 "
                                                                                                 id="address_{{ $item->id }}_{{ $index }}"
                                                                                                 value="{{ $address }}"
                                                                                                 placeholder="Address">
 
-                                                                                            <select
-                                                                                                class="form-control col-sm-2 ml-2"
-                                                                                                name="business_type[{{ $item->id }}][]"
-                                                                                                id="business_type_{{ session('order_id') }}_{{ $index }}">
-                                                                                                <option
-                                                                                                    {{ json_decode($item->type)[$index] == 'Business' ? 'selected' : '' }}
-                                                                                                    value="Business">
-                                                                                                    Business</option>
-                                                                                                <option
-                                                                                                    {{ json_decode($item->type)[$index] == 'Residence' ? 'selected' : '' }}
-                                                                                                    value="Residence">
-                                                                                                    Residence</option>
-                                                                                            </select>
 
                                                                                             @if ($index > 0)
                                                                                                 <a href="#!"
-                                                                                                    class="col-sm-1 text-right"
+                                                                                                    class="col-sm-1 text-right ml-auto"
                                                                                                     onclick="removeAddress(this, event)"
                                                                                                     style="color: #000"><i
                                                                                                         class="fa fa-times"
@@ -1865,9 +1870,20 @@
                                                                                 @else
                                                                                     <div
                                                                                         class="d-flex align-items-center justify-content-start">
+                                                                                        <select
+                                                                                            onchange="addressTypeUpdate(this)"
+                                                                                            class="form-control col-sm-2 "
+                                                                                            name="business_type[{{ $item->id }}][]"
+                                                                                            id="business_type_{{ session('order_id') }}">
+                                                                                            <option value="Residence">
+                                                                                                Residence</option>
+                                                                                            <option value="Business">
+                                                                                                Business</option>
+                                                                                        </select>
+
                                                                                         <input type="text"
                                                                                             name="s_add_business_name[{{ $item->id }}][]"
-                                                                                            class="form-control my-2 col-sm-4"
+                                                                                            class="form-control my-2 ml-2 col-sm-4 d-none"
                                                                                             id="address_business_name_{{ $item->id }}"
                                                                                             placeholder="Business Name">
 
@@ -1878,15 +1894,6 @@
                                                                                             id="address_{{ $item->id }}"
                                                                                             placeholder="Address">
 
-                                                                                        <select
-                                                                                            class="form-control col-sm-2 ml-2"
-                                                                                            name="business_type[{{ $item->id }}][]"
-                                                                                            id="business_type_{{ session('order_id') }}">
-                                                                                            <option value="Business">
-                                                                                                Business</option>
-                                                                                            <option value="Residence">
-                                                                                                Residence</option>
-                                                                                        </select>
                                                                                     </div>
                                                                                 @endif
                                                                             </div>
@@ -1938,7 +1945,7 @@
                                                                             <div class="formprt mb-3">
                                                                                 <label for="datetime">Hearing Date/Time
                                                                                     :</label>
-                                                                                <input required type="datetime-local"
+                                                                                <input type="datetime-local"
                                                                                     name="h_time[]"
                                                                                     value="{{ $item->h_date }}"
                                                                                     class="form-control">

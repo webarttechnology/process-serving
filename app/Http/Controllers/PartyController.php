@@ -207,9 +207,15 @@ class PartyController extends Controller
     }
     public function get_party_all()
     {
-        $data = DB::table('parties')
+        $data = [];
+
+        if( !empty(session('case_id')) )
+        {
+            $data = DB::table('parties')
             ->where(['case_no' => session('case_id')])
             ->get();
+        }
+        
         return response()->json($data);
     }
     public function get_party_all_c()

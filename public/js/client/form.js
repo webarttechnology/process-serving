@@ -242,6 +242,14 @@ function leadClientChange(elm, e, id) {
   $("#change_party").modal("show");
 }
 
+function addressTypeUpdate(elm) {
+  if ($(elm).val() == "Residence") {
+    $(elm).next().addClass("d-none");
+  } else {
+    $(elm).next().removeClass("d-none");
+  }
+}
+
 $(document).ready(function () {
   var addressVal = 50;
 
@@ -268,9 +276,14 @@ $(document).ready(function () {
     var id = $(this).data("id");
 
     $("#address_wrapper_" + id).append(`
-      <div class="d-flex align-items-center justify-content-between">
+    
+      <div class="d-flex align-items-center justify-content-start">
+        <select onchange="addressTypeUpdate(this)" name="business_type[${id}][]" class=" col-sm-2 form-control" id="business_type_${id}_${addressVal}">
+            <option value="Residence">Residence</option>
+            <option value="Business">Business</option>
+        </select>
         <input type="text" name="s_add_business_name[${id}][]"
-        class="form-control my-2 col-sm-4"
+        class="form-control my-2 ml-2 col-sm-4 d-none"
         id="address_business_name_${id}_${addressVal}"
         placeholder="Business Name">
 
@@ -279,11 +292,7 @@ $(document).ready(function () {
         class="form-control my-2 ml-2 col-sm-5"
         id="address_${id}_${addressVal}"
         placeholder="Address">
-        <select name="business_type[${id}][]" class="ml-2 col-sm-2 form-control" id="business_type_${id}_${addressVal}">
-            <option value="Business">Business</option>
-            <option value="Residence">Residence</option>
-        </select>
-        <a href="#!" class="col-sm-1 text-right" onclick="removeAddress(this, event)" style="color: #000"><i class="fa fa-times" aria-hidden="true"></i></a>
+        <a href="#!" class="col-sm-1 text-right ml-auto" onclick="removeAddress(this, event)" style="color: #000"><i class="fa fa-times" aria-hidden="true"></i></a>
       </div>
     `);
 
@@ -368,7 +377,10 @@ $(document).ready(function () {
       $(currentElm).prev().val("");
     }
 
-    $(currentElm).next().val($("#addressType").val());
+    $(currentElm).prev().prev().val($("#addressType").val());
+
+    addressTypeUpdate($(currentElm).prev().prev());
+
     $("#edit_address_modal").modal("hide");
     $("#edit_address_form")[0].reset();
     $("#business-name-wrapper").show();
@@ -482,6 +494,41 @@ $(document).ready(function (e) {
             "selected",
             "selected"
           );
+
+          var attorneyInfoList = document.getElementById("attorney-info-list");
+          attorneyInfoList.innerHTML = `
+              <li class="listhdng">Attorney Name & Bar ID:</li>
+              <li id="s_bid">${
+                response.data.name + " " + response.data.b_id
+              }</li>
+              <li class="listhdng">Firm Name:</li>
+              <li id="s_afm">${response.data.firm_name}</li>
+              <li class="listhdng">Firm Address:</li>
+              <li id="s_fa">${response.data.street_address}</li>
+              <li class="listhdng">City, State, Zip Code:</li>
+              <li id="s_csz">${[
+                response.data.city,
+                response.data.state,
+                response.data.zip,
+              ].join(", ")}</li>
+              <li class="listhdng">Email :</li>
+              <li id="s_em">${response.data.email}</li>
+              <li class="listhdng">Phone :</li>
+              <li id="s_ph">${response.data.phone}</li>
+            `;
+
+          dynamicData.s_name = response.data.name;
+          dynamicData.s_bid = response.data.b_id;
+          dynamicData.s_afm = response.data.firm_name;
+          dynamicData.s_fa = response.data.street_address;
+          dynamicData.s_city = response.data.city;
+          dynamicData.s_state = response.data.state;
+          dynamicData.s_zip = response.data.zip;
+          dynamicData.s_em = response.data.email;
+          dynamicData.s_ph = response.data.phone;
+
+          $(".modify-attorney-wrapper").addClass("d-flex");
+          $(".modify-attorney-wrapper").removeClass("d-none");
 
           toastr.success("Attorney Added");
         } else {
@@ -1137,6 +1184,7 @@ $(document).ready(function () {
   function initializeSelect2(selectElementObj) {
     selectElementObj.select2({
       tags: true,
+      selectOnClose: true,
     });
   }
 
@@ -1316,7 +1364,9 @@ function d_upload(id) {
       $("#secondSelec" + id + 'option[value="-"]').attr("selected", "selected");
       $("#d_file_" + id).val("");
       $("#s_d_table_" + id).append(
-        "<tr><td><a style='color: red; text-decoration:none;' href='uploads/" +
+        "<tr id='s_d_r_" +
+          response.id +
+          "' ><td><a style='color: red; text-decoration:none;' href='uploads/" +
           response.document +
           "' target='_blank'>" +
           response.document +
@@ -1393,7 +1443,9 @@ function sd_d_upload(id) {
       $("#second" + id + 'option[value="-"]').attr("selected", "selected");
       $("#sd_d_file_" + id).val("");
       $("#sd_s_d_table_" + id).append(
-        "<tr><td><a style='color: red; text-decoration:none;' href='uploads/" +
+        "<tr id='s_d_r_" +
+          response.id +
+          "'><td><a style='color: red; text-decoration:none;' href='uploads/" +
           response.document +
           "' target='_blank'>" +
           response.document +
@@ -1402,7 +1454,7 @@ function sd_d_upload(id) {
           ")'><i class='fa fa-times' aria-hidden='true'></i></a> </div> </td></tr>"
       );
       $("#dd").append(
-        "<tr><td>-</td><td><a style='color: red; text-decoration:none;' href='uploads/" +
+        "<tr ><td>-</td><td><a style='color: red; text-decoration:none;' href='uploads/" +
           response.document +
           "' target='_blank'>" +
           response.document +
@@ -1444,6 +1496,7 @@ function del_document(id) {
           _token: _token,
         },
         success: function (response) {
+          console.log(id, $("#s_d_r_" + id).length);
           if (response) {
             if ($("#ss_d_r_" + id).length) {
               $("#ss_d_r_" + id).remove();
@@ -1459,7 +1512,7 @@ function del_document(id) {
         },
         error: function (xhr, status, error) {
           console.error(xhr.responseText);
-          toastr.error("Error deleting the party.");
+          toastr.error("Error deleting the document.");
         },
       });
     } else {

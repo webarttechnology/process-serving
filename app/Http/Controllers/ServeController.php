@@ -193,11 +193,9 @@ class ServeController extends Controller
         }
 
         $request->session()->put('step', 5);
-        DB::table('orders')
-                ->where('order_id', session('order_id'))
-                ->update([
-                    'step' => 5
-                ]);
+        $order = order::find(session('order_id'));
+        $order->step = 5;
+        $order->save();
         
         return true;
     }
