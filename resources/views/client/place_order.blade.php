@@ -1239,6 +1239,25 @@
                                                 </table>
                                             </div>
                                         @else
+                                        @php 
+                                            $documentExists = false;
+                                            $documentType = '';
+
+                                            foreach( $s_d as $check )
+                                            {
+                                                $d_d = DB::table('documents')
+                                                        ->where(['order_id' => session('order_id')])
+                                                        ->where(['case_no' => session('case_id')])
+                                                        ->where(['s_no' => $check->id])
+                                                        ->get();
+                                                
+                                                if( count($d_d) > 0  )
+                                                {
+                                                    $documentExists = true;
+                                                    $documentType = $d_d[0]->type;
+                                                }
+                                            }
+                                        @endphp
                                             @foreach ($s_d as $item)
                                                 @php
                                                     $d_d = DB::table('documents')
@@ -1293,40 +1312,40 @@
                                                                     {{-- <input type="hidden" value="{{ $item->id }}"
                                                                         name="sid" id="sid_{{ $item->id }}"> --}}
 
-                                                                    <div class="{{ count($d_d) > 0 ? 'col-md-4' : 'col-md-12' }}"
+                                                                    <div class="court-defined-document {{ $documentExists ? 'col-md-4' : 'col-md-12' }}"
                                                                         id="cddfs{{ $item->id }}">
                                                                         <label>Court Defined Documents</label>
                                                                         {{-- @php var_dump($d_d[0]);exit; @endphp --}}
-                                                                        <select {{ count($d_d) > 0 ? 'disabled' : '' }}
+                                                                        <select {{ $documentExists ? 'disabled' : '' }}
                                                                             id="firstSelec{{ $item->id }}"
-                                                                            class="form-control dynamic">
+                                                                            class="form-control dynamic document-type-select">
                                                                             <option value="-">Select</option>
                                                                             <option
-                                                                                {{ count($d_d) > 0 && $d_d[0]->type == 'eviction' ? 'selected' : '' }}
+                                                                                {{ $documentType == 'eviction' ? 'selected' : '' }}
                                                                                 value="eviction">Eviction</option>
                                                                             <option
-                                                                                {{ count($d_d) > 0 && $d_d[0]->type == 'civil' ? 'selected' : '' }}
+                                                                                {{ $documentType == 'civil' ? 'selected' : '' }}
                                                                                 value="civil">Civil</option>
                                                                             <option
-                                                                                {{ count($d_d) > 0 && $d_d[0]->type == 'family_law' ? 'selected' : '' }}
+                                                                                {{ $documentType == 'family_law' ? 'selected' : '' }}
                                                                                 value="family_law">Family Law</option>
                                                                             <option
-                                                                                {{ count($d_d) > 0 && $d_d[0]->type == 'small_claims' ? 'selected' : '' }}
+                                                                                {{ $documentType == 'small_claims' ? 'selected' : '' }}
                                                                                 value="small_claims">Small Claims
                                                                             </option>
                                                                         </select>
                                                                     </div>
-                                                                    <div class="col-md-8 " id="cddss{{ $item->id }}"
-                                                                        style="{{ count($d_d) == 0 ? 'display:none' : '' }}">
+                                                                    <div class="col-md-8 document-name-wrapper" id="cddss{{ $item->id }}"
+                                                                        style="{{ !$documentExists ? 'display:none' : '' }}">
                                                                         <label>Document Name</label>
                                                                         <select id="secondSelec{{ $item->id }}"
                                                                             class="form-control dynamic_se"
                                                                             style="display: none;">
                                                                             <option value="-">Select Document</option>
-                                                                            @if (count($d_d) > 0)
+                                                                            @if ($documentExists)
                                                                                 @php
                                                                                     $options = DB::table('court_defined_documents')
-                                                                                        ->where('category', $d_d[0]->type)
+                                                                                        ->where('category', $documentType)
                                                                                         ->get();
                                                                                 @endphp
 

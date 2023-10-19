@@ -1227,7 +1227,7 @@ $(".dynamic").change(function () {
         $("#secondSelec" + id).empty();
 
         // Add the "Select Title" option as the first option
-        $("#secondSelec" + id).append(new Option("Select Title", "-"));
+        $("#secondSelec" + id).append(new Option("Select Document", "-"));
 
         $.each(data, function (index, document) {
           $("#secondSelec" + id).append(new Option(document, document));
@@ -1307,14 +1307,19 @@ function d_upload(id) {
       // $("#cddfs" + id).removeClass("col-md-3");
       // $("#cddfs" + id).addClass("col-md-12");
       // $("#cddss" + id).remove();
-      $("#firstSelec" + id + ' option[value="' + type + '"]').attr(
+      $('.document-type-select option[value="' + type + '"]').attr(
         "selected",
         "selected"
       );
-      $("#firstSelec" + id).attr("disabled", true);
-      $("#secondSelec" + id)
-        .val("-")
-        .trigger("change.select2");
+
+      $(".document-name-wrapper").show();
+      $(".court-defined-document").addClass("col-md-4");
+      $(".court-defined-document").removeClass("col-md-12");
+      $(".document-type-select").attr("disabled", true);
+
+      // $("#secondSelec" + id)
+      //   .val("-")
+      //   .trigger("change.select2");
       $("#d_file_" + id).val("");
       $("#s_d_table_" + id).append(
         "<tr id='s_d_r_" +
@@ -1340,6 +1345,23 @@ function d_upload(id) {
       $("#d_upload").html(
         '<i class="fa fa-cloud-upload mr-1"aria-hidden="true"></i>'
       );
+
+      $.ajax({
+        type: "POST",
+        url: "get-options",
+        data: { category: type },
+        success: function (data) {
+          $(".dynamic_se").empty();
+
+          // Add the "Select Title" option as the first option
+          $(".dynamic_se").append(new Option("Select Document", "-"));
+
+          $.each(data, function (index, document) {
+            $(".dynamic_se").append(new Option(document, document));
+          });
+        },
+      });
+
       toastr.success("Document inserted successfully.");
       // location.reload();
     },
