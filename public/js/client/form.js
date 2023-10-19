@@ -304,71 +304,22 @@ $(document).ready(function () {
 
     var str = "";
 
-    // $(currentElm).val($("#addressFull").val());
-
-    if ($("#businessName").val() != "") {
-      // str +=
-      //   '<li class="list-group-item"><strong class="float-left">Business:</strong> ' +
-      //   '<span class="float-right" style="font-size:14px !important;">' +
-      //   $("#businessName").val() +
-      //   "</span>" +
-      //   "</li>";
-
-      str += $("#businessName").val() + ", ";
-    }
-
     str += $("#addressFull").val();
 
     if ($("#unitSuite").val() != "") {
-      // str +=
-      //   '<li class="list-group-item"><strong class="float-left">Type:</strong> ' +
-      //   '<span class="float-right" style="font-size:14px !important;">' +
-      //   $("#unitSuite").val() +
-      //   "</span>" +
-      //   "</li>";
-
       str += ", " + $("#unitSuite").val();
     }
 
     if ($("#cityAddress").val() != "") {
-      // str +=
-      //   '<li class="list-group-item"><strong class="float-left">City:</strong> ' +
-      //   '<span class="float-right" style="font-size:14px !important;">' +
-      //   $("#cityAddress").val() +
-      //   "</span>" +
-      //   "</li>";
-
       str += ", " + $("#cityAddress").val();
     }
 
     str += ", " + $("#stateAddress").val();
 
     if ($("#zipAddress").val() != "") {
-      // str +=
-      //   '<li class="list-group-item"><strong class="float-left">Zip:</strong> ' +
-      //   '<span class="float-right" style="font-size:14px !important;">' +
-      //   $("#zipAddress").val() +
-      //   "</span>" +
-      //   "</li>";
-
       str += ", " + $("#zipAddress").val();
     }
 
-    // var divHTML = `
-    //     <div class="card my-3 address-info" style="width:300px;">
-    //         <ul class="list-group list-group-flush" style="border:1px solid rgba(0, 0, 0, 0.125)">
-    //             <li class="list-group-item"><strong class="float-left">Type:</strong>
-    //             <span class="float-right" style="font-size:14px !important">${$(
-    //               "#addressType"
-    //             ).val()}</span></li>
-    //             ${str}
-    //         </ul>
-    //     </div>
-    // `;
-
-    console.log($(currentElm)); // Check if divHTML is being built correctly
-
-    // $(currentElm).parent().after(divHTML);
     $(currentElm).val(str);
 
     if ($("#addressType").val() != "Residence") {
@@ -1328,7 +1279,7 @@ function d_upload(id) {
   var fileInput = $("#d_file_" + id)[0];
   var file = fileInput.files[0];
   if (title === "-") {
-    toastr.error("Please select a title.");
+    toastr.error("Please select a document.");
     return;
   }
   if (!file) {
@@ -1361,7 +1312,9 @@ function d_upload(id) {
         "selected"
       );
       $("#firstSelec" + id).attr("disabled", true);
-      $("#secondSelec" + id + 'option[value="-"]').attr("selected", "selected");
+      $("#secondSelec" + id)
+        .val("-")
+        .trigger("change.select2");
       $("#d_file_" + id).val("");
       $("#s_d_table_" + id).append(
         "<tr id='s_d_r_" +
@@ -1408,7 +1361,7 @@ function sd_d_upload(id) {
   var fileInput = $("#sd_d_file_" + id)[0];
   var file = fileInput.files[0];
   if (title === "-") {
-    toastr.error("Please Select a title.");
+    toastr.error("Please select a document.");
     return;
   }
   if (!file) {
@@ -1440,7 +1393,10 @@ function sd_d_upload(id) {
         "selected"
       );
       $("#first" + id).attr("disabled", true);
-      $("#second" + id + 'option[value="-"]').attr("selected", "selected");
+      $("#second" + id + ' option[value="-"]').attr("selected", "selected");
+      $("#second" + id)
+        .val("-")
+        .trigger("change.select2");
       $("#sd_d_file_" + id).val("");
       $("#sd_s_d_table_" + id).append(
         "<tr id='s_d_r_" +

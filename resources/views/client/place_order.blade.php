@@ -1156,11 +1156,11 @@
                                                                 </div>
                                                                 <div class="col-md-8" id="cdss{{ $item->id }}"
                                                                     style="{{ count($d_dd) == 0 ? 'display:none' : '' }}">
-                                                                    <label>Second Option</label>
+                                                                    <label>Document Name</label>
                                                                     <select id="second{{ $item->id }}"
                                                                         class="form-control dynamic_se"
                                                                         style="display: none;">
-                                                                        <option value="-">Select Title</option>
+                                                                        <option value="-">Select Document</option>
 
                                                                         @if (count($d_dd) > 0)
                                                                             @php
@@ -1318,11 +1318,11 @@
                                                                     </div>
                                                                     <div class="col-md-8 " id="cddss{{ $item->id }}"
                                                                         style="{{ count($d_d) == 0 ? 'display:none' : '' }}">
-                                                                        <label>Second Option</label>
+                                                                        <label>Document Name</label>
                                                                         <select id="secondSelec{{ $item->id }}"
                                                                             class="form-control dynamic_se"
                                                                             style="display: none;">
-                                                                            <option value="-">Select Title</option>
+                                                                            <option value="-">Select Document</option>
                                                                             @if (count($d_d) > 0)
                                                                                 @php
                                                                                     $options = DB::table('court_defined_documents')
@@ -1355,16 +1355,14 @@
                                                                                 id="d_file_{{ $item->id }}">
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-1 text-right">
-                                                                        <div class="my-1">
-                                                                            <a href="javascript:void(0)"
-                                                                                class="ptrbtn w-100 mt-4"
-                                                                                id="d_upload_{{ $item->id }}"
-                                                                                onclick="d_upload({{ $item->id }})"><i
-                                                                                    class="fa fa-cloud-upload mr-1"
-                                                                                    aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
+                                                                    <div class="col-md-1 text-center">
+                                                                        <a href="javascript:void(0)"
+                                                                            class="ptrbtn w-100 mt-4 p-0"
+                                                                            id="d_upload_{{ $item->id }}"
+                                                                            onclick="d_upload({{ $item->id }})"><i
+                                                                                class="fa fa-cloud-upload"
+                                                                                aria-hidden="true"></i>
+                                                                        </a>
                                                                     </div>
                                                                     @if (isset($d_d->document))
                                                                         <div class="d_fn col-md-12" id="d_fn"
@@ -1586,7 +1584,7 @@
 
                                                                                         <input type="text"
                                                                                             name="s_add_business_name[{{ session('order_id') }}][]"
-                                                                                            class="form-control ml-2 my-2 col-sm-4 {{ json_decode($item->type)[$index] != 'Business' ? 'd-none' : '' }}"
+                                                                                            class="form-control ml-2 my-2 col-sm-4 {{ json_decode($c_d->type)[$index] != 'Business' ? 'd-none' : '' }}"
                                                                                             id="address_business_name_{{ session('order_id') }}_{{ $index }}"
                                                                                             value="{{ json_decode($c_d->business_name)[$index] }}"
                                                                                             placeholder="Business Name">
