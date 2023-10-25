@@ -33,6 +33,15 @@ class ServeController extends Controller
             $req->session()->forget('doc_check');
             $order->doc_check = 0;
         }
+        
+        if ($req->input('service_check') === 'yes') {
+            $req->session()->put('service_check', true);
+            $order->service_check = 1;
+        } else {
+            $req->session()->forget('service_check', true);
+            $order->service_check = 0;
+        }
+        
         if ($req->input('add_check') === 'yes') {
             $req->session()->put('add_check', true);
             $order->add_check = 1;

@@ -21,19 +21,24 @@
                                                         </th>
                                                         <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                             rowspan="1" colspan="1"
-                                                            aria-label="Purchased On: activate to sort column ascending">Order #</th>
+                                                            aria-label="Purchased On: activate to sort column ascending">
+                                                            Order #</th>
                                                         <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                             rowspan="1" colspan="1"
-                                                            aria-label="Customer: activate to sort column ascending">Order Type</th>
+                                                            aria-label="Customer: activate to sort column ascending">Order
+                                                            Type</th>
                                                         <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                             rowspan="1" colspan="1"
-                                                            aria-label="Ship to: activate to sort column ascending">Case</th>
+                                                            aria-label="Ship to: activate to sort column ascending">Case
+                                                        </th>
                                                         <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                             rowspan="1" colspan="1"
-                                                            aria-label="Base Price: activate to sort column ascending">Name & Location</th>
+                                                            aria-label="Base Price: activate to sort column ascending">Name
+                                                            & Location</th>
                                                         <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                             rowspan="1" colspan="1"
-                                                            aria-label="Status: activate to sort column ascending">Status</th>
+                                                            aria-label="Status: activate to sort column ascending">Status
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -44,12 +49,33 @@
                                                             </td>
                                                             <td><a href="pending-inrpg.html">{{ $order->order_id }}</a></td>
                                                             <td>
-                                                                <div class="mb-1"><strong style="text-transform: capitalize">{{ $order->attempt_type }} Service</strong></div>
-                                                                <div>{{ $order->attempt_time }}</div>
+                                                                <div class="mb-1">
+                                                                    @if (is_array(json_decode($order->attempt_type, true)))
+                                                                        @foreach (json_decode($order->attempt_type, true) as $index => $type)
+                                                                        @php
+                                                                            $time = json_decode($order->attempt_time, true);
+                                                                        @endphp
+                                                                            <strong style="text-transform: capitalize">
+                                                                                {{ $type }} Service
+                                                                            </strong>
+                                                                            <div>{{ $time[$index] }}</div>
+                                                                            <br>
+                                                                        @endforeach
+                                                                    @else
+                                                                        <strong style="text-transform: capitalize">
+                                                                            {{ $order->attempt_type }}
+                                                                        </strong>
+                                                                        <div>{{ $order->attempt_time }}</div>
+                                                                    @endif
+                                                                </div>
                                                             </td>
                                                             <td>
-                                                                <div><strong>{{ isset($order->case->case_title) ? $order->case->case_title : '' }}</strong></div>
-                                                                <div>{{ isset($order->case->case_no) ? $order->case->case_no : '' }}</div>
+                                                                <div>
+                                                                    <strong>{{ isset($order->case->case_title) ? $order->case->case_title : '' }}</strong>
+                                                                </div>
+                                                                <div>
+                                                                    {{ isset($order->case->case_no) ? $order->case->case_no : '' }}
+                                                                </div>
                                                             </td>
                                                             <td>
                                                                 <div>{{ $order->case->jurisdiction }}</div>

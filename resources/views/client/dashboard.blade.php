@@ -66,20 +66,6 @@
                         </div>
                      </div>
                   </div>
-                  <div class="col-md-6 stretch-card transparent">
-                     <div class="card card-ble">
-                        <div class="card-body cardmxy">
-                           <div class="leftprt">
-                              <h3 class="mb-2">Closed Orders</h3>
-                              <p>View completed orders and associated documents <br> such as Conformed Copies and Proofs of Service.</p>
-                              <h2>13</h2>
-                           </div>
-                           <div class="rightprt">
-                              <h2><i class="bi bi-card-list"></i></h2>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
                   <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                      <div class="card card-light-danger">
                         <div class="card-body cardmxy">
@@ -90,6 +76,20 @@
                            </div>
                            <div class="rightprt">
                               <h2><i class="bi bi-list-ul"></i></h2>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-6 stretch-card transparent">
+                     <div class="card card-ble">
+                        <div class="card-body cardmxy">
+                           <div class="leftprt">
+                              <h3 class="mb-2">Closed Orders</h3>
+                              <p>View completed orders and associated documents <br> such as Conformed Copies and Proofs of Service.</p>
+                              <h2>13</h2>
+                           </div>
+                           <div class="rightprt">
+                              <h2><i class="bi bi-card-list"></i></h2>
                            </div>
                         </div>
                      </div>

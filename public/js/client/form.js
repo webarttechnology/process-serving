@@ -145,7 +145,7 @@ function roleChangeUpdate(elm) {
         str = "State Official/Person Authorized";
         break;
       case "Minor":
-        str = "Paret of legal guardian.";
+        str = "Parent of legal guardian.";
         break;
       default:
         break;
@@ -1604,10 +1604,10 @@ $(document).ready(function (e) {
     },
   });
 
-  $('input[name="optradio"]').change(function () {
-    var type = $('input[name="optradio"]:checked').data("type");
-
-    $("#attempt_type").val(type);
+  $(".optradio").click(function () {
+    var type = $(this).data("type");
+    var index = $(this).data("index");
+    $("#attempt_type_" + index).val(type);
   });
 
   $("#order_details").on("submit", function (e) {

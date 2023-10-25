@@ -66,8 +66,8 @@ class OrderController extends Controller
     public function final_step(Request $req)
     {
         $order = Order::find(session('order_id'));
-        $order->attempt_type = $req->input('attempt_type');
-        $order->attempt_time = $req->input('optradio');
+        $order->attempt_type = json_encode($req->input('attempt_type'));
+        $order->attempt_time = json_encode($req->input('optradio'));
         $order->internal_reference_number = $req->input('irn');
         $order->notification = $req->input('notification');
         $order->status = 'pending';

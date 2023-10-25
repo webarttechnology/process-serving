@@ -300,9 +300,9 @@ form.was-validated
   display: none;
 }
 
-.select2-container--default {
+/* .select2-container--default {
   width: 100% !important;
-}
+} */
 .dataTables_filter {
   display: block !important;
 }
@@ -317,6 +317,6 @@ table td {
   font-size: 16px !important;
 }
 
-#add_address label{
+#add_address label {
   font-size: 14px !important;
 }
