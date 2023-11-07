@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\admin;
+use App\Models\AdminInfo;
 use App\Models\order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +14,20 @@ class PageManageController extends Controller
 
     public function dashboard()
     {
-        return view('client.dashboard');
+        $pendingOrders = order::where('status', 'pending')->count();
+        $draftOrders = order::where('status', 'draft')->count();
+
+        return view('client.dashboard', compact('pendingOrders', 'draftOrders'));
+    }
+
+    public function settings()
+    {
+        $userInfo = admin::find(session('admin_id')) ;
+        $extraInfo = AdminInfo::where('admin_id' , session("admin_id"))->first() ;
+
+        // var_dump($userInfo);exit;
+
+        return view('client.settings', compact('userInfo', 'extraInfo'));
     }
 
     public function place_order()

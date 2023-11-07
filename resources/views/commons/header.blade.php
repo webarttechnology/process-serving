@@ -41,7 +41,7 @@
 
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js" integrity="sha512-WW8/jxkELe2CAiE4LvQfwm1rajOS8PHasCCx+knHG0gBHt8EXxS6T6tJRTGuDQVnluuAvMxWF4j8SNFDKceLFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
-    
+
     <style>
         .select2-container--default .select2-selection--single {
             padding-top: 10px;
@@ -124,6 +124,10 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
                             aria-labelledby="profileDropdown">
+                            <a class="dropdown-item" href="{{ url('settings') }}">
+                                <i class="ti-settings text-primary"></i>
+                                Settings
+                            </a>
                             <a class="dropdown-item" href="{{ url('logout') }}">
                                 <i class="ti-power-off text-primary"></i>
                                 Logout
@@ -196,7 +200,7 @@
     <script src="{{ asset('vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('vendors/datatables.net/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('vendors/datatables.net-bs4/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ asset('js/dataTables.select.min.js')}}"></script>
+    <script src="{{ asset('js/dataTables.select.min.js') }}"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
     <script src="{{ asset('js/off-canvas.js') }}"></script>
@@ -219,6 +223,35 @@
             // Hide the loader
             loader.style.display = 'none';
         });
+    </script>
+
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true
+        }
+
+        @if (Session::has('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if (Session::has('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+
+        @if (Session::has('info'))
+            toastr.info("{{ session('info') }}");
+        @endif
+
+        @if (Session::has('warning'))
+            toastr.warning("{{ session('warning') }}");
+        @endif
+
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error("{{ $error }}");
+            @endforeach
+        @endif
     </script>
 
 </body>

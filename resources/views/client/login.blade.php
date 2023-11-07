@@ -2,78 +2,100 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Process Serving</title>
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="{{ asset('vendors/feather/feather.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendors/ti-icons/css/themify-icons.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendors/css/vendor.bundle.base.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/vertical-layout-light/style.css') }}">
-    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <!----------Custom CSS------------>
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 
 <body>
-    <div class="container-scroller">
-        <div class="container-fluid page-body-wrapper full-page-wrapper">
-            <div class="content-wrapper d-flex align-items-center auth px-0">
-                <div class="row w-100 mx-0">
-                    <div class="col-lg-4 mx-auto">
-                        <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-                            <h4>Hello! Legal CRM</h4>
-                            <h6 class="font-weight-light">Sign in to continue.</h6>
-                            @if (null != session('error'))
-                                <div class="alert alert-danger fade show pe-5" role="alert">
-                                    <span class="badge rounded-pill badge-danger shadow-100">Error</span>
-                                    &nbsp; {{ session('error') }}
-                                </div>
-                            @endif
-                            @if (null != session('success'))
-                                <div class="alert alert-success  fade show pe-5" role="alert">
-                                    <span class="badge rounded-pill badge-success shadow-100">Success</span>
-                                    &nbsp; {{ session('success') }}
-                                </div>
-                            @endif
-                            @if (null != session('warning'))
-                                <div class="alert alert-warning fade show pe-5" role="alert">
-                                    <span class="badge rounded-pill badge-warning shadow-100">Warning</span>
-                                    {{ session('warning') }}
-                                </div>
-                            @endif
-                            <form class="pt-3" method="POST" action="{{ @url('auth') }}">
+    <section class="registrsecty loginscty py-5">
+        <div class="container">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-4">
+                    <div class="lftprt">
+                        <div>
+                            <h2>Create your Account</h2>
+                            <p>To keep track on your dashboard please login with your personal info.</p>
+                            <div class="btnprt mt-4">
+                                <a href="https://countrywideprocess.com/new/user-information-register"
+                                    class="lgmnbtn">Register</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 text-center">
+                    <div class="rghtprt d-flex flex-column justify-content-center">
+                        <h2>Login</h2>
+                        {{-- <div class="mdlicns mt-4">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div> --}}
+                        <!-- <div class="infost mt-4">
+                        <ul>
+                           <li>User Information <a href="#" class="active">1</a></li>
+                           <li>Account Information <a href="#">2</a></li>
+                           <li>Payment Information <a href="#">3</a></li>
+                        </ul>
+                     </div> -->
+                        <div class="cform mt-4">
+                            <form method="POST" action="{{ @url('auth') }}">
                                 @csrf
-                                <div class="form-group">
-                                    <input type="email" name="email" class="form-control form-control-lg"
-                                        placeholder="Email" required>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3 material-textfield">
+                                            <input type="email" id="email" name="email" placeholder="">
+                                            <label for="">Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3 material-textfield">
+                                            <input type="password" id="password" name="password" placeholder="">
+                                            <label for="">Password</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <input type="password" name="password" class="form-control form-control-lg"
-                                        placeholder="Password" required>
-                                </div>
-                                <div class="mt-3">
-                                    <button type="submit"
-                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">SIGN
-                                        IN</button>
+                                @if (null != session('error'))
+                                    <div class="alert alert-danger fade show pe-5" role="alert">
+                                        <span class="badge rounded-pill badge-danger shadow-100">Error</span>
+                                        &nbsp; {{ session('error') }}
+                                    </div>
+                                @endif
+                                @if (null != session('success'))
+                                    <div class="alert alert-success  fade show pe-5" role="alert">
+                                        <span class="badge rounded-pill badge-success shadow-100">Success</span>
+                                        &nbsp; {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (null != session('warning'))
+                                    <div class="alert alert-warning fade show pe-5" role="alert">
+                                        <span class="badge rounded-pill badge-warning shadow-100">Warning</span>
+                                        {{ session('warning') }}
+                                    </div>
+                                @endif
+                                <div class="actnbtns mt-5">
+                                    <ul>
+                                        <li><button type="submit" href="javascript:void(0)"
+                                                class="penqbtn">Login</button></li>
+                                        <!-- <li><a href="javascript:void(0)" class="penqbtn">Next</a></li> -->
+                                    </ul>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- content-wrapper ends -->
         </div>
-        <!-- page-body-wrapper ends -->
-    </div>
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="{{ asset('/vendors/js/vendor.bundle.base.js') }}"></script>
-    <script src="{{ asset('/js/off-canvas.js') }}"></script>
-    <script src="{{ asset('/js/hoverable-collapse.js') }}"></script>
-    <script src="{{ asset('/js/template.js') }}"></script>
-    <script src="{{ asset('/js/settings.js') }}"></script>
-    <script src="{{ asset('/js/todolist.js') }}"></script>
-    <!-- endinject -->
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </body>
 
 </html>

@@ -21,13 +21,18 @@ Route::get('logout', function () {
     return redirect('/');
 });
 
+Route::post('register', [AdminController::class, 'register']);
+
 Route::controller(PageManageController::class)
     ->middleware(['admin_login'])
     ->group(function () {
         Route::get('dashboard', 'dashboard');
+        Route::get('settings', 'settings');
         Route::get('reset_order', [OrderController::class, 'reset_order'])->name('reset_order');
         Route::get('add_case_prev_step', [CcaseController::class, 'previous_step']);
         Route::get('place-order', 'place_order');
+        Route::post('update_account_info', [AdminController::class, 'update_info']);
+        Route::post('update_password_info', [AdminController::class, 'update_password_info']);
         Route::post('set_session', [ServeController::class, 'set_session']);
         Route::post('add_serve', [ServeController::class, 'add_serve']);
         Route::post('upd_serve', [ServeController::class, 'upd_serve']);

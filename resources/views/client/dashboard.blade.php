@@ -72,7 +72,7 @@
                            <div class="leftprt">
                               <h3 class="mb-2">Pending Orders</h3>
                               <p>View status updates on your pending orders.</p>
-                              <h2>09</h2>
+                              <h2>{{ $pendingOrders }}</h2>
                            </div>
                            <div class="rightprt">
                               <h2><i class="bi bi-list-ul"></i></h2>

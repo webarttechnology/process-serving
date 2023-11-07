@@ -1,0 +1,222 @@
+@import url("https://fonts.googleapis.com/css?family=Muli:400,600,700|Roboto+Slab:300,400,500&display=swap");
+
+body {
+  background: #f5f5f5;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+:root {
+  --primary-font: "Roboto", sans-serif;
+  --primary-color: #1d84cf;
+}
+
+.registrsecty h2 {
+  font-family: var(--primary-font);
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 31px;
+}
+
+.registrsecty .lftprt {
+  background-color: #1d84cf;
+  background-size: cover;
+  height: 850px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  border-radius: 10px 0 0 10px;
+}
+
+.registrsecty .rghtprt {
+  padding: 30px;
+  height: 850px;
+  background: #fff;
+  box-shadow: 1px 1px 10px 0px #ccc;
+  border-radius: 0 10px 10px 0;
+}
+
+.registrsecty .lgmnbtn {
+  width: 250px;
+  display: block;
+  color: #fff;
+  font-size: 18px;
+  text-align: center;
+  border: 2px solid #fff;
+  padding: 10px;
+  border-radius: 25px;
+  margin: 0 auto;
+}
+
+.registrsecty .lftprt h2 {
+  color: #fff;
+}
+
+.registrsecty .lftprt p {
+  color: #fff;
+  font-weight: 500;
+}
+
+.registrsecty .mdlicns ul li {
+  display: inline-block;
+  padding: 0 20px;
+}
+
+.registrsecty .mdlicns li a {
+  width: 40px;
+  display: block;
+  font-size: 20px;
+  color: #333;
+  border: 1px solid #b5b5b5;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+}
+
+.registrsecty .infost li {
+  display: inline-block;
+  padding: 0 35px;
+}
+
+.registrsecty .infost li a {
+  width: 40px;
+  display: block;
+  font-size: 20px;
+  color: #333;
+  border: 1px solid #b5b5b5;
+  height: 40px;
+  line-height: 35px;
+  border-radius: 50%;
+  margin: 10px auto;
+  font-weight: 600;
+}
+
+.registrsecty .infost li a.active {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.registrsecty .cform {
+  text-align: left;
+}
+
+.registrsecty .actnbtns .penqbtn {
+  width: 220px;
+  display: block;
+  margin: 0 auto;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 20px;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+}
+
+.registrsecty .cform .form-control {
+  height: 45px;
+}
+
+.registrsecty .cform .form-select {
+  height: 45px;
+}
+
+.registrsecty .actnbtns ul {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/*.registrsecty .cform .form-check-inline {
+	margin-right: 0;
+}
+
+.registrsecty .cform .form-check {
+	padding-left: 0.5rem;
+}*/
+
+/*.aftnm::after {
+    content: 'First Name';
+    background: #fff;
+    color: #333;
+    position: relative;
+    padding: 0 4%;
+    width: 334px;
+    left: 14px;
+    top: -56px;
+    display: inline;
+}*/
+
+/*.post_try {
+    position: relative;
+}
+
+.post_try label {
+  position: absolute;
+  top: 0.2ex;
+  z-index: 1;
+  left: 2em;
+  background-color: white;
+  padding: 0 5px;
+}*/
+
+.material-textfield {
+  position: relative;
+}
+
+.material-textfield label {
+  position: absolute;
+  font-size: 1rem;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  color: gray;
+  padding: 0 0.3rem;
+  margin: 0 0.5rem;
+  transition: 0.1s ease-out;
+  transform-origin: left top;
+  pointer-events: none;
+}
+
+.material-textfield input {
+  height: 45px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  padding: 10px;
+}
+
+.material-textfield input:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.material-textfield input:focus + label {
+  color: #333;
+  top: 0;
+  transform: translateY(-50%) scale(0.9);
+}
+
+.material-textfield input:not(:placeholder-shown) + label {
+  top: 0;
+  transform: translateY(-50%) scale(0.9);
+}
+
+.loginscty .lftprt {
+  height: 480px !important;
+}
+.loginscty .rghtprt {
+  height: 480px !important;
+}
