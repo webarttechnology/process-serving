@@ -198,13 +198,5 @@ class PageManageController extends Controller
         }
     }
 
-    public function users()
-    {
-        return view('client.users');
-    }
-
-    public function add_users()
-    {
-        return view('client.add_users');
-    }
+    
 }

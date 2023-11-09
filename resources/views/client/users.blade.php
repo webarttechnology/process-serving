@@ -20,6 +20,10 @@
                                                     <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                         rowspan="1" colspan="1"
                                                         aria-label="Purchased On: activate to sort column ascending">User
+                                                        id</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="order-listing"
+                                                        rowspan="1" colspan="1"
+                                                        aria-label="Purchased On: activate to sort column ascending">User
                                                         Name</th>
                                                     <th class="sorting_desc" tabindex="0" aria-controls="order-listing"
                                                         rowspan="1" colspan="1"
@@ -36,9 +40,9 @@
                                                         rowspan="1" colspan="1"
                                                         aria-label="Ship to: activate to sort column ascending">Attorney
                                                     </th>
-                                                    <th class="sorting" tabindex="0" aria-controls="order-listing"
+                                                    {{-- <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                         rowspan="1" colspan="1"
-                                                        aria-label="Ship to: activate to sort column ascending">Bar#</th>
+                                                        aria-label="Ship to: activate to sort column ascending">Bar#</th> --}}
                                                     <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                         rowspan="1" colspan="1"
                                                         aria-label="Ship to: activate to sort column ascending">Status</th>
@@ -48,95 +52,51 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @foreach ($adminData as $admin)
+                                               
                                                 <tr class="odd">
-                                                    <td>Amy R</td>
-                                                    <td>amyefiling@gmail.com</td>
-                                                    <td>(323) 938-2868</td>
+                                                    <td>{{$admin->id}}</td>
+                                                    <td>{{$admin->name}}</td>
+                                                    <td>{{$admin->email}}</td>
+                                                    <td>{{$admin->phone}}</td>
                                                     <td>
-                                                        <div
-                                                            style="text-align:center;background-color:#808080;color:#fff;border-radius:10px;padding:4px 6px;">
-                                                            Admiistrator</div>
+                                                        @php
+                                                            switch ($admin->role) {
+                                                                case 'staff':
+                                                                    echo 'Staff';
+                                                                    break;
+                                                                case 'owner_admin':
+                                                                    echo 'Owner Admin';
+                                                                    break;
+                                                                case 'admin':
+                                                                    echo 'Admin';
+                                                                    break;
+                                                                
+                                                                default:
+                                                                    # code...
+                                                                    break;
+                                                            }
+                                                        @endphp
                                                     </td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{$admin->attorney ? 'Yes' : 'No'}}</td>
                                                     <td style="color:#008000">Active</td>
                                                     <td>
-                                                        <a href="" class="btn btn-primary text-white"
+                                                        <a href="" class="btn btn-primary text-white my-1 mx-1"
                                                             data-toggle="modal" data-target="#exampleModal">
                                                             {{-- <i class="fa fa-eye" aria-hidden="true"></i> --}}
                                                             View
                                                         </a>
-                                                        <a style="color:#fff" href="" data-toggle="modal"
-                                                            data-target="#exampleModalLong" class="btn btn-success">
+                                                        <a style="color:#fff" href="{{url('edit-user/'.$admin->id)}}" class="btn btn-success my-1 mx-1">
                                                             <!--<i class="fa fa-pencil" aria-hidden="true"></i>-->
                                                             Edit
                                                         </a>
-                                                        <a style="color:#fff" href="#!" class="btn btn-danger">
+                                                        <a style="color:#fff" href="#!" class="btn btn-danger my-1 mx-1">
                                                             <!--<i class="fa fa-times ml-2 text-danger" aria-hidden="true"></i>-->
                                                             delete
                                                         </a>
                                                     </td>
                                                 </tr>
-
-                                                <tr class="odd">
-                                                    <td>Amy R</td>
-                                                    <td>amyefiling@gmail.com</td>
-                                                    <td>(323) 938-2868</td>
-                                                    <td>
-                                                        <div
-                                                            style="text-align:center;background-color:#0000FF;color:#fff;border-radius:10px;padding:4px 6px;">
-                                                            Staff</div>
-                                                    </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td style="color:#ff0000">Inactive</td>
-                                                    <td>
-                                                        <a href="" class="btn btn-primary text-white"
-                                                            data-toggle="modal" data-target="#exampleModal">
-                                                            {{-- <i class="fa fa-eye" aria-hidden="true"></i> --}}
-                                                            View
-                                                        </a>
-                                                        <a style="color:#fff" href="" data-toggle="modal"
-                                                            data-target="#exampleModalLong" class="btn btn-success">
-                                                            <!--<i class="fa fa-pencil" aria-hidden="true"></i>-->
-                                                            Edit
-                                                        </a>
-                                                        <a style="color:#fff" href="#!" class="btn btn-danger">
-                                                            <!--<i class="fa fa-times ml-2 text-danger" aria-hidden="true"></i>-->
-                                                            Delete
-                                                        </a>
-                                                    </td>
-                                                </tr>
-
-                                                <tr class="odd">
-                                                    <td>Amy R</td>
-                                                    <td>amyefiling@gmail.com</td>
-                                                    <td>(323) 938-2868</td>
-                                                    <td>
-                                                        <div style="text-align:center;background-color:#008000;color:#fff;border-radius:10px;padding:4px 6px;"
-                                                            class="owner">Owner</div>
-                                                    </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td style="color:#008000">Active</td>
-                                                    <td>
-                                                        <a href="" class="btn btn-primary text-white"
-                                                            data-toggle="modal" data-target="#exampleModal">
-                                                            {{-- <i class="fa fa-eye" aria-hidden="true"></i> --}}
-                                                            View
-                                                        </a>
-                                                        <a style="color:#fff" href="" data-toggle="modal"
-                                                            data-target="#exampleModalLong" class="btn btn-success">
-                                                            <!--<i class="fa fa-pencil" aria-hidden="true"></i>-->
-                                                            Edit
-                                                        </a>
-                                                        <a style="color:#fff" href="#!" class="btn btn-danger">
-                                                            <!--<i class="fa fa-times ml-2 text-danger" aria-hidden="true"></i>-->
-                                                            Delete
-                                                        </a>
-                                                    </td>
-                                                </tr>
-
+                                                @endforeach
                                             </tbody>
                                         </table>
                                         <div class="modal fade" id="invite-modal" tabindex="-1" role="dialog"

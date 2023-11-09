@@ -5,36 +5,31 @@
             <h5 class="modal-title" id="exampleModalLabel">Acount Information</h5>
         </div>
         <div class="modal-body">
-            <form class="row" action="{{ route ('store_users')}}" method="POST">
+            <form class="row" action="{{ route ('update_users' , ['id' => $adminData->id])}}" method="POST">
                 @csrf
+                @method('PUT')
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputName" class="form-label">Organization Name:</label>
-                    <input type="text" class="form-control" id="exampleInputName" aria-describedby="name" value="Organizer Name" name="organizer_name" readonly>
+                    <input type="text" class="form-control" id="exampleInputName" aria-describedby="name" value="Tester" name="organizer_name" readonly>
                 </div>
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputName" class="form-label">Role:</label>
                     <select class="form-select form-select-sm form-control" aria-label=".form-select-sm example" name="role">
                         <option selected>Open this select menu</option>
-                        <option value="admin">Admin</option>
-                        <option value="staff">Staff</option>
+                        <option value="admin" {{old('role') == "admin" ? 'selected': ''}}>Admin</option>
+                        <option value="staff" {{old('role') == "staff" ? 'selected': ''}}>Staff</option>
                     </select>
-                    @error('role')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
                 </div>
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputName" class="form-label">Name:</label>
-                    <input type="text" class="form-control" name="name" value="{{old('name')}}">
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
+                    <input type="text" class="form-control" name="name" value="{{$adminData->name}}">
                 </div>
                 
                 <div class="col-md-6">
                     <div class="mb-4">
                         <label for="Last Name" class="sect">Attorney<span style="color: red">*</span> 
-                        <input type="checkbox" id="attorney" name="attorney"></label>
-                        <input type="text" class="form-control" id="bar_id" name="bar_id" readonly="">
+                        <input type="checkbox" {{$adminData->attorney ? 'checked' : ""}} id="attorney" name="attorney"></label>
+                        <input type="text" class="form-control" id="bar_id" name="bar_id" value="{{isset($adminData->attorney_info) ? $adminData->attorney_info->b_id : ''}}" {{$adminData->attorney ? '' : "readonly"}} >
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -42,34 +37,31 @@
                         <div class="col-md-6 mb-4">
                             <label for="exampleInputContact" class="form-label">Email:*</label>
                             <div class="cont_wrapper">
-                                <input type="text" class="form-control mb-2 mr-1 ml-1" name="email" value="{{old('email')}}">
+                                <input type="text" class="form-control mb-2 mr-1 ml-1" id="exampleInputContact" aria-describedby="contact" name="email"
+                                value="{{$adminData->email}}">
                             </div>
-                           
                         </div>
                         <div class="col-md-6 mb-4">
                             <label for="exampleInputContact" class="form-label">Phone:*</label>
                             <div class="cont_wrapper">
-                                <input type="number" class="form-control mb-2 mr-1 ml-1" name="phone" value="{{old('phone')}}">
+                                <input type="number" class="form-control mb-2 mr-1 ml-1" id="exampleInputContact" aria-describedby="contact" name="phone"
+                                value="{{$adminData->phone}}">
                             </div>
-                           
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputAddress" class="form-label">Address 1:*</label>
-                    <input type="text" class="form-control" id="exampleInputAddress" aria-describedby="address" name="address1" value="{{old('address1')}}">
-                  
+                    <input type="text" class="form-control" id="exampleInputAddress" aria-describedby="address" name="address1" value="{{isset($adminData->admin_info_single) ? $adminData->admin_info_single->address : ''}}">
                 </div>
-                <div class="col-md-6 mb-4">
+                {{-- <div class="col-md-6 mb-4">
                     <label for="exampleInputAddress" class="form-label">Address 2</label>
-                    <input type="text" class="form-control" name="address2" value="{{old('address2')}}">
-                   
-                </div>
+                    <input type="text" class="form-control" id="exampleInputAddress" aria-describedby="address" name="address2" value="{{$adminData->admin_info_single->address}}">
+                </div> --}}
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputCity" class="form-label">City:*</label>
-                    <input type="text" class="form-control" name="city" value="{{old('city')}}">
-                   
+                    <input type="text" class="form-control" id="exampleInputCity" aria-describedby="city" name="city" value="{{isset($adminData->admin_info_single) ?$adminData->admin_info_single->billing_city : ''}}">
                 </div>
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputAddress" class="form-label">State:*</label>
@@ -136,41 +128,36 @@
                         <option value="WY">WYOMING</option>
                         <option value="AP">ARMED FORCES PACIFIC</option>
                     </select>
-                   
                 </div>
 
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputCode" class="form-label">Zip Code:*</label>
-                    <input type="text" class="form-control" name="zip" value="{{old('zip')}}">
-                  
+                    <input type="text" class="form-control" id="exampleInputCode" aria-describedby="code" name="zip" value="{{isset($adminData->admin_info_single) ?$adminData->admin_info_single->zip: ''}}">
                 </div>
-                <div class="col-md-6 mb-4">
+                {{-- <div class="col-md-6 mb-4">
                     <label for="exampleInputAddress" class="form-label">Password:*</label>
-                    <input type="password" class="form-control" name="password" value="{{old('password')}}">
-                  
-                </div>
+                    <input type="password" class="form-control" name="password" value="{{$adminData->password}}">
+                </div> --}}
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <label for="exampleInputContact" class="form-label">Billing Email:*</label>
                             <div class="cont_wrapper">
-                                <input type="text" class="form-control mb-2 mr-1 ml-1" name="billing_email" value="{{old('billing_email')}}">
+                                <input type="text" class="form-control mb-2 mr-1 ml-1" id="exampleInputContact" name="billing_email" value="{{isset($adminData->admin_info_single) ?$adminData->admin_info_single->billing_email : ''}}">
                             </div>
-                          
                         </div>
                         <div class="col-md-6 mb-4">
                             <label for="exampleInputContact" class="form-label">Billing Phone:*</label>
                             <div class="cont_wrapper">
-                                <input type="text" class="form-control mb-2 mr-1 ml-1" name="billing_phone" value="{{old('billing_phone')}}">
+                                <input type="text" class="form-control mb-2 mr-1 ml-1" id="exampleInputContact" name="billing_phone" value="{{isset($adminData->admin_info_single) ?$adminData->admin_info_single->billing_phone : ''}}">
                             </div>
-                           
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 language-select">
                     <div class="mb-3">
                         <label for="Type of Account" class="sect">Type of Account<span style="color: red"> * </span></label>
-                        <select class="valid form-control" aria-invalid="false" title="How Did You Hear of Us?" id="department" name="deperment" >
+                        <select class="valid form-control" aria-invalid="false" title="How Did You Hear of Us?" id="department" name="deperment" required="">
                             <option value="" selected="">Choose Type of Account </option>
                             <option value="Law Firm/Legal Department">Law Firm/Legal Department </option>
                             <option value="Party Without Attorney">Party Without Attorney </option>
@@ -180,17 +167,17 @@
                             <option value="Affiliate Partner">Affiliate Partner </option>
                             <option value="Paralegal">Paralegal</option>
                         </select>
-                       
                     </div>
                 </div>
                 <div class="col-md-12 mb-4">
                     <label for="exampleInputContact" class="form-label">Billing Code Required?</label>
                     <div class="form-check mb-4">
-                        <input class="form-check-input" name="billing_code" type="radio" value="Yes" id="flexCheckDefault" style="margin-left:0;">
+                        <input class="form-check-input" name="billing_code" type="radio" value="Yes" 
+                        {{ old('billing_code') === 'Yes'  ? 'checked' : '' }} id="flexCheckDefault" style="margin-left:0;">
                         <label class="form-check-label" for="flexCheckDefault">  Yes </label>
                     </div>
                     <div class="form-check mb-4">
-                        <input class="form-check-input" name="billing_code" type="radio" value="No" id="flexCheckChecked2" style="margin-left:0;" checked>
+                        <input class="form-check-input" checked name="billing_code" type="radio" value="No" id="flexCheckChecked2" style="margin-left:0;">
                         <label class="form-check-label" for="flexCheckChecked2">  No </label>
                     </div>
                     <label for="exampleInputContact" class="form-label">This is your internal billing reference, file or client matter number.</label>

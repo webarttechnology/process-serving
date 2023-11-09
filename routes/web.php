@@ -10,6 +10,7 @@ use App\Http\Controllers\CcaseController;
 use App\Http\Controllers\PartyController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderDetailsController;
 use Illuminate\Support\Facades\Session;
 
@@ -66,8 +67,11 @@ Route::controller(PageManageController::class)
         Route::get('close-order', 'close_order');
         Route::get('pending-order', 'pending_order');
         Route::get('draft-order', 'draft_order');
-        Route::get('users', 'users');
-        Route::get('add-user', 'add_users');
+        Route::get('users', [UserController::class, 'users'])->name('users');
+        Route::get('add-user', [UserController::class, 'add_users'])->name('add_users');
+        Route::post('store-user', [UserController::class, 'store_users'])->name('store_users');
+        Route::get('edit-user/{id}', [UserController::class, 'edit_users'])->name('edit_users');
+        Route::put('update-user/{id}', [UserController::class, 'update_users'])->name('update_users');
     });
 
 Route::get('forgot-password/{verifyCode?}', [PageManageController::class, 'forgot_Pass']);

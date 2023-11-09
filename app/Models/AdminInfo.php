@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin;
 
 class AdminInfo extends Model
 {
@@ -26,6 +27,12 @@ class AdminInfo extends Model
         'billing_state',
         'billing_city',
         'referral',
-        'referral_other'
+        'referral_other',
+        'zip',
     ];
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
 }
