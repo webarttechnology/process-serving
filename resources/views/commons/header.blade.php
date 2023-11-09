@@ -154,6 +154,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url('users') }}">
+                            <i class="icon-grid menu-icon"></i>
+                            <span class="menu-title">Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url('place-order') }}">
                             <i class="icon-layout menu-icon"></i>
                             <span class="menu-title">Place Order</span>

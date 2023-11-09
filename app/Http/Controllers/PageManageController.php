@@ -7,6 +7,9 @@ use App\Models\AdminInfo;
 use App\Models\order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 class PageManageController extends Controller
 {
@@ -22,8 +25,8 @@ class PageManageController extends Controller
 
     public function settings()
     {
-        $userInfo = admin::find(session('admin_id')) ;
-        $extraInfo = AdminInfo::where('admin_id' , session("admin_id"))->first() ;
+        $userInfo = admin::find(session('admin_id'));
+        $extraInfo = AdminInfo::where('admin_id', session("admin_id"))->first();
 
         // var_dump($userInfo);exit;
 
@@ -39,13 +42,11 @@ class PageManageController extends Controller
 
         $step = !empty(session('step')) ? session('step') : 1;
 
-        if( !empty(session('order_id')) )
-        {
+        if (!empty(session('order_id'))) {
             $orderInfo = order::find(session('order_id'));
         }
 
-        if( !empty(session('case_id')) )
-        {
+        if (!empty(session('case_id'))) {
             $par = DB::table('parties')
                 ->where('case_no', session('case_id'))
                 ->get();
@@ -122,14 +123,88 @@ class PageManageController extends Controller
     public function pending_order()
     {
         $orders = order::with('case')->where('status', 'pending')->get();
-        
+
         return view('client.pending_order', compact('orders'));
     }
 
     public function draft_order()
     {
         $orders = order::with('case')->where('status', 'draft')->get();
-        
+
         return view('client.draft_order', compact('orders'));
+    }
+
+    /**
+     * Forget Password
+     */
+
+    public function forgot_Pass($verifyCode = null)
+    {
+        if ($verifyCode == null) {
+            return view('client.forgot_password');
+        } else {
+            $check_code = admin::where('email_verify_code', $verifyCode)->first();
+
+            if ($check_code != null) {
+                return view('client.change_password', compact('verifyCode'));
+            } else {
+                Session()->flash('error', 'Please Verify Your Email Properly');
+                return view('client.forgot_password');
+            }
+        }
+    }
+
+    public function forgot_Pass_action(Request $request)
+    {
+        $request->validate([
+            'email' => 'required',
+        ]);
+
+        $email = $request->email;
+
+        $check_email = admin::whereEmail($email)->first();
+
+        if (!$check_email) {
+            $request->session()->flash('error', 'The email you entered is not valid.');
+            return redirect()->back();
+        } else {
+            $code = Str::random(20);
+
+            admin::whereEmail($email)->update([
+                'email_verify_code' => $code,
+            ]);
+
+            Mail::send('client.mail.forgot_pass_link', ['email' => $email, 'verifyCode' => $code], function ($message) use ($email) {
+                $message->to($email)->subject("Forget Password");
+            });
+
+            $request->session()->flash('success', 'Please check your email');
+            return redirect()->back();
+        }
+    }
+
+    public function pass_change_action(Request $request)
+    {
+        if ($request->password == $request->confirm_password) {
+            admin::where('email_verify_code', $request->verifyCode)->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            $request->session()->flash('success', 'Password is successfully updated');
+            return redirect('/');
+        } else {
+            $request->session()->flash('error', 'Password & Confirm Password Must Be Same');
+            return redirect()->back();
+        }
+    }
+
+    public function users()
+    {
+        return view('client.users');
+    }
+
+    public function add_users()
+    {
+        return view('client.add_users');
     }
 }

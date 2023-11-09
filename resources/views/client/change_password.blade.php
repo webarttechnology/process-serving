@@ -30,35 +30,24 @@
                 </div>
                 <div class="col-md-8 text-center">
                     <div class="rghtprt d-flex flex-column justify-content-center">
-                        <h2>Login</h2>
-                        {{-- <div class="mdlicns mt-4">
-                            <ul>
-                                <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-github" aria-hidden="true"></i></a></li>
-                            </ul>
-                        </div> --}}
-                        <!-- <div class="infost mt-4">
-                        <ul>
-                           <li>User Information <a href="#" class="active">1</a></li>
-                           <li>Account Information <a href="#">2</a></li>
-                           <li>Payment Information <a href="#">3</a></li>
-                        </ul>
-                     </div> -->
+                        <h2>Change Your Password</h2>
+
                         <div class="cform mt-4">
-                            <form method="POST" action="{{ @url('auth') }}">
+                            <form method="POST" action="{{ url('change-password-action') }}">
                                 @csrf
+
+                                <input type="hidden" name="verifyCode" value="{{ $verifyCode }}">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="mb-3 material-textfield">
-                                            <input type="email" id="email" name="email" placeholder="">
-                                            <label for="">Email</label>
+                                            <input type="password" id="password" name="password" required>
+                                            <label for="">Password</label>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3 material-textfield">
-                                            <input type="password" id="password" name="password" placeholder="">
-                                            <label for="">Password</label>
+                                            <input type="password" id="password" name="confirm_password" required>
+                                            <label for="">Confirm Password</label>
                                         </div>
                                     </div>
                                 </div>
@@ -80,11 +69,11 @@
                                         {{ session('warning') }}
                                     </div>
                                 @endif
-                                <a href="{{ url('forgot-password') }}">Forgot Password? Click Here</a>
+                                <a href="{{ url('/') }}">Remember your password? Login Now</a>
                                 <div class="actnbtns mt-5">
                                     <ul>
                                         <li><button type="submit" href="javascript:void(0)"
-                                                class="penqbtn">Login</button></li>
+                                                class="penqbtn">Save</button></li>
                                         <!-- <li><a href="javascript:void(0)" class="penqbtn">Next</a></li> -->
                                     </ul>
                                 </div>

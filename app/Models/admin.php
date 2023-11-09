@@ -15,6 +15,7 @@ class admin extends Model
         'email',
         'phone',
         'role',
-        'attorney'
+        'attorney',
+        'email_verify_code'
     ];
 }

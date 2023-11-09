@@ -66,4 +66,10 @@ Route::controller(PageManageController::class)
         Route::get('close-order', 'close_order');
         Route::get('pending-order', 'pending_order');
         Route::get('draft-order', 'draft_order');
+        Route::get('users', 'users');
+        Route::get('add-user', 'add_users');
     });
+
+Route::get('forgot-password/{verifyCode?}', [PageManageController::class, 'forgot_Pass']);
+Route::post('forgot-password-action', [PageManageController::class, 'forgot_Pass_action']);
+Route::post('change-password-action', [PageManageController::class, 'pass_change_action']);
