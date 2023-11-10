@@ -99,7 +99,7 @@ class UserController extends Controller
             'organizer_name' => 'required|string|max:255',
             'role' => 'required|in:admin,staff', 
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email',
+            'email' => 'required|email',
             'phone' => 'required|string|max:12',
             'address1' => 'required|string|max:255',
             'city' => 'required|string|max:255',

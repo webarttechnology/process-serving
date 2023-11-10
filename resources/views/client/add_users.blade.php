@@ -147,7 +147,6 @@
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputAddress" class="form-label">Password:*</label>
                     <input type="password" class="form-control" name="password" value="{{old('password')}}">
-                  
                 </div>
                 <div class="col-md-12">
                     <div class="row">
