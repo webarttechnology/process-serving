@@ -6,14 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\admin;
 use App\Models\AdminInfo;
 use App\Models\attorny;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
     public function users()
     {
         $adminData = admin::orderBy('id', 'desc')->get();
-       
-       // return  $adminData; die;
         return view('client.users', compact('adminData'));
     }
 
@@ -78,17 +77,18 @@ class UserController extends Controller
                 'city' => $request->city,
                 'state' => $request->state,
                 'zip' => $request->zip,
+                'city_state_zip' => $request->zip,
                 'password' => bcrypt ($request->password),
                 'b_id' => $request->bar_id,
             ]);
         }
+        $request->session()->flash('success', 'Inserted Successfully');
         return redirect()->route('users');
     }
 
     public function edit_users($id)
     {
         $adminData = admin::with('admin_info_single', 'attorney_info')->where('id', $id)->first();
-        //return  $adminData; die;
         return view('client.edit_users', compact('adminData'));
     }
 
@@ -164,7 +164,7 @@ class UserController extends Controller
                 ]);
             }
         }
-
+        $request->session()->flash('success', 'Updated Successfully');
         return redirect()->route('users');
     }
 
@@ -172,8 +172,33 @@ class UserController extends Controller
 
     public function delete_users($id)
     {
-        $adminData = AdminInfo::with('admin')->get();
-        $adminData->delete($id);
+        admin::find($id)->delete();
+        AdminInfo::where('admin_id', $id)->first()->delete();
+        attorny::where('admin_id', $id)->first()->delete();
         return redirect()->route('users');
+    }
+
+    public function userDetails($id)
+    {
+        return admin::with('admin_info_single', 'attorney_info')->where('id', $id)->first();
+    }
+
+    public function inviteUser(Request $request)
+    {
+        $request->validate([
+            'email' => 'required',
+            'role' => 'required',
+        ]);
+
+        $email = $request->email;
+        $role = $request->role;
+        
+        Mail::send('client.mail.inviteUser', ['email' => $email, 'role'=> $role  ], function ($message) use ($email) {
+            $message->to($email)->subject("Your are Invited!!");
+        });
+
+        $request->session()->flash('success', 'Please check your email');
+        return redirect()->back();
+        
     }
 }

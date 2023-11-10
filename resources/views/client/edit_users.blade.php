@@ -10,14 +10,14 @@
                 @method('PUT')
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputName" class="form-label">Organization Name:</label>
-                    <input type="text" class="form-control" id="exampleInputName" aria-describedby="name" value="Tester" name="organizer_name" readonly>
+                    <input type="text" class="form-control" value="Organizer Name" name="organizer_name" readonly>
                 </div>
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputName" class="form-label">Role:</label>
                     <select class="form-select form-select-sm form-control" aria-label=".form-select-sm example" name="role">
                         <option selected>Open this select menu</option>
-                        <option value="admin" {{old('role') == "admin" ? 'selected': ''}}>Admin</option>
-                        <option value="staff" {{old('role') == "staff" ? 'selected': ''}}>Staff</option>
+                        <option value="admin" {{ $adminData->role == "admin" ? 'selected' : '' }}>Admin</option>
+                        <option value="staff" {{ $adminData->role == "staff" ? 'selected' : '' }}>Staff</option>
                     </select>
                 </div>
                 <div class="col-md-6 mb-4">
@@ -55,10 +55,7 @@
                     <label for="exampleInputAddress" class="form-label">Address 1:*</label>
                     <input type="text" class="form-control" id="exampleInputAddress" aria-describedby="address" name="address1" value="{{isset($adminData->admin_info_single) ? $adminData->admin_info_single->address : ''}}">
                 </div>
-                {{-- <div class="col-md-6 mb-4">
-                    <label for="exampleInputAddress" class="form-label">Address 2</label>
-                    <input type="text" class="form-control" id="exampleInputAddress" aria-describedby="address" name="address2" value="{{$adminData->admin_info_single->address}}">
-                </div> --}}
+               
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputCity" class="form-label">City:*</label>
                     <input type="text" class="form-control" id="exampleInputCity" aria-describedby="city" name="city" value="{{isset($adminData->admin_info_single) ?$adminData->admin_info_single->billing_city : ''}}">
@@ -134,10 +131,7 @@
                     <label for="exampleInputCode" class="form-label">Zip Code:*</label>
                     <input type="text" class="form-control" id="exampleInputCode" aria-describedby="code" name="zip" value="{{isset($adminData->admin_info_single) ?$adminData->admin_info_single->zip: ''}}">
                 </div>
-                {{-- <div class="col-md-6 mb-4">
-                    <label for="exampleInputAddress" class="form-label">Password:*</label>
-                    <input type="password" class="form-control" name="password" value="{{$adminData->password}}">
-                </div> --}}
+             
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-6 mb-4">
@@ -159,13 +153,13 @@
                         <label for="Type of Account" class="sect">Type of Account<span style="color: red"> * </span></label>
                         <select class="valid form-control" aria-invalid="false" title="How Did You Hear of Us?" id="department" name="deperment" required="">
                             <option value="" selected="">Choose Type of Account </option>
-                            <option value="Law Firm/Legal Department">Law Firm/Legal Department </option>
-                            <option value="Party Without Attorney">Party Without Attorney </option>
-                            <option value="Insurance Company">Insurance Company </option>
-                            <option value="Government Agency">Government Agency </option>
-                            <option value="eFiling Fee Waiver (Pro Per)">eFiling Fee Waiver (Pro Per) </option>
-                            <option value="Affiliate Partner">Affiliate Partner </option>
-                            <option value="Paralegal">Paralegal</option>
+                            <option value="Law Firm/Legal Department" {{ $adminData->admin_info_single->type_of_account == "Law Firm/Legal Department" ? 'selected' : '' }}>Law Firm/Legal Department </option>
+                            <option value="Party Without Attorney" {{ $adminData->admin_info_single->type_of_account == "Party Without Attorney" ? 'selected' : '' }}>Party Without Attorney </option>
+                            <option value="Insurance Company" {{ $adminData->admin_info_single->type_of_account == "Insurance Company" ? 'selected' : '' }}>Insurance Company </option>
+                            <option value="Government Agency" {{ $adminData->admin_info_single->type_of_account == "Government Agency" ? 'selected' : '' }}>Government Agency </option>
+                            <option value="eFiling Fee Waiver (Pro Per)" {{ $adminData->admin_info_single->type_of_account == "eFiling Fee Waiver (Pro Per)" ? 'selected' : '' }}>eFiling Fee Waiver (Pro Per) </option>
+                            <option value="Affiliate Partner" {{ $adminData->admin_info_single->type_of_account == "Affiliate Partner" ? 'selected' : '' }}>Affiliate Partner </option>
+                            <option value="Paralegal" {{ $adminData->admin_info_single->type_of_account == "Paralegal" ? 'selected' : '' }}>Paralegal</option>
                         </select>
                     </div>
                 </div>

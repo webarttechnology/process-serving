@@ -9,7 +9,7 @@
                 @csrf
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputName" class="form-label">Organization Name:</label>
-                    <input type="text" class="form-control" id="exampleInputName" aria-describedby="name" value="Organizer Name" name="organizer_name" readonly>
+                    <input type="text" class="form-control" value="Organizer Name" name="organizer_name" readonly>
                 </div>
                 <div class="col-md-6 mb-4">
                     <label for="exampleInputName" class="form-label">Role:</label>

@@ -72,6 +72,9 @@ Route::controller(PageManageController::class)
         Route::post('store-user', [UserController::class, 'store_users'])->name('store_users');
         Route::get('edit-user/{id}', [UserController::class, 'edit_users'])->name('edit_users');
         Route::put('update-user/{id}', [UserController::class, 'update_users'])->name('update_users');
+        Route::get('delete-user/{id}', [UserController::class, 'delete_users'])->name('delete_users');
+        Route::get('account-details/{id}', [UserController::class, 'userDetails'])->name('userDetails');
+        Route::post('invite-user', [UserController::class, 'inviteUser'])->name('inviteUser');
     });
 
 Route::get('forgot-password/{verifyCode?}', [PageManageController::class, 'forgot_Pass']);
