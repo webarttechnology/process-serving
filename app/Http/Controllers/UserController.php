@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function users()
     {
-        $adminData = admin::orderBy('id', 'desc')->get();
+        $adminData = admin::where('owner_id', session('admin_id'))->orderBy('id', 'desc')->get();
         return view('client.users', compact('adminData'));
     }
 
@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         $request->validate([
             'organizer_name' => 'required|string|max:255',
-            'role' => 'required|in:admin,staff', 
+            'role' => 'required|in:admin,staff',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email',
             'phone' => 'required|string|max:12',
@@ -34,39 +34,39 @@ class UserController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
-            'bar_id' => 'nullable|string|max:255', 
+            'bar_id' => 'nullable|string|max:255',
             'billing_email' => 'required|email',
             'billing_phone' => 'required|string|max:12',
             'billing_code' => 'required|string|max:10',
-            'deperment' => 'required|string|max:255', 
+            'deperment' => 'required|string|max:255',
         ]);
-        
-      $adminrecord =   admin::create([
+
+        $adminrecord =   admin::create([
+            'owner_id' => session('admin_id'),
             'organization_name' => $request->organizer_name,
             'attorney' => $request->attorney == 'on' ? true : false,
             'role' => $request->role,
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => bcrypt ($request->password),
+            'password' => bcrypt($request->password),
         ]);
 
         AdminInfo::create([
             'admin_id' => $adminrecord->id,
             'type_of_account' => $request->deperment,
             'account_name' => $request->name,
-            'address' => $request->address1 ,
+            'address' => $request->address1,
             'billing_name' => $request->name,
             'billing_email' => $request->billing_email,
             'billing_phone' => $request->billing_phone,
             'billing_state' => $request->state,
             'billing_city' => $request->city,
             'billing_code_on_invoice' => $request->billing_code,
-            'zip' =>$request->zip,
+            'zip' => $request->zip,
         ]);
 
-        if ($request->has('attorney')) 
-        {
+        if ($request->has('attorney')) {
             attorny::create([
                 'admin_id' => $adminrecord->id,
                 'name' => $request->organizer_name,
@@ -78,7 +78,7 @@ class UserController extends Controller
                 'state' => $request->state,
                 'zip' => $request->zip,
                 'city_state_zip' => $request->zip,
-                'password' => bcrypt ($request->password),
+                'password' => bcrypt($request->password),
                 'b_id' => $request->bar_id,
             ]);
         }
@@ -97,7 +97,7 @@ class UserController extends Controller
     {
         $request->validate([
             'organizer_name' => 'required|string|max:255',
-            'role' => 'required|in:admin,staff', 
+            'role' => 'required|in:admin,staff',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'required|string|max:12',
@@ -105,11 +105,11 @@ class UserController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
-            'bar_id' => 'nullable|string|max:255', 
+            'bar_id' => 'nullable|string|max:255',
             'billing_email' => 'required|email',
             'billing_phone' => 'required|string|max:12',
             'billing_code' => 'required|string|max:10',
-            'deperment' => 'required|string|max:255', 
+            'deperment' => 'required|string|max:255',
         ]);
 
         $admin = admin::find($id);
@@ -192,13 +192,12 @@ class UserController extends Controller
 
         $email = $request->email;
         $role = $request->role;
-        
-        Mail::send('client.mail.inviteUser', ['email' => $email, 'role'=> $role  ], function ($message) use ($email) {
+
+        Mail::send('client.mail.inviteUser', ['email' => $email, 'role' => $role, 'ownerId' => session('admin_id')], function ($message) use ($email) {
             $message->to($email)->subject("Your are Invited!!");
         });
 
-        $request->session()->flash('success', 'Please check your email');
+        $request->session()->flash('success', 'Invitation link has been sent successfully');
         return redirect()->back();
-        
     }
 }

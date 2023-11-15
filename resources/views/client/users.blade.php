@@ -39,7 +39,7 @@
                                                         rowspan="1" colspan="1"
                                                         aria-label="Ship to: activate to sort column ascending">Attorney
                                                     </th>
-                                                   
+
                                                     <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                         rowspan="1" colspan="1"
                                                         aria-label="Ship to: activate to sort column ascending">Status</th>
@@ -50,46 +50,52 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($adminData as $admin)
-                                               
-                                                <tr class="odd">
-                                                    <td>{{$admin->id}}</td>
-                                                    <td>{{$admin->name}}</td>
-                                                    <td>{{$admin->email}}</td>
-                                                    <td>{{$admin->phone}}</td>
-                                                    <td>
-                                                        @php
-                                                            switch ($admin->role) {
-                                                                case 'staff':
-                                                                    echo 'Staff';
-                                                                    break;
-                                                                case 'owner_admin':
-                                                                    echo 'Owner Admin';
-                                                                    break;
-                                                                case 'admin':
-                                                                    echo 'Admin';
-                                                                    break;
-                                                                
-                                                                default:
-                                                                    # code...
-                                                                    break;
-                                                            }
-                                                        @endphp
-                                                    </td>
-                                                    <td>{{$admin->attorney ? 'Yes' : 'No'}}</td>
-                                                    <td style="color:#008000">Active</td>
-                                                    <td>
-                                                        <a href="" class="btn btn-primary text-white my-1 mx-1 details-view"  data-id="{{$admin->id}}"
-                                                            data-toggle="modal" data-target="#exampleModal">View
-                                                        </a>
-                                                        <a style="color:#fff" href="{{url('edit-user/'.$admin->id)}}" class="btn btn-success my-1 mx-1">
-                                                            Edit
-                                                        </a>
-                                                        <a style="color:#fff" href="{{url('delete-user/'.$admin->id)}}" class="btn btn-danger my-1 mx-1" onclick="return confirm('Are you sure you want to delete this record?')">
-                                                            Delete
-                                                        </a>
-                                                       
-                                                    </td>
-                                                </tr>
+                                                    <tr class="odd">
+                                                        <td>{{ $admin->id }}</td>
+                                                        <td>{{ $admin->name }}</td>
+                                                        <td>{{ $admin->email }}</td>
+                                                        <td>{{ $admin->phone }}</td>
+                                                        <td>
+                                                            @php
+                                                                switch ($admin->role) {
+                                                                    case 'staff':
+                                                                        echo 'Staff';
+                                                                        break;
+                                                                    case 'owner_admin':
+                                                                        echo 'Owner Admin';
+                                                                        break;
+                                                                    case 'admin':
+                                                                        echo 'Admin';
+                                                                        break;
+
+                                                                    default:
+                                                                        # code...
+                                                                        break;
+                                                                }
+                                                            @endphp
+                                                        </td>
+                                                        <td>{{ $admin->attorney ? 'Yes' : 'No' }}</td>
+                                                        <td style="color:#008000">Active</td>
+                                                        <td>
+                                                            <a href=""
+                                                                class="btn btn-primary text-white my-1 mx-1 details-view"
+                                                                data-id="{{ $admin->id }}" data-toggle="modal"
+                                                                data-target="#exampleModal">View
+                                                            </a>
+                                                            <a style="color:#fff"
+                                                                href="{{ url('edit-user/' . $admin->id) }}"
+                                                                class="btn btn-success my-1 mx-1">
+                                                                Edit
+                                                            </a>
+                                                            <a style="color:#fff"
+                                                                href="{{ url('delete-user/' . $admin->id) }}"
+                                                                class="btn btn-danger my-1 mx-1"
+                                                                onclick="return confirm('Are you sure you want to delete this record?')">
+                                                                Delete
+                                                            </a>
+
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -105,13 +111,15 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    <form action="{{route('inviteUser')}}" method="post" id="invite-user">
+                                                    <form action="{{ route('inviteUser') }}" method="post"
+                                                        id="invite-user">
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div clss="row">
                                                                 <div class="form-group">
                                                                     <label for="">Email Id</label>
-                                                                    <input type="email" class="form-control" name="email">
+                                                                    <input type="email" class="form-control"
+                                                                        name="email">
 
                                                                 </div>
                                                                 <div class="form-group">
@@ -123,7 +131,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                   
+
                                                         <div class="modal-footer">
                                                             <button type="submit" class="btn btn-primary">Invite</button>
                                                             <button type="button" class="btn btn-secondary"
@@ -153,11 +161,11 @@
                                                                 <span id="name"></span>
                                                             </div>
                                                             <div class="col-md-12 mb-3">
-                                                                <strong>Email:</strong> 
+                                                                <strong>Email:</strong>
                                                                 <span id="email"></span>
                                                             </div>
                                                             <div class="col-md-12 mb-3">
-                                                                <strong>Phone Number:</strong> 
+                                                                <strong>Phone Number:</strong>
                                                                 <span id="phone"></span>
                                                             </div>
                                                             <div class="col-md-12 mb-3">
@@ -169,26 +177,26 @@
                                                                 <span id="city"></span>
                                                             </div>
                                                             <div class="col-md-12 mb-3">
-                                                                <strong>State:</strong> 
+                                                                <strong>State:</strong>
                                                                 <span id="state"></span>
                                                             </div>
                                                             <div class="col-md-12 mb-3">
-                                                                <strong>Zip Code:</strong> 
+                                                                <strong>Zip Code:</strong>
                                                                 <span id="zip"></span>
                                                             </div>
                                                             <div class="col-md-12 mb-3">
-                                                                <strong>Billing Email:</strong> 
+                                                                <strong>Billing Email:</strong>
                                                                 <span id="billing_email"></span>
                                                             </div>
                                                             <div class="col-md-12 mb-3">
-                                                                <strong>Billing Contact:</strong> 
+                                                                <strong>Billing Contact:</strong>
                                                                 <span id="billing_contact"></span>
                                                             </div>
                                                             <div class="col-md-12 mb-3">
-                                                                <strong>Type Of Account:</strong> 
+                                                                <strong>Type Of Account:</strong>
                                                                 <span id="type_of_account"></span>
                                                             </div>
-                                                            
+
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -216,18 +224,15 @@
 
 
 <script>
-
-    $(document).ready(function(){
-        $('.details-view').on('click', function()
-        {
+    $(document).ready(function() {
+        $('.details-view').on('click', function() {
             var id = $(this).data('id');
 
             $.ajax({
-                url: '{{url('account-details')}}' + "/" + id,
+                url: '{{ url('account-details') }}' + "/" + id,
                 type: 'GET',
                 dataType: 'json',
-                success: function (details) 
-                {
+                success: function(details) {
                     console.log(details);
                     $('#name').text(details.name);
                     $('#email').text(details.email);
@@ -240,11 +245,11 @@
                     $('#billing_contact').text(details.admin_info_single.billing_phone);
                     $('#type_of_account').text(details.admin_info_single.type_of_account);
                 },
-                error: function (error) {
+                error: function(error) {
                     console.error('Ajax request failed: ', error);
                 }
             });
         });
-      
+
     });
 </script>

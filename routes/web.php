@@ -77,6 +77,7 @@ Route::controller(PageManageController::class)
         Route::post('invite-user', [UserController::class, 'inviteUser'])->name('inviteUser');
     });
 
+Route::get('email-verify/{id}', [AdminController::class, 'verify']);
 Route::get('forgot-password/{verifyCode?}', [PageManageController::class, 'forgot_Pass']);
 Route::post('forgot-password-action', [PageManageController::class, 'forgot_Pass_action']);
 Route::post('change-password-action', [PageManageController::class, 'pass_change_action']);
