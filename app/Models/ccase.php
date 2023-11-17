@@ -9,4 +9,9 @@ class ccase extends Model
 {
     use HasFactory;
     protected $fillable = ['order_id', 'case_no', 'case_title', 'jurisdiction', 'attorney'];
+
+    public function orders()
+    {
+        return $this->hasMany(order::class, 'case_id', 'id');
+    }
 }

@@ -724,6 +724,12 @@ $(document).ready(function (e) {
     e.preventDefault();
     let form = new FormData(this);
 
+    if (!$("#no-attorney").prop("checked")) {
+      if ($("#c_num").val() == "" || $(".jur_select").val() == "default") {
+        return toastr.error("Please fill in fields carefully");
+      }
+    }
+
     $.ajax({
       type: "POST",
       url: "add_case",

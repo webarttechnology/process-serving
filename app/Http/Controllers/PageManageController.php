@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\admin;
 use App\Models\AdminInfo;
+use App\Models\ccase;
 use App\Models\order;
+use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use SimpleXMLElement;
 
 class PageManageController extends Controller
 {
@@ -124,6 +127,45 @@ class PageManageController extends Controller
     {
         $orders = order::with('case')->where('status', 'pending')->get();
 
+        $cases = order::with('case', 'documents', 'parties', 'servees', 'serveAddress')->get()->toArray();
+        $data = [];
+        foreach ($cases as $key => $case) {
+            $data = [
+                'caseId' => $case['id']
+            ];
+        }
+
+        function arrayToXml($data, &$xmlData)
+        {
+            foreach ($data as $key => $value) {
+                if (is_array($value)) {
+                    if (is_numeric($key)) {
+                        // If the key is numeric, use a generic item name
+                        $key = 'item';
+                    }
+                    $subnode = $xmlData->addChild($key);
+                    arrayToXml($value, $subnode);
+                } else {
+                    $xmlData->addChild("$key", htmlspecialchars("$value"));
+                }
+            }
+        }
+
+
+        // Create a new SimpleXMLElement
+        $xmlData = new SimpleXMLElement('<cases/>');
+
+        // Call the function to convert the PHP array to XML
+        arrayToXml($data, $xmlData);
+
+        // Format the XML for readability
+        $dom = new DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML($xmlData->asXML());
+        echo $dom->saveXML();
+        exit;
+
         return view('client.pending_order', compact('orders'));
     }
 
@@ -197,6 +239,4 @@ class PageManageController extends Controller
             return redirect()->back();
         }
     }
-
-    
 }

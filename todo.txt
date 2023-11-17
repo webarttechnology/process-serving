@@ -1,0 +1,5 @@
+#TODO
+
+1. cases table - change case_no to nullable
+2. add owner_id in attories
+3. add temp_password in attornies

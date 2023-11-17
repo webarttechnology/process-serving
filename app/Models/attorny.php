@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class attorny extends Model
 {
     use HasFactory;
-    protected $table ='attornies';
-    protected $fillable = ['admin_id' , 'name', 'email', 'phone', 'b_id', 'firm_name', 'street_address', 'city', 'state', 'zip'];
+    protected $table = 'attornies';
+    protected $fillable = ['temp_password', 'owner_id', 'admin_id', 'name', 'email', 'phone', 'b_id', 'firm_name', 'street_address', 'city', 'state', 'zip'];
 }

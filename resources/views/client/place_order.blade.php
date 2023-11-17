@@ -13,24 +13,24 @@
                 <!-- Tabs nav -->
                 <div class="nav flex-column nav-pills nav-pills-custom p-2" id="v-pills-tab" role="tablist"
                     aria-orientation="vertical">
-                    <a class="nav-link {{ $step == 1 ? 'active' : '' }}" id="step1s" href="#step1" 
-                        role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                    <a class="nav-link {{ $step == 1 ? 'active' : '' }}" id="step1s" href="#step1" role="tab"
+                        aria-controls="v-pills-profile" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">CASE INFO</span>
                     </a>
-                    <a class="nav-link {{ $step == 2 ? 'active' : '' }}" id="step2s" href="#step2" 
-                        role="tab" aria-controls="v-pills-messages" aria-selected="false">
+                    <a class="nav-link {{ $step == 2 ? 'active' : '' }}" id="step2s" href="#step2" role="tab"
+                        aria-controls="v-pills-messages" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">CASE PARTICIPANTS</span>
                     </a>
-                    <a class="nav-link {{ $step == 3 ? 'active' : '' }}" id="step3s" href="#step3" 
-                        role="tab" aria-controls="v-pills-settings" aria-selected="false">
+                    <a class="nav-link {{ $step == 3 ? 'active' : '' }}" id="step3s" href="#step3" role="tab"
+                        aria-controls="v-pills-settings" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">DOCUMENTS</span>
                     </a>
-                    <a class="nav-link {{ $step == 4 ? 'active' : '' }}" id="step4s" href="#step4" 
-                        role="tab" aria-controls="v-serve-settings" aria-selected="false">
+                    <a class="nav-link {{ $step == 4 ? 'active' : '' }}" id="step4s" href="#step4" role="tab"
+                        aria-controls="v-serve-settings" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">SERVE INFO</span>
                     </a>
-                    <a class="nav-link {{ $step == 5 ? 'active' : '' }}" id="step5s" href="#step5" 
-                        role="tab" aria-controls="v-details-settings" aria-selected="false">
+                    <a class="nav-link {{ $step == 5 ? 'active' : '' }}" id="step5s" href="#step5" role="tab"
+                        aria-controls="v-details-settings" aria-selected="false">
                         <span class="font-weight-bold small text-uppercase">ORDER DETAILS</span>
                     </a>
                 </div>
@@ -57,6 +57,11 @@
                                             <label for="case-number">Case Number :</label>
                                             <input type="text" class="form-control" id="c_num" name="c_num"
                                                 placeholder="Case Number" value="<?php echo isset($ca) ? $ca->case_no : ''; ?>" required>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input ml-0" id="no-attorney">
+                                                <label class="form-check-label ml-4 mb-0" for="no-attorney">Click here if
+                                                    you dont have a case number</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -962,12 +967,15 @@
                             <div class="row p-3">
                                 <div class="col-md-12 ml-5 mb-2">
                                     @if (session('service_check'))
-                                        <input class="form-check-input" type="checkbox" name="service_check" value="yes"
-                                            checked>
+                                        <input class="form-check-input" type="checkbox" name="service_check"
+                                            value="yes" checked>
                                     @else
-                                        <input class="form-check-input" type="checkbox" name="service_check" value="yes">
+                                        <input class="form-check-input" type="checkbox" name="service_check"
+                                            value="yes">
                                     @endif
-                                    <label class="form-check-label" for="inlineCheckbox3">Click here to serve all parties with the "Same Service Level" (Examples: Routine, Priority, Urgent or On-Demand)</label>
+                                    <label class="form-check-label" for="inlineCheckbox3">Click here to serve all parties
+                                        with the "Same Service Level" (Examples: Routine, Priority, Urgent or
+                                        On-Demand)</label>
                                 </div>
 
                                 <div class="col-md-12 ml-5 mb-2">
@@ -1249,25 +1257,23 @@
                                                 </table>
                                             </div>
                                         @else
-                                        @php 
-                                            $documentExists = false;
-                                            $documentType = '';
+                                            @php
+                                                $documentExists = false;
+                                                $documentType = '';
 
-                                            foreach( $s_d as $check )
-                                            {
-                                                $d_d = DB::table('documents')
+                                                foreach ($s_d as $check) {
+                                                    $d_d = DB::table('documents')
                                                         ->where(['order_id' => session('order_id')])
                                                         ->where(['case_no' => session('case_id')])
                                                         ->where(['s_no' => $check->id])
                                                         ->get();
-                                                
-                                                if( count($d_d) > 0  )
-                                                {
-                                                    $documentExists = true;
-                                                    $documentType = $d_d[0]->type;
+
+                                                    if (count($d_d) > 0) {
+                                                        $documentExists = true;
+                                                        $documentType = $d_d[0]->type;
+                                                    }
                                                 }
-                                            }
-                                        @endphp
+                                            @endphp
                                             @foreach ($s_d as $item)
                                                 @php
                                                     $d_d = DB::table('documents')
@@ -1345,7 +1351,8 @@
                                                                             </option>
                                                                         </select>
                                                                     </div>
-                                                                    <div class="col-md-8 document-name-wrapper" id="cddss{{ $item->id }}"
+                                                                    <div class="col-md-8 document-name-wrapper"
+                                                                        id="cddss{{ $item->id }}"
                                                                         style="{{ !$documentExists ? 'display:none' : '' }}">
                                                                         <label>Document Name</label>
                                                                         <select id="secondSelec{{ $item->id }}"
@@ -1640,8 +1647,8 @@
                                                                                 <div
                                                                                     class="d-flex align-items-center justify-content-start">
 
-                                                                                    <select
-                                                                                        class="form-control col-sm-2 " onchange="addressTypeUpdate(this)"
+                                                                                    <select class="form-control col-sm-2 "
+                                                                                        onchange="addressTypeUpdate(this)"
                                                                                         name="business_type[{{ session('order_id') }}][]"
                                                                                         id="business_type_{{ session('order_id') }}">
                                                                                         <option value="Residence">
@@ -1726,8 +1733,8 @@
                                                                     <div class="col-md-2">
                                                                         <div class="formprt mb-3">
                                                                             <label for="dept">Dept/Div :</label>
-                                                                            <input  type="text"
-                                                                                class="form-control" name="dpt"
+                                                                            <input type="text" class="form-control"
+                                                                                name="dpt"
                                                                                 value=" <?php if (isset($c_d->dept)) {
                                                                                     echo $c_d->dept;
                                                                                 } else {
@@ -1982,7 +1989,7 @@
                                                                         <div class="col-md-2">
                                                                             <div class="formprt mb-3">
                                                                                 <label for="dept">Dept/Div :</label>
-                                                                                <input  type="text"
+                                                                                <input type="text"
                                                                                     class="form-control" name="dpt[]"
                                                                                     value="{{ $item->dept }}"
                                                                                     placeholder="Dept/Div">
@@ -2154,12 +2161,15 @@
                                                 @php
                                                     $index = 1;
                                                 @endphp
-                                                <h4 class="d-block pb-3">When would you like this attempted for all Servee?</h4>
+                                                <h4 class="d-block pb-3">When would you like this attempted for all
+                                                    Servee?</h4>
                                                 <ul class="rediolist">
-                                                    <input type="hidden" name="attempt_type[]" id="attempt_type_{{$index}}">
+                                                    <input type="hidden" name="attempt_type[]"
+                                                        id="attempt_type_{{ $index }}">
                                                     <li>
                                                         <label class="radio">
-                                                            <input required data-type="routine" data-index="{{$index}}" type="radio"
+                                                            <input required data-type="routine"
+                                                                data-index="{{ $index }}" type="radio"
                                                                 class="mr-1 optradio" name="optradio[]"
                                                                 value="{{ date('d-m-Y g:i a', strtotime('+ 72 hours')) }}">
                                                             <strong>Routine Service</strong> Attempt by
@@ -2169,7 +2179,8 @@
                                                     </li>
                                                     <li>
                                                         <label class="radio">
-                                                            <input required data-type="priority" data-index="{{$index}}" type="radio"
+                                                            <input required data-type="priority"
+                                                                data-index="{{ $index }}" type="radio"
                                                                 class="mr-1 optradio" name="optradio[]"
                                                                 value="{{ date('d-m-Y g:i a', strtotime('+ 48 hours')) }}">
                                                             <strong>Priority Service</strong> Attempt by
@@ -2179,7 +2190,8 @@
                                                     </li>
                                                     <li>
                                                         <label class="radio">
-                                                            <input required data-type="urgent" data-index="{{$index}}" type="radio"
+                                                            <input required data-type="urgent"
+                                                                data-index="{{ $index }}" type="radio"
                                                                 class="mr-1 optradio" name="optradio[]"
                                                                 value="{{ date('d-m-Y g:i a', strtotime('+ 24 hours')) }}">
                                                             <strong>Urgent Service</strong> Attempt by
@@ -2189,24 +2201,31 @@
                                                     </li>
                                                     <li>
                                                         <label class="radio">
-                                                            <input required data-type="on demand" data-index="{{$index}}" type="radio"
+                                                            <input required data-type="on demand"
+                                                                data-index="{{ $index }}" type="radio"
                                                                 class="mr-1 optradio" name="optradio[]"
                                                                 value="{{ date('d-m-Y g:i a', strtotime('+ 4 hours')) }}">
                                                             <strong>On Demand Service</strong> Attempt by
-                                                            <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong> for
+                                                            <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong>
+                                                            for
                                                             $175
                                                         </label>
                                                     </li>
                                                 </ul>
                                             @else
-                                                @foreach ( $s_d as $index => $servee )
-                                                    <h4 class="d-block pb-3">When would you like this attempted for <strong>{{ $servee->p_t_serve }}</strong>?</h4>
+                                                @foreach ($s_d as $index => $servee)
+                                                    <h4 class="d-block pb-3">When would you like this attempted for
+                                                        <strong>{{ $servee->p_t_serve }}</strong>?
+                                                    </h4>
                                                     <ul class="rediolist">
-                                                        <input type="hidden" name="attempt_type[]" id="attempt_type_{{$index}}">
+                                                        <input type="hidden" name="attempt_type[]"
+                                                            id="attempt_type_{{ $index }}">
                                                         <li>
                                                             <label class="radio">
-                                                                <input required data-type="routine" data-index="{{$index}}" type="radio"
-                                                                    class="mr-1 optradio" name="optradio[{{$index}}]"
+                                                                <input required data-type="routine"
+                                                                    data-index="{{ $index }}" type="radio"
+                                                                    class="mr-1 optradio"
+                                                                    name="optradio[{{ $index }}]"
                                                                     value="{{ date('d-m-Y g:i a', strtotime('+ 72 hours')) }}">
                                                                 <strong>Routine Service</strong> Attempt by
                                                                 <strong>{{ date('l g:i a', strtotime('+ 72 hours')) }}</strong>
@@ -2215,8 +2234,10 @@
                                                         </li>
                                                         <li>
                                                             <label class="radio">
-                                                                <input required data-type="priority" data-index="{{$index}}" type="radio"
-                                                                    class="mr-1 optradio" name="optradio[{{$index}}]"
+                                                                <input required data-type="priority"
+                                                                    data-index="{{ $index }}" type="radio"
+                                                                    class="mr-1 optradio"
+                                                                    name="optradio[{{ $index }}]"
                                                                     value="{{ date('d-m-Y g:i a', strtotime('+ 48 hours')) }}">
                                                                 <strong>Priority Service</strong> Attempt by
                                                                 <strong>{{ date('l g:i a', strtotime('+ 48 hours')) }}</strong>
@@ -2225,8 +2246,10 @@
                                                         </li>
                                                         <li>
                                                             <label class="radio">
-                                                                <input required data-type="urgent" data-index="{{$index}}" type="radio"
-                                                                    class="mr-1 optradio" name="optradio[{{$index}}]"
+                                                                <input required data-type="urgent"
+                                                                    data-index="{{ $index }}" type="radio"
+                                                                    class="mr-1 optradio"
+                                                                    name="optradio[{{ $index }}]"
                                                                     value="{{ date('d-m-Y g:i a', strtotime('+ 24 hours')) }}">
                                                                 <strong>Urgent Service</strong> Attempt by
                                                                 <strong>{{ date('l g:i a', strtotime('+ 24 hours')) }}</strong>
@@ -2235,11 +2258,14 @@
                                                         </li>
                                                         <li>
                                                             <label class="radio">
-                                                                <input required data-type="on demand" data-index="{{$index}}" type="radio"
-                                                                    class="mr-1 optradio" name="optradio[{{$index}}]"
+                                                                <input required data-type="on demand"
+                                                                    data-index="{{ $index }}" type="radio"
+                                                                    class="mr-1 optradio"
+                                                                    name="optradio[{{ $index }}]"
                                                                     value="{{ date('d-m-Y g:i a', strtotime('+ 4 hours')) }}">
                                                                 <strong>On Demand Service</strong> Attempt by
-                                                                <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong> for
+                                                                <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong>
+                                                                for
                                                                 $175
                                                             </label>
                                                         </li>
@@ -2256,7 +2282,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="formprt mb-3">
-                                                <label for="bssnm">Internal Reference/Matter Number (Optional) :</label>
+                                                <label for="bssnm">Internal Reference/Matter Number (Optional)
+                                                    :</label>
                                                 <input type="text" class="form-control" name="irn"
                                                     value=" <?php if (isset($o_d->irn)) {
                                                         echo $o_d->irn;
@@ -2628,13 +2655,24 @@
         </form>
     </div>
 
-    <script 
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2h5V1Jl9owOguijhl9Fy21uuAjlkKjpY&libraries=places">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2h5V1Jl9owOguijhl9Fy21uuAjlkKjpY&libraries=places">
     </script>
 
     <script>
         var currentElm = '';
         var zip = "";
+
+        $("#no-attorney").on("change", function(e) {
+            var checkbox = this;
+
+            if (checkbox.checked) {
+                $("#c_num").val('').prop('disabled', true);
+                $(".jur_select").val('default').trigger('change').prop('disabled', true);
+            } else {
+                $("#c_num").prop('disabled', false);
+                $(".jur_select").prop('disabled', false);
+            }
+        });
 
         function addressVal(elm) {
             currentElm = elm;
@@ -2676,7 +2714,7 @@
             $("#addressFull").val($(address1Field).val());
             $("#zipAddress").val(zip);
 
-            if($(address1Field).prev().prev().val() == 'Residence') {
+            if ($(address1Field).prev().prev().val() == 'Residence') {
                 $("#addressType").val('Residence');
                 $("#business-name-wrapper").hide();
             } else {
