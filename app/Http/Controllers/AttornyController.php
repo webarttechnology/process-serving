@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\admin;
+use App\Models\AdminInfo;
 use Illuminate\Http\Request;
 use App\Models\attorny;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AttornyController extends Controller
@@ -36,7 +39,7 @@ class AttornyController extends Controller
             'email' => 'required|email',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'b_id' => 'required',
-            'firm_name' => 'required',
+            // 'firm_name' => 'required',
             'street_address' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -61,8 +64,24 @@ class AttornyController extends Controller
             ]);
         }
 
+        $admin = admin::create([
+            'owner_id' => session('admin_id'),
+            'attorney' => true,
+            'role' => 'staff',
+            'verified' => 1,
+            'password' => Hash::make($req->input('pass')),
+            'name' => $req->input('fname') . ' ' . $req->input('lname'),
+            'email' => $req->input('email'),
+            'phone' => $req->input('phone'),
+        ]);
+
+        // AdminInfo::create([
+        //     'admin_id' => $admin->id,
+
+        // ]);
 
         attorny::create([
+            'admin_id' => $admin->id,
             'owner_id' => session('admin_id'),
             'temp_password' => $req->input('pass'),
             'password' => Hash::make($req->input('pass')),
@@ -70,7 +89,7 @@ class AttornyController extends Controller
             'email' => $req->input('email'),
             'phone' => $req->input('phone'),
             'b_id' => $req->input('b_id'),
-            'firm_name' => $req->firm_name,
+            // 'firm_name' => $req->firm_name,
             'street_address' => $req->street_address,
             'city' => $req->city,
             'state' => $req->state,
@@ -82,12 +101,17 @@ class AttornyController extends Controller
             'email' => $req->input('email'),
             'phone' => $req->input('phone'),
             'b_id' => $req->input('b_id'),
-            'firm_name' => $req->firm_name,
+            // 'firm_name' => $req->firm_name,
             'street_address' => $req->street_address,
             'city' => $req->city,
             'state' => $req->state,
             'zip' => $req->zip,
         ];
+
+        Mail::send('client.mail.welcome', ['type' => 'Attorney', 'pass' => $req->pass, 'name' => $req->fname . ' ' . $req->lname, 'email' => $req->email], function ($message) use ($req) {
+            $message->to($req->email)->subject("Welcome to Countrywide Process");
+        });
+
         return response()->json([
             'status' => true,
             'data' => $data

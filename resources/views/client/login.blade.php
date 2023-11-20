@@ -1,3 +1,9 @@
+{{-- @php
+    Mail::send('client.mail.welcome', ['name' => 'Rony Saha', 'email' => 'testerwhatever@yopmail.com', 'zip' => 123456, 'type' => 'Efiling'], function ($message) {
+        $message->to('tester2323@yopmail.com')->subject('Welcome to Countrywide Process');
+    });
+@endphp --}}
+
 <!DOCTYPE html>
 <html lang="en">
 

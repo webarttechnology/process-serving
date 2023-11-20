@@ -11,6 +11,7 @@ class admin extends Model
     use HasFactory;
 
     protected $fillable = [
+        'verified',
         'owner_id',
         'organization_name',
         'password',

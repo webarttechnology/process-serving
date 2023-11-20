@@ -88,9 +88,11 @@ class AdminController extends Controller
             ]);
         }
 
-        Mail::send('client.mail.verifyEmail', ['id' => $admin->id], function ($message) use ($request) {
-            $message->to($request->email)->subject("Verify your email");
+        Mail::send('client.mail.verifyEmail', ['type' => $request->deperment, 'name' => $request->fname . ' ' . $request->lname, 'email' => $request->email], function ($message) use ($request) {
+            $message->to($request->email)->subject("Welcome to Countrywide Process");
         });
+
+        exit;
     }
 
     public function login(Request $req)

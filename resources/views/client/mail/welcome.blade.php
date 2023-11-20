@@ -10,6 +10,7 @@
     <h4>Hi {{ $name }},</h4>
     <p>Thank you for registering with Countrywide Process!</p>
     <p>Your login email is: <a href="mailto:"><strong>{{ $email }}</strong></a></p>
+    <p>Your Customer password is: <strong>{{ $pass }}</strong></p>
     <p>Your Customer Type is: <strong>{{ $type }}</strong></p>
     <small><em>View your Electronic <a href="#!"><strong>Terms of Service</strong></a> and <a
                 href="#!"><strong>Sign-Up Agreement</strong></a>.
@@ -29,8 +30,6 @@
         455 N Moss St. Suite 130, Valley Village, CA 91607
     </small>
     <a style="display: block" href="#!"><strong>Contact Us</strong></a>
-    <p><a href="http://127.0.0.1:8081/email-verify/{{ $id }}">Click here</a> to finalise your acount and login
-    </p>
 </body>
 
 </html>

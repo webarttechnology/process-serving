@@ -1,3 +1,7 @@
+<?php
+$userInfo = App\Models\admin::where('id', session('admin_id'))->first();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -153,12 +157,14 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('users') }}">
-                            <i class="icon-grid menu-icon"></i>
-                            <span class="menu-title">Users</span>
-                        </a>
-                    </li>
+                    @if ($userInfo->role != 'staff')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('users') }}">
+                                <i class="icon-grid menu-icon"></i>
+                                <span class="menu-title">Users</span>
+                            </a>
+                        </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('place-order') }}">
                             <i class="icon-layout menu-icon"></i>

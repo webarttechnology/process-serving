@@ -26,9 +26,9 @@
             <div class="col-md-10 p-2">
                 <!-- Tabs content -->
                 <div class="tab-content" id="v-pills-tabContent">
-                    <div class="tab-pane fade bg-white bg-sdw py-2 active show" id="account"
-                        role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                        <form method="POST"  action="{{ url('update_account_info') }}">
+                    <div class="tab-pane fade bg-white bg-sdw py-2 active show" id="account" role="tabpanel"
+                        aria-labelledby="v-pills-profile-tab">
+                        <form method="POST" action="{{ url('update_account_info') }}">
                             @csrf
                             <div class="bxptyrtmain">
                                 <div class="row">
@@ -38,23 +38,23 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-4">
                                             <label for="case-number">Name :</label>
                                             <input type="text" class="form-control" name="name" id="name"
-                                                placeholder="Name"
-                                                value="{{ isset($userInfo) ? $userInfo->name : ''; }}" required>
+                                                placeholder="Name" value="{{ isset($userInfo) ? $userInfo->name : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="case-number">Email :</label>
-                                            
-                                            <input type="text" class="form-control" name="email" id="email" disabled
-                                                placeholder="Email" 
-                                                value="{{ isset($userInfo) ? $userInfo->email : ''; }}" required>
+
+                                            <input type="text" class="form-control" name="email" id="email"
+                                                disabled placeholder="Email"
+                                                value="{{ isset($userInfo) ? $userInfo->email : '' }}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -63,17 +63,17 @@
                                         <div class="mb-4">
                                             <label for="case-number">Phone :</label>
                                             <input type="text" class="form-control" name="phone" id="phone"
-                                                placeholder="Phone"
-                                                value="{{ isset($userInfo) ? $userInfo->phone : ''; }}" required>
+                                                placeholder="Phone" value="{{ isset($userInfo) ? $userInfo->phone : '' }}"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="case-number">Address :</label>
-                                            
+
                                             <input type="text" class="form-control" name="address" id="address"
-                                                placeholder="Address" 
-                                                value="{{ isset($extraInfo) ? $extraInfo->address : ''; }}" required>
+                                                placeholder="Address"
+                                                value="{{ isset($extraInfo) ? $extraInfo->address : '' }}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -83,16 +83,16 @@
                                             <label for="case-number">State :</label>
                                             <input type="text" class="form-control" name="state" id="state"
                                                 placeholder="State"
-                                                value="{{ isset($extraInfo) ? $extraInfo->billing_state : ''; }}" required>
+                                                value="{{ isset($extraInfo) ? $extraInfo->billing_state : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="case-number">City :</label>
-                                            
+
                                             <input type="text" class="form-control" name="city" id="city"
-                                                placeholder="City" 
-                                                value="{{ isset($extraInfo) ? $extraInfo->billing_city : ''; }}" required>
+                                                placeholder="City"
+                                                value="{{ isset($extraInfo) ? $extraInfo->billing_city : '' }}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@
                                 </div>
                             </div>
                         </form>
-                        <form method="POST"  action="{{ url('update_password_info') }}">
+                        <form method="POST" action="{{ url('update_password_info') }}">
                             @csrf
                             <div class="bxptyrtmain">
                                 <div class="row">
@@ -121,23 +121,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-4">
                                             <label for="case-number">Password :</label>
                                             <input type="password" class="form-control" name="password" id="password"
-                                                placeholder="Password"
-                                                 required>
+                                                placeholder="Password" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="case-number">Email :</label>
-                                            
-                                            <input type="password" class="form-control" name="confirm_password" id="confirm_password" 
-                                                placeholder="Confirm Password" 
-                                                 required>
+
+                                            <input type="password" class="form-control" name="confirm_password"
+                                                id="confirm_password" placeholder="Confirm Password" required>
                                         </div>
                                     </div>
                                 </div>
@@ -157,14 +155,23 @@
                             </div>
                         </form>
                     </div>
-                    <div class="tab-pane fade bg-white bg-sdw py-2 " id="payment"
-                        role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <div class="tab-pane fade bg-white bg-sdw py-2 " id="payment" role="tabpanel"
+                        aria-labelledby="v-pills-profile-tab">
                         <div class="bxptyrtmain">
+                            <p>By choosing to pay by check as your payment method, it is understood and agreed that you are
+                                applying for Open Credit. If credit is granted, payment is due 15 days from the date of
+                                service. In addition, a credit card will be used as a guarantee of payment and will be
+                                charged for invoices that are not paid within 30 days from the date of service. All
+                                transactions must be in U.S. dollars.</p>
+
+                            <p><strong>Name on Card: </strong></p>
+                            <p><strong>Card Details: </strong></p>
+                            <p><strong>Billing Address:* </strong></p>
+                            <p><strong>Billing City/State/Zip:* </strong></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection

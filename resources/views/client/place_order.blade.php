@@ -2401,13 +2401,13 @@
 
 
                             <!-- new addition -->
-                            <div class="col-md-12">
+                            {{-- <div class="col-md-12">
                                 <div class="formprt mb-3">
                                     <label for="phone">Firm Name *</label>
                                     <input type="text" class="form-control" name="firm_name"
                                         placeholder="Firm Name" required>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-12">
                                 <div class="formprt mb-3">
                                     <label for="phone">Street Address *</label>
