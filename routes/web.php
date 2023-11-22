@@ -29,6 +29,7 @@ Route::controller(PageManageController::class)
     ->group(function () {
         Route::get('dashboard', 'dashboard');
         Route::get('settings', 'settings');
+        Route::post('update_payment_method', [AdminController::class, 'update_payment_method'])->name('update_payment_method');
         Route::get('reset_order', [OrderController::class, 'reset_order'])->name('reset_order');
         Route::get('add_case_prev_step', [CcaseController::class, 'previous_step']);
         Route::get('place-order', 'place_order');

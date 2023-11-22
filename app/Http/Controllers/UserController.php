@@ -12,25 +12,6 @@ class UserController extends Controller
 {
     public function users()
     {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://apiprod.fattlabs.com/payment-method/" . );
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Content-Type: application/json",
-            "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXJjaGFudCI6ImQ3OTMxMTdlLTRkYTMtNDhlZi04YjI5LTQ1NmYxMDU1M2U1NiIsImdvZFVzZXIiOmZhbHNlLCJhc3N1bWluZyI6ZmFsc2UsImJyYW5kIjoiZmF0dG1lcmNoYW50LXNhbmRib3giLCJzdWIiOiJmMWYxNjVhMi1mOGNkLTQ4YzctYmU3Ni01Y2EwNWY1YmJlNDIiLCJpc3MiOiJodHRwOi8vYXBpcHJvZC5mYXR0bGFicy5jb20vc2FuZGJveCIsImlhdCI6MTcwMDIyMzQ1MiwiZXhwIjo0ODUzODIzNDUyLCJuYmYiOjE3MDAyMjM0NTIsImp0aSI6ImJiNVRMSlpDMTdlRkxPN0MifQ.s-iFSrf3ZQuiqpflEO2OLRdZyFRh6aCFzVb5vElWDFw",
-            "Accept: application/json"
-        ));
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        var_dump($response);
-
-        exit;
-
         $adminData = admin::where('owner_id', session('admin_id'))->orderBy('id', 'desc')->get();
         return view('client.users', compact('adminData'));
     }

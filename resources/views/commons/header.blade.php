@@ -266,6 +266,8 @@ $userInfo = App\Models\admin::where('id', session('admin_id'))->first();
         @endif
     </script>
 
+    @yield('custom_js')
+
 </body>
 
 </html>

@@ -23,6 +23,17 @@ class AdminController extends Controller
         return redirect('/');
     }
 
+    public function update_payment_method(Request $request)
+    {
+        $admin = admin::find($request->owner_id);
+
+        $admin->update([
+            'payment_token' => $request->payment_token
+        ]);
+
+        return redirect('/settings');
+    }
+
     public function register(Request $request)
     {
 

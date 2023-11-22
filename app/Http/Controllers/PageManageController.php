@@ -28,12 +28,35 @@ class PageManageController extends Controller
 
     public function settings()
     {
-        $userInfo = admin::find(session('admin_id'));
-        $extraInfo = AdminInfo::where('admin_id', session("admin_id"))->first();
+        $customerId = '';
+        $userInfo = admin::with('adminInfo')->find(session('admin_id'));
+        $ch = curl_init();
 
-        // var_dump($userInfo);exit;
+        if ($userInfo->role == 'owner_admin') {
+            $customerId = $userInfo->adminInfo->stax_customer_id;
+            $ownerId = $userInfo->id;
+        } else {
+            $ownerInfo = admin::with('adminInfo')->find($userInfo->owner_id);
+            $ownerId = $userInfo->owner_id;
+            $customerId = $ownerInfo->adminInfo->stax_customer_id;
+        }
 
-        return view('client.settings', compact('userInfo', 'extraInfo'));
+        curl_setopt($ch, CURLOPT_URL, "https://apiprod.fattlabs.com/customer/" . $customerId . "/payment-method");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json",
+            "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXJjaGFudCI6ImRmODMzOWEwLTk4N2UtNGUxZC1iMDYxLWUyYWUwNTcxYTZlMiIsImdvZFVzZXIiOmZhbHNlLCJhc3N1bWluZyI6ZmFsc2UsImJyYW5kIjoiZmF0dG1lcmNoYW50LXNhbmRib3giLCJzdWIiOiI5OTI1YzVlNi05MzczLTQ4MjUtOWJkYy0wYTgzNzE0ZDc3MGYiLCJpc3MiOiJodHRwOi8vYXBpcHJvZC5mYXR0bGFicy5jb20vc2FuZGJveCIsImlhdCI6MTcwMDQ1NDg1OCwiZXhwIjo0ODU0MDU0ODU4LCJuYmYiOjE3MDA0NTQ4NTgsImp0aSI6IjNQb251dXk5Rmx6Sm5ONjAifQ._gqDA6-FZSFHEXXzOOjbRNu329b3bQo46__Bib08kBg",
+            "Accept: application/json"
+        ));
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $paymentInfo = json_decode($response, true);
+
+        return view('client.settings', compact('userInfo', 'paymentInfo', 'ownerId', 'customerId'));
     }
 
     public function place_order()

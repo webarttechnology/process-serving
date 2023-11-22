@@ -23,9 +23,9 @@ class admin extends Model
         'email_verify_code'
     ];
 
-    public function admininfo()
+    public function adminInfo()
     {
-        return $this->hasMany(AdminInfo::class);
+        return $this->hasOne(AdminInfo::class);
     }
 
     public function admin_info_single()
