@@ -320,3 +320,12 @@ table td {
 #add_address label {
   font-size: 14px !important;
 }
+
+.custom-readonly {
+  pointer-events: none;
+}
+
+/*Kritika: place holder */
+.place_order {
+  padding: 2.375rem 2.5rem;
+}

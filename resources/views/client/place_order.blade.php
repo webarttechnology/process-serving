@@ -9,9 +9,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <div class="content-wrapper place_order">
         <div class="row">
-            <div class="col-md-2 px-0">
+            <div class="col-md-12 p-2">
                 <!-- Tabs nav -->
-                <div class="nav flex-column nav-pills nav-pills-custom p-2" id="v-pills-tab" role="tablist"
+                <div class="nav justify-content-center nav-pills nav-pills-custom" id="v-pills-tab" role="tablist"
                     aria-orientation="vertical">
                     <a class="nav-link {{ $step == 1 ? 'active' : '' }}" id="step1s" href="#step1" role="tab"
                         aria-controls="v-pills-profile" aria-selected="false">
@@ -34,8 +34,6 @@
                         <span class="font-weight-bold small text-uppercase">ORDER DETAILS</span>
                     </a>
                 </div>
-            </div>
-            <div class="col-md-10 p-2">
                 <!-- Tabs content -->
                 <div class="tab-content" id="v-pills-tabContent">
                     <div class="tab-pane fade bg-white bg-sdw py-2 {{ $step == 1 ? 'active show' : '' }}" id="step1"
@@ -938,7 +936,10 @@
                                                             </select>
                                                         </td>
                                                         <td class="col-2 servee-role-type">
-                                                            <select class='form-control' name="servee_role_type[]">
+                                                            <select
+                                                                class='form-control {{ isset($item->role_type) ? 'custom-readonly' : '' }}'
+                                                                {{ isset($item->role_type) ? 'readonly' : '' }}
+                                                                name="servee_role_type[]">
                                                                 <option
                                                                     {{ isset($item->role_type) && $item->role_type == 'defendant' ? 'selected' : '' }}
                                                                     value='defendant'>Defendant</option>

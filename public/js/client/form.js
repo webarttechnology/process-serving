@@ -1153,13 +1153,15 @@ function addNewPartyToServe(elm) {
             .parent()
             .find(".servee-role-type select")
             .val(response.role_type)
-            .prop("disabled", true);
+            .addClass("custom-readonly")
+            .attr("readonly", true);
         } else {
           $(elm)
             .parent()
             .parent()
             .find(".servee-role-type select")
-            .prop("disabled", false);
+            .removeClass("custom-readonly")
+            .attr("readonly", false);
         }
       }
     },
@@ -1168,7 +1170,8 @@ function addNewPartyToServe(elm) {
         .parent()
         .parent()
         .find(".servee-role-type select")
-        .prop("disabled", false);
+        .removeClass("custom-readonly")
+        .attr("readonly", false);
 
       $(elm).parent().next().next().find("select").val("-");
       $(elm).parent().next().next().next().find("input").val("");
