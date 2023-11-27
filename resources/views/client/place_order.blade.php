@@ -381,6 +381,30 @@
 
                                                             <div class="col-md-12">
                                                                 <div class="formprt">
+                                                                    <div class="d-inline-block">
+                                                                        <p>
+                                                                            Party Type
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="d-inline-block">
+
+                                                                        <label class="radio-inline mr-3">
+                                                                            <input type="radio" class="mr-1"
+                                                                                name="role_type"
+                                                                                value="plaintiff">Plaintiff
+                                                                        </label>
+                                                                        <label class="radio-inline mr-3">
+                                                                            <input type="radio" class="mr-1"
+                                                                                value="defendant" name="role_type"
+                                                                                checked>Defendant
+                                                                        </label>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                <div class="formprt">
                                                                     <div class="d-inline-block mr-1">
                                                                         <p>
                                                                             Is this your Lead Client ?
@@ -504,6 +528,30 @@
 
                                                             <div class="col-md-12">
                                                                 <div class="formprt">
+                                                                    <div class="d-inline-block">
+                                                                        <p>
+                                                                            Party Type
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="d-inline-block">
+
+                                                                        <label class="radio-inline mr-3">
+                                                                            <input type="radio" class="mr-1"
+                                                                                name="role_type"
+                                                                                value="plaintiff">Plaintiff
+                                                                        </label>
+                                                                        <label class="radio-inline mr-3">
+                                                                            <input type="radio" class="mr-1"
+                                                                                value="defendant" name="role_type"
+                                                                                checked>Defendant
+                                                                        </label>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                <div class="formprt">
                                                                     <div class="d-inline-block mr-1">
                                                                         <p>
                                                                             Is this your Lead Client ?
@@ -609,6 +657,31 @@
                                                                         id="pe_nam" name="pe_name" placeholder="Name">
                                                                 </div>
                                                             </div>
+
+                                                            <div class="col-md-12">
+                                                                <div class="formprt">
+                                                                    <div class="d-inline-block">
+                                                                        <p>
+                                                                            Party Type
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="d-inline-block">
+
+                                                                        <label class="radio-inline mr-3">
+                                                                            <input type="radio" class="mr-1"
+                                                                                name="role_type"
+                                                                                value="plaintiff">Plaintiff
+                                                                        </label>
+                                                                        <label class="radio-inline mr-3">
+                                                                            <input type="radio" class="mr-1"
+                                                                                value="defendant" name="role_type"
+                                                                                checked>Defendant
+                                                                        </label>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="col-md-12">
                                                                 <div class="formprt">
                                                                     <div class="d-inline-block mr-1">
@@ -668,6 +741,7 @@
                                     <tr class="text-center">
                                         <th class="col-1">Lead Client</th>
                                         <th class="col-5">Name</th>
+                                        <th class="col-4">Role Type</th>
                                         <th class="col-4">Role</th>
                                         <th class="col-2">Action</th>
                                     </tr>
@@ -688,6 +762,9 @@
                                                 </td>
                                                 <td>
                                                     {{ $item->name }}
+                                                </td>
+                                                <td style="text-transform:capitalize">
+                                                    {{ $item->role_type }}
                                                 </td>
                                                 <td>
                                                     {{ $item->role }}
@@ -788,8 +865,9 @@
                                     <table class="table">
                                         <thead class="txtryt text-capitalize">
                                             <tr>
-                                                <th class="col-5">Party(s) To Serve*</th>
-                                                <th class="col-3">Role</th>
+                                                <th class="col-4">Entity Being Served*</th>
+                                                <th class="col-2">Servee Type</th>
+                                                <th class="col-2">Capacity</th>
                                                 <th class="col-3">Registered Agent</th>
                                                 <th class="col-1" width="5%">
                                                     {{-- <div class="btnsct">
@@ -843,7 +921,7 @@
                                                     <tr id="serve_row_{{ $key }}">
                                                         <input type="hidden" name="order_id"
                                                             value="{{ session('order_id') }}">
-                                                        <td class='col-5'>
+                                                        <td class='col-4'>
                                                             <select
                                                                 onChange='addNewPartyToServe(this ,{{ $key }})'
                                                                 class="form-control serve-party-name" name="party[]">
@@ -857,6 +935,22 @@
                                                                         {{ $pars->name }}
                                                                     </option>
                                                                 @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td class="col-2 servee-role-type">
+                                                            <select class='form-control' name="servee_role_type[]">
+                                                                <option
+                                                                    {{ isset($item->role_type) && $item->role_type == 'defendant' ? 'selected' : '' }}
+                                                                    value='defendant'>Defendant</option>
+                                                                <option
+                                                                    {{ isset($item->role_type) && $item->role_type == 'plaintiff' ? 'selected' : '' }}
+                                                                    value='plaintiff'>Plaintiff</option>
+                                                                <option
+                                                                    {{ isset($item->role_type) && $item->role_type == 'witness' ? 'selected' : '' }}
+                                                                    value='witness'>Witness</option>
+                                                                <option
+                                                                    {{ isset($item->role_type) && $item->role_type == 'deponent' ? 'selected' : '' }}
+                                                                    value='deponent'>Deponent</option>
                                                             </select>
                                                         </td>
                                                         <td class='col-3'>
@@ -943,7 +1037,7 @@
                                                                 placeholder="{{ $str }}"
                                                                 value="{{ $item->agent }}">
                                                         </td>
-                                                        <td class='col-6'>
+                                                        <td class='col-1'>
                                                             <div class='btnsct'><a href='javascript:void(0)'
                                                                     class='pencl'
                                                                     style='background-color: red; color:white;'
@@ -1610,7 +1704,8 @@
                                                                                             id="business_type_{{ session('order_id') }}__{{ $index }}">
                                                                                             <option
                                                                                                 {{ json_decode($c_d->type)[$index] == 'Residence' ? 'selected' : '' }}
-                                                                                                value="Residence">Residence
+                                                                                                value="Residence">
+                                                                                                Residence
                                                                                             </option>
                                                                                             <option
                                                                                                 {{ json_decode($c_d->type)[$index] == 'Business' ? 'selected' : '' }}

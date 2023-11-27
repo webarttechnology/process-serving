@@ -960,23 +960,24 @@ $(document).ready(function (e) {
       success: (response) => {
         console.log(response);
         if (response.status) {
-          $("#editpartyp").modal("toggle");
-          $("#party_tbody").append(
-            "<tr class='text-center'><td><input onclick='leadClientChange(this, event, " +
-              response.data.id +
-              ")' type='checkbox' " +
-              (response.data.l_client === "yes" ? "checked disabled" : "") +
-              "></td><td>" +
-              response.data.name +
-              "</td><td>" +
-              response.data.role +
-              "</td><td><div class='btnsct'><a href='javascript:void(0)' onclick='edit_party(" +
-              response.data.id +
-              ")' class='pencl'><i class='fa fa-pencil' ></i></a><a href='javascript:void(0)' class='crss' onclick='del_party(" +
-              response.data.id +
-              ")'><i class='fa fa-times'></i></a></div></td></tr>"
-          );
+          // $("#editpartyp").modal("toggle");
+          // $("#party_tbody").append(
+          //   "<tr class='text-center'><td><input onclick='leadClientChange(this, event, " +
+          //     response.data.id +
+          //     ")' type='checkbox' " +
+          //     (response.data.l_client === "yes" ? "checked disabled" : "") +
+          //     "></td><td>" +
+          //     response.data.name +
+          //     "</td><td>" +
+          //     response.data.role +
+          //     "</td><td><div class='btnsct'><a href='javascript:void(0)' onclick='edit_party(" +
+          //     response.data.id +
+          //     ")' class='pencl'><i class='fa fa-pencil' ></i></a><a href='javascript:void(0)' class='crss' onclick='del_party(" +
+          //     response.data.id +
+          //     ")'><i class='fa fa-times'></i></a></div></td></tr>"
+          // );
           toastr.success("Party Updated");
+          window.location.reload();
         } else {
           var str = "";
           $.each(response.errors, function (fieldName, errorMessages) {
@@ -1133,6 +1134,47 @@ function del_party(id) {
 
 function addNewPartyToServe(elm) {
   elementToUpdateServe = elm;
+  let _token = $("input[name=_token]").val();
+  $.ajax({
+    url: "check_party/" + $(elm).val(),
+    type: "GET",
+    data: {
+      _token: _token,
+    },
+    success: function (response) {
+      if (response) {
+        $(elm).parent().next().next().find("select").val("-");
+        $(elm).parent().next().next().next().find("input").val("");
+
+        console.log($(elm).parent().next().next());
+        if (response.role_type != null) {
+          $(elm)
+            .parent()
+            .parent()
+            .find(".servee-role-type select")
+            .val(response.role_type)
+            .prop("disabled", true);
+        } else {
+          $(elm)
+            .parent()
+            .parent()
+            .find(".servee-role-type select")
+            .prop("disabled", false);
+        }
+      }
+    },
+    error: function (xhr, status, error) {
+      $(elm)
+        .parent()
+        .parent()
+        .find(".servee-role-type select")
+        .prop("disabled", false);
+
+      $(elm).parent().next().next().find("select").val("-");
+      $(elm).parent().next().next().next().find("input").val("");
+    },
+  });
+
   if ($(elm).val() == "new") {
     add_free_serve();
   }
@@ -1142,6 +1184,16 @@ $(document).ready(function () {
     selectElementObj.select2({
       tags: true,
       selectOnClose: true,
+    });
+
+    selectElementObj.on("select2:select", function (e) {
+      // Triggered when a tag is selected (existing or newly created)
+      var selectedTag = e.params.data.text;
+
+      addNewPartyToServe(this);
+
+      // Run your custom function here with the selectedTag
+      // Example: customFunction(selectedTag);
     });
   }
 
@@ -1164,7 +1216,7 @@ $(document).ready(function () {
         var html =
           "<tr id='serve_row_" +
           i +
-          "'><td><select class='form-control serve-party-name' onChange='addNewPartyToServe(this)'  name='party[]'><option value='-'>Select...</option>  @php $par = DB::table('parties')->get(); @endphp @foreach ($par as $pars) <option value='{{ $pars->name }}'>{{ $pars->name }}</option>@endforeach</select></td><td><select onChange='roleChangeUpdate(this)' class='form-control role-select' name='role[]'><option value='-'>Select...</option><option value='Association or Partnership'>Association or Partnership</option><option value='Authorized Person'>Authorized Person</option><option value='Business Organization, Form Unknown'>Business Organization, Form Unknown</option><option value='Corporation'>Corporation</option><option value='Defunct Corporation'>Defunct Corporation</option><option value='Estate'>Estate</option><option value='Fictitious'>Fictitious</option><option value='Individual'>Individual</option><option value='Joint Stock Company/Association'>Joint Stock Company/Association</option><option value='Minor'>Minor</option><option value='Occupant Prejudgment Claim'>Occupant Prejudgment Claim</option><option value='Public Entity'>Public Entity</option><option value='Sole Proprietorship'>Sole Proprietorship</option><option value='Trust'>Trust</option></select></td><td><input type='text' class='form-control' name='agent[]' placeholder='Registered Agent'></td><td width='5%'><div class='btnsct'><a href='javascript:void(0)' class='pencl' style='background-color: red; color:white;' onclick='remove_more(" +
+          "'><td><select class='form-control serve-party-name'   name='party[]'><option value='-'>Select...</option>  @php $par = DB::table('parties')->get(); @endphp @foreach ($par as $pars) <option value='{{ $pars->name }}'>{{ $pars->name }}</option>@endforeach</select></td><td class='servee-role-type'><select class='form-control' name='servee_role_type[]'><option value='defendant'>Defendant</option><option value='plaintiff' >Plaintiff</option><option value='witness'>Witness</option><option value='deponent'>Deponent</option></select></td><td><select onChange='roleChangeUpdate(this)' class='form-control role-select' name='role[]'><option value='-'>Select...</option><option value='Association or Partnership'>Association or Partnership</option><option value='Authorized Person'>Authorized Person</option><option value='Business Organization, Form Unknown'>Business Organization, Form Unknown</option><option value='Corporation'>Corporation</option><option value='Defunct Corporation'>Defunct Corporation</option><option value='Estate'>Estate</option><option value='Fictitious'>Fictitious</option><option value='Individual'>Individual</option><option value='Joint Stock Company/Association'>Joint Stock Company/Association</option><option value='Minor'>Minor</option><option value='Occupant Prejudgment Claim'>Occupant Prejudgment Claim</option><option value='Public Entity'>Public Entity</option><option value='Sole Proprietorship'>Sole Proprietorship</option><option value='Trust'>Trust</option></select></td><td><input type='text' class='form-control' name='agent[]' placeholder='Registered Agent'></td><td width='5%'><div class='btnsct'><a href='javascript:void(0)' class='pencl' style='background-color: red; color:white;' onclick='remove_more(" +
           i +
           ")'><i class='fa fa-times' aria-hidden='true'></i></a></div></td></tr>";
         $("#serve_table").append(html);

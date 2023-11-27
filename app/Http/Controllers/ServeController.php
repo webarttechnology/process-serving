@@ -17,14 +17,14 @@ class ServeController extends Controller
 
         $order = order::find(session('order_id'));
         $order->step = 3;
-        
-        
+
+
         // DB::table('orders')
         //         ->where('order_id', session('order_id'))
         //         ->update([
         //             'step' => 3
         //         ]);
-        
+
         $insertedData = [];
         if ($req->input('doc_check') === 'yes') {
             $req->session()->put('doc_check', true);
@@ -33,7 +33,7 @@ class ServeController extends Controller
             $req->session()->forget('doc_check');
             $order->doc_check = 0;
         }
-        
+
         if ($req->input('service_check') === 'yes') {
             $req->session()->put('service_check', true);
             $order->service_check = 1;
@@ -41,7 +41,7 @@ class ServeController extends Controller
             $req->session()->forget('service_check', true);
             $order->service_check = 0;
         }
-        
+
         if ($req->input('add_check') === 'yes') {
             $req->session()->put('add_check', true);
             $order->add_check = 1;
@@ -52,14 +52,13 @@ class ServeController extends Controller
 
         $order->save();
         foreach ($req->input('party') as $index => $value) {
-            
+
             $checkNewParty = party::where('order_id', session('order_id'))
                 ->where('case_no', session('case_id'))
                 ->where('name', $req->input('party')[$index])
                 ->first();
 
-            if( !$checkNewParty )
-            {
+            if (!$checkNewParty) {
                 $newServe = party::create([
                     'order_id' => session('order_id'),
                     'case_no' => session('case_id'),
@@ -67,7 +66,7 @@ class ServeController extends Controller
                     'role' => $req->input('role')[$index]
                 ]);
             }
-            
+
             $existingData = serve::where('order_id', session('order_id'))
                 ->where('p_t_serve', $req->input('party')[$index])
                 ->where('role', $req->input('role')[$index])
@@ -77,6 +76,7 @@ class ServeController extends Controller
                 $newServe = serve::create([
                     'order_id' => session('order_id'),
                     'p_t_serve' => $req->input('party')[$index],
+                    'role_type' => $req->input('servee_role_type')[$index],
                     'role' => $req->input('role')[$index],
                     'agent' => $req->input('agent')[$index],
                     'status' => 0,
@@ -118,7 +118,7 @@ class ServeController extends Controller
         return true;
     }
 
-    public function del_serves( Request $req, $id )
+    public function del_serves(Request $req, $id)
     {
         if ($req->ajax()) {
             $model = serve::find($id);
@@ -142,7 +142,7 @@ class ServeController extends Controller
         $proofArray = $request->input('proof');
         $sInstructionArray = $request->input('s_instruction');
         if (isset($sIdArray)) {
-            $c=1;
+            $c = 1;
             foreach ($sIdArray as $index => $sId) {
                 $record = Serve::find($sId);
                 if ($record) {
@@ -153,7 +153,7 @@ class ServeController extends Controller
                     $record->timezone = $sTzArray[$index];
                     $record->h_date = $hTimeArray[$index];
                     $record->dept = $dptArray[$index];
-                    $record->w_fee = $request->input('w_fee_'.$c);
+                    $record->w_fee = $request->input('w_fee_' . $c);
                     $record->proof = isset($proofArray[$index]) ? $proofArray[$index] : '';
                     $record->s_inst = $sInstructionArray[$index];
                     $record->save();
@@ -161,12 +161,12 @@ class ServeController extends Controller
                 $c++;
             }
         } else {
-            
+
             $c = DB::table('serve_address')
-            ->where('order_id', session('order_id'))
-            ->first();
+                ->where('order_id', session('order_id'))
+                ->first();
             if (isset($c)) {
-                
+
                 DB::table('serve_address')
                     ->where('order_id', session('order_id'))
                     ->update([
@@ -205,7 +205,7 @@ class ServeController extends Controller
         $order = order::find(session('order_id'));
         $order->step = 5;
         $order->save();
-        
+
         return true;
     }
     public function set_session(Request $req)

@@ -60,6 +60,7 @@ Route::controller(PageManageController::class)
         Route::get('get_party_all_c', [PartyController::class, 'get_party_all_c']);
         Route::get('get_party_all', [PartyController::class, 'get_party_all']);
         Route::delete('del_party/{id}', [PartyController::class, 'del_party']);
+        Route::get('check_party/{name}', [PartyController::class, 'check_party']);
         Route::post('order_details', [OrderDetailsController::class, 'order_details']);
         Route::post('final_step', [OrderController::class, 'final_step']);
         Route::post('order_draft', [OrderDetailsController::class, 'order_draft']);

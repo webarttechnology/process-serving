@@ -15,14 +15,15 @@ class PartyController extends Controller
     public function add_party(Request $req)
     {
         if ($req->ajax()) {
-            
+
             $rules = [
                 'p_type' => 'required|in:person,organization',
                 'p_role' => 'required',
+                'role_type' => 'required',
                 'p_fname' => 'required_if:p_type,person',
                 'p_lname' => 'required_if:p_type,person',
                 'p_bcode' => 'required_if:p_lclient,yes',
-                'org_name' => 'required_if:p_type,organization', 
+                'org_name' => 'required_if:p_type,organization',
             ];
 
             $messages = [
@@ -45,6 +46,7 @@ class PartyController extends Controller
             $model->order_id = session('order_id');
             $model->case_no = session('case_id');
             $model->type = $req->input('p_type');
+            $model->role_type = $req->input('role_type');
             $model->role = $req->input('p_role');
             $model->name = $req->input('p_type') == 'person' ? $req->input('p_fname') . ' ' . $req->input('p_mname') . ' ' . $req->input('p_lname') : $req->input('org_name');
             $model->sfx = $req->input('p_sfx');
@@ -52,8 +54,7 @@ class PartyController extends Controller
             $model->b_code = $req->input('p_bcode');
             $model->save();
 
-            if( $req->p_lclient == 'yes' )
-            {
+            if ($req->p_lclient == 'yes') {
                 party::where('case_no', session('case_id'))
                     ->whereNotIn('id', [$model->id])
                     ->update([
@@ -86,21 +87,20 @@ class PartyController extends Controller
         return abort(404);
     }
 
-    public function change_party_lead( Request $req )
+    public function change_party_lead(Request $req)
     {
         if ($req->ajax()) {
 
             $party = party::find($req->party_form_id);
 
-            if( empty($party) ) return false;
+            if (empty($party)) return false;
 
             $order = order::find(session('order_id'));
             $order->l_client = $req->party_form_id;
             $order->b_code = $req->p_bcode;
             $order->save();
 
-            if( $req->change_lead == 'yes' )
-            {
+            if ($req->change_lead == 'yes') {
                 $party->l_client = 'yes';
                 $party->save();
 
@@ -111,8 +111,7 @@ class PartyController extends Controller
                     ]);
             }
 
-            if( $req->change_billing == 'yes' )
-            {
+            if ($req->change_billing == 'yes') {
                 $party->b_code = $req->p_bcode;
                 $party->save();
 
@@ -122,8 +121,18 @@ class PartyController extends Controller
                         'b_code' => '',
                     ]);
             }
-
         }
+    }
+
+    public function check_party($name)
+    {
+        $party = party::where('name', $name)->first();
+
+        if (!empty($party)) {
+            return response()->json($party);
+        }
+
+        return abort(404);
     }
 
     public function add_partyd(Request $req)
@@ -142,10 +151,13 @@ class PartyController extends Controller
     {
         if ($req->ajax()) {
 
+            // var_dump($req->post());
+            // exit;
             $rules = [
                 'pe_type' => 'required|in:person,organization',
                 'pe_role' => 'required',
                 'pe_name' => 'required',
+                'role_type' => 'required',
                 'pe_bcode' => 'required_if:pe_lclient,yes',
             ];
 
@@ -165,22 +177,19 @@ class PartyController extends Controller
                 ]);
             }
 
-            // $id = $req->input('pe_id');
-            $model = new party();
-            $model->order_id = session('order_id');
-            $model->case_no = session('case_id');
-            $model->type = $req->input('pe_type');
+            $id = $req->input('pe_id');
+            $model = party::find($id);
             $model->role = $req->input('pe_role');
+            $model->role_type = $req->input('role_type');
             $model->name = $req->input('pe_name');
             $model->sfx = $req->input('pe_sfx');
             $model->l_client = $req->input('pe_lclient');
             $model->b_code = $req->input('pe_bcode');
             $model->save();
 
-            if( $req->pe_lclient == 'yes' )
-            {
+            if ($req->pe_lclient == 'yes') {
                 party::where('case_no', session('case_id'))
-                    ->whereNotIn('id', [$model->id])
+                    ->whereNotIn('id', [$id])
                     ->update([
                         'l_client' => 'no',
                         'b_code' => '',
@@ -191,7 +200,7 @@ class PartyController extends Controller
                 $order->b_code = $req->pe_bcode;
                 $order->save();
             }
-            
+
             return response()->json([
                 'status' => true,
                 'data' => $model
@@ -209,13 +218,12 @@ class PartyController extends Controller
     {
         $data = [];
 
-        if( !empty(session('case_id')) )
-        {
+        if (!empty(session('case_id'))) {
             $data = DB::table('parties')
-            ->where(['case_no' => session('case_id')])
-            ->get();
+                ->where(['case_no' => session('case_id')])
+                ->get();
         }
-        
+
         return response()->json($data);
     }
     public function get_party_all_c()

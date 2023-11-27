@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class party extends Model
 {
     use HasFactory;
-    protected $fillable = ['order_id', 'case_no', 'type', 'role', 'name', 'sfx', 'l_client', 'b_code'];
+    protected $fillable = ['role_type', 'order_id', 'case_no', 'type', 'role', 'name', 'sfx', 'l_client', 'b_code'];
 }

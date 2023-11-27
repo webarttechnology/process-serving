@@ -83,8 +83,6 @@ class PageManageController extends Controller
                 ->whereNotNull('role')
                 ->get();
         }
-
-
         $s_d = DB::table('serves')
             ->where(['order_id' => session('order_id')])
             ->get();
