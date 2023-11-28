@@ -1,0 +1,33 @@
+.header,
+            .sort-btns {
+                display: inline-block;
+                float: left;
+                cursor: pointer;
+            }
+
+            .sort-btns {
+                width: 10px;
+                margin: 0 0 0 10px;
+            }
+
+            .sort-btns .fa {
+                display: block;
+                font-size: 20px;
+                line-height: 12px;
+                cursor: pointer;
+            }
+
+            @media (max-width: 600px) {
+
+                #demo table {
+                    border: 0;
+                }
+
+                #demo td {
+                    display: block;
+                    width: 94%;
+                    float: left;
+                    border: 0;
+                    padding: 5px 3% 0 3%;
+                }
+            }

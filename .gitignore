@@ -1,2 +1,6 @@
 /vendor
 process-serving.zip
+webservice.zip
+countrywide.zip
+webservice/webservice/error_log
+countrywide/countrywide/error_log

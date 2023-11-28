@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap');
+body {
+  background-color: #f2f5f7;
+  font-family: 'Oxygen', sans-serif;
+  color: #333
+}
+.login_wraper {
+  width: 100%;
+  height: 100vh;
+  background-color: #fff;
+  background-image: url(../images/login_page_bg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right top;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+  overflow-y: auto;
+}
+.login__box{
+  width: 72%;
+  max-width: 720px;
+  position: relative;
+  background: linear-gradient(140deg, #FFFFFF 15%, #0075EA 70%);
+  -moz-background: linear-gradient(140deg, #FFFFFF 15%, #0075EA 70%);
+  -webkit-background: linear-gradient(140deg, #FFFFFF 15%, #0075EA 70%);
+  border: 2px solid rgba(255, 255, 255, 1);
+  box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+}
+.loginbox_left{
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 45px;
+  background: url(../images/loginbox_vector_bg.svg) no-repeat;
+} 
+.login__box h1 {
+  font-weight: 700;
+  font-size: 36px;
+  position: relative;
+  color: #fff
+}
+.login__box h6 {
+  font-weight: 700;
+  font-size: 19px;
+  position: relative;
+  color: #fff
+}
+.loginbox_left img{
+  margin-top: 25px;
+}
+.login__box label {
+  color: #fff;
+  font-weight: 400;
+  text-transform: none;
+  display: block;
+  padding-bottom: 0;
+  font-size: 14px;
+}
+.login__box .lbl-remember{
+  text-decoration: underline;
+}
+.form-check-input {
+  background: rgba(255, 255, 255, 1);
+}
+form {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.inset {
+  padding:70px 50px;
+  background-color: #035FBB;
+  height: 100%;
+}
+
+.inset p {
+  margin: 0
+}
+
+.login__heading {
+  margin-bottom: 40px
+}
+
+
+
+input[type=password],
+input[type=text] {
+  width: 100%;
+  line-height: 46px;
+  padding: 0 10px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #00AEEF;
+}
+
+input[type=password]:focus,
+input[type=text]:focus {
+  border: solid 1px #2692fd;
+  outline: 0
+}
+
+
+input[type=checkbox] {
+  display: inline-block;
+  vertical-align: baseline;
+  height: 16px;
+  width: 16px;
+  margin-right: 10px;
+}
+.log_username, .log_password{
+  position: relative;
+}
+.log_username::before {
+  background-image: url(../images/user-icon-small.svg);
+}
+.log_password::before {
+  background-image: url(../images/password-icon-small.svg);
+}
+.log_username::before, .log_password::before{
+  content: "";
+  width: 20px;
+  height: 18px;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.login__box .form-control{
+  padding-left: 40px;
+}
+.form-control:focus{
+  background-color: #fff;
+  color: #333;
+}
+.button-sty01 {
+  background: #240053;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.09);
+  border-radius: 5px;
+  border: 0;
+  color: #fff;
+  font-size: 18px;
+  justify-content: center;
+  line-height: 1em;
+  padding: 19px 24px;
+  text-decoration: none;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 700;
+}
+
+.button-sty01:active,
+.button-sty01:hover {
+  outline: 0
+}
+
+.tag-line {
+  height: 30px;
+  border-top: 1px solid #aed0ea;
+  border-bottom: 1px solid #aed0ea;
+  background-color: #deedf7
+}
+
+#email_err,
+#password_err {
+  color: red
+}
+
+#invalidlog {
+  font-size: 20px;
+  color: red
+}
+
+.mlogo {
+  text-align: center;
+  padding: 0 50px;
+  margin: 50px 0
+}
+
+.mlogo img {
+  max-width: 380px;
+  width: 100%
+}
+
+.action {
+  text-align: center
+}
+.copyright{position: absolute; width: 100%; text-align: center; bottom: -30px; left: 50%; transform: translateX(-50%);}
+.copyright p{margin: 0; font-size: 14px;}
+
+.action a {
+  margin-top: 15px;
+  font-size: 15px;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+  display: inline-block;
+}
+
+@media screen and (max-width:991.98px){
+  .login_wraper{display: block; padding-top: 50px; padding-bottom: 50px;}
+  .login__box{margin: auto;}
+}
+
+@media screen and (max-width:767.98px){
+  .login__box{width: 90%; margin: auto;}
+  .inset {padding: 50px 35px;}
+  .copyright p{font-size: 12px;}
+}
+@media screen and (max-width:567.98px){
+  .login__box h1 {font-size: 30px;}
+  .login__box h5 {font-size: 18px;}
+}
