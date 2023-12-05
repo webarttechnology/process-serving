@@ -10,6 +10,8 @@ use App\Models\AdminInfo;
 use App\Models\attorny;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
+use SoapClient;
+use SoapFault;
 
 class AdminController extends Controller
 {
@@ -108,29 +110,201 @@ class AdminController extends Controller
 
     public function login(Request $req)
     {
-        if (!App::runningInConsole()) {
-            $res = Admin::where(['email' => $req->post('email')])->first();
-        }
-        if ($res) {
-            if (Hash::check($req->post('password'), $res->password)) {
+        $email = $_POST['email'];
+        $pass = $_POST['password'];
 
-                if ($res->verified) {
+        $validUser = false;
+        $jxml = "<?xml version=\"1.0\" ?>
+            <auth>
+                <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
+                <custid>cw</custid>
+                <func>SEARCHCLIENTS</func>
+                <filters>
+                    <filter>
+                        <param>clients.mainlogin</param>
+                        <qualifier>=</qualifier>
+                        <value>" . $req->post('email') . "</value>
+                    </filter>
+                    <filter>
+                        <param>clients.mainpass</param>
+                        <qualifier>=</qualifier>
+                        <value>" . $req->post('password') . "</value>
+                    </filter>
+                </filters>
+                <agencylogin>1</agencylogin>
+            </auth>";
+
+        $ldserver = "ldmax.loyalpuppy.com";
+
+        $options = array(
+            'cache_wsdl' => 0,
+            'uri' => "urn:ld",
+            'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
+            'trace' => 1,
+            'stream_context' => stream_context_create(array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            ))
+        );
+
+        $user = Admin::where(['email' => $req->post('email')])->with('adminInfo')->first();
+
+        if ($user) {
+            if (Hash::check($req->post('password'), $user->password)) {
+                if ($user->verified) {
+                    $validUser = true;
+                }
+            }
+        }
+
+        try {
+            $client = new SoapClient("https://" . $ldserver . "/doldmaxservices.wsdl", $options);
+            $client->__setLocation("https://" . $ldserver . "/doldmaxservices.php");
+
+            $result = $client->doFunction($jxml);
+            $clientarr = simplexml_load_string($result);
+            $clientarr = json_decode(json_encode($clientarr), true);
+            // var_dump($clientarr);
+            // echo $clientarr['Client']['ClientID'];
+            // exit;
+
+            //print_r($clientarr);
+
+            if (isset($clientarr['Client']['ClientID']) && $clientarr['Client']['ClientID'] != "") {
+
+                if( $validUser )
+                {
+                    $req->session()->put('ClientIDn', $clientarr['Client']['ClientID']);
+                    $req->session()->put('Clientn', $clientarr['Client']['Client']);
+                    $req->session()->put('Emailn', $clientarr['Client']['Email']);
+                    $req->session()->put('Passwordn', $clientarr['Client']['Password']);
                     $req->session()->put('admin_login', true);
-                    $req->session()->put('admin_id', $res->id);
-                    $req->session()->put('admin_name', $res->name);
+                    $req->session()->put('admin_id', $user->id);
+                    $req->session()->put('admin_name', $user->name);
                     return redirect('dashboard');
+                    
                 } else {
-                    $req->session()->flash('error', 'Please verify your email first to login');
+                    $req->session()->flash('error', "You need to register to Process Serving first to login");
+                    return redirect('/');
+                }
+
+            } else if ($validUser) {
+                $options = array(
+                    'cache_wsdl' => 0,
+                    'uri' => "urn:ld",
+                    'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
+                    'trace' => 1,
+                    'stream_context' => stream_context_create(array(
+                        'ssl' => array(
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                            'allow_self_signed' => true
+                        )
+                    ))
+                );
+                $hash = password_hash($user->password, PASSWORD_BCRYPT, $options);
+                $jxml = "<?xml version=\"1.0\" ?>
+                    <auth>
+                            <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
+                            <custid>cw</custid>
+                            <func>ADDNEWCLIENT</func>
+                            <newclientlogin>" . $user->email . "</newclientlogin>
+                            <newclientpassword>" . $pass . "</newclientpassword>
+                            <newclientname>" . $user->name . "</newclientname>
+                            <newclientaddress>" . $user->adminInfo->address . "</newclientaddress>
+                            <newclientaddress1>" . $user->adminInfo->address . "</newclientaddress1>
+                            <newclientcity>" . $user->adminInfo->billing_city . "</newclientcity>
+                            <newclientstate>" . $user->adminInfo->billing_state . "</newclientstate>
+                            <newclientzip>" . $user->adminInfo->zip . "</newclientzip>
+                            <newclientphone>" . $user->phone . "</newclientphone>
+                            <newclientfax></newclientfax>
+                            <newclientemail>" . $user->email . "</newclientemail>
+                            <agencylogin>1</agencylogin>
+                        </auth>";
+
+                    // <auth>
+                    //     <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
+                    //     <custid>cw</custid>
+                    //     <func>ADDNEWCLIENT</func>
+                    //     <newclientlogin>registerworking@yopmail.com</newclientlogin>
+                    //     <newclientpassword>123456</newclientpassword>
+                    //     <newclientname>Countrywide Test</newclientname>
+                    //     <newclientaddress>Agarpara, South Station Road</newclientaddress>
+                    //     <newclientaddress1>Agarpara, South Station Road</newclientaddress1>
+                    //     <newclientcity>Kolkata</newclientcity>
+                    //     <newclientstate>West Bengal</newclientstate>
+                    //     <newclientzip>700109</newclientzip>
+                    //     <newclientphone>1233456678</newclientphone>
+                    //     <newclientfax></newclientfax>
+                    //     <newclientemail>registerworking@yopmail.com</newclientemail>
+                    //     <agencylogin>1</agencylogin>
+                    // </auth>";
+
+                try {
+                    $client = new SoapClient("https://" . $ldserver . "/doldmaxservices.wsdl", $options);
+                    $client->__setLocation("https://" . $ldserver . "/doldmaxservices.php");
+
+                    $result1 = $client->doFunction($jxml);
+                    $resxml = simplexml_load_string($result1);
+                    $resxml = json_decode(json_encode($resxml), true);
+                    // echo $resxml->ClientID;exit;
+
+                    if($resxml['Code'] != 'FAIL' )
+                    {
+                        $req->session()->put('ClientIDn', $resxml['ClientID']);
+                        $req->session()->put('Clientn', $user->name);
+                        $req->session()->put('Emailn', $user->email);
+                        $req->session()->put('Passwordn', $pass);
+                        $req->session()->put('admin_login', true);
+                        $req->session()->put('admin_id', $user->id);
+                        $req->session()->put('admin_name', $user->name);
+    
+                        return redirect('dashboard');
+                    }
+                    $req->session()->flash('error', $resxml['Detail']);
+                    return redirect('/');
+
+                } catch (SoapFault $fault) {
+
+                    // dd(1, $fault);
+                    $req->session()->flash('error', "SOAP Fault:<br />fault code: {$fault->faultcode}, fault string: {$fault->faultstring}");
                     return redirect('/');
                 }
             } else {
-                $req->session()->flash('error', 'Aww ! Enter Valid Password.');
+                $req->session()->flash('error', "Please enter valid credentials");
                 return redirect('/');
             }
-        } else {
-            $req->session()->flash('error', 'Aww ! Enter Valid Email.');
+        } catch (SoapFault $fault) {
+            $req->session()->flash('error', "SOAP Fault:<br />fault code: {$fault->faultcode}, fault string: {$fault->faultstring}");
             return redirect('/');
         }
+
+        // if (!App::runningInConsole()) {
+        // $res = Admin::where(['email' => $req->post('email')])->first();
+        // }
+        // if ($res) {
+        // if (Hash::check($req->post('password'), $res->password)) {
+
+        // if ($res->verified) {
+        // $req->session()->put('admin_login', true);
+        // $req->session()->put('admin_id', $res->id);
+        // $req->session()->put('admin_name', $res->name);
+        // return redirect('dashboard');
+        // } else {
+        // $req->session()->flash('error', 'Please verify your email first to login');
+        // return redirect('/');
+        // }
+        // } else {
+        // $req->session()->flash('error', 'Aww ! Enter Valid Password.');
+        // return redirect('/');
+        // }
+        // } else {
+        // $req->session()->flash('error', 'Aww ! Enter Valid Email.');
+        // return redirect('/');
+        // }
     }
 
     public function update_password_info(Request $req)

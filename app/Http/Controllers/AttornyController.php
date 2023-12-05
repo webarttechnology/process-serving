@@ -9,6 +9,8 @@ use App\Models\attorny;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use SoapClient;
+use SoapFault;
 
 class AttornyController extends Controller
 {
@@ -111,6 +113,56 @@ class AttornyController extends Controller
         Mail::send('client.mail.welcome', ['type' => 'Attorney', 'pass' => $req->pass, 'name' => $req->fname . ' ' . $req->lname, 'email' => $req->email], function ($message) use ($req) {
             $message->to($req->email)->subject("Welcome to Countrywide Process");
         });
+
+        $jxml = "<?xml version=\"1.0\" ?>
+    <auth>
+        <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
+        <custid>cw</custid>
+        <func>ADDNEWATTORNEY</func>
+        <clientid>" . session('ClientIDn') . "</clientid>
+        <newattorneyname>" . $data['name'] . "</newattorneyname>
+        <newattorneybarnum>" . $data['b_id'] . "</newattorneybarnum>
+        <newattorneyemail>" . $data['email'] . "</newattorneyemail>
+        <newattorneyaddress>" . $data['street_address'] . "</newattorneyaddress>
+        <newattorneycity>" . $data['city'] . "</newattorneycity>
+        <newattorneystate>" . $data['state'] . "</newattorneystate>
+        <newattorneyzip>" . $data['zip'] . "</newattorneyzip>
+        <newattorneyphone>" . $data['phone'] . "</newattorneyphone>
+        <agencylogin>1</agencylogin>
+    </auth>";
+
+        $ldserver = "ldmax.loyalpuppy.com";
+
+        $options = array(
+            'cache_wsdl' => 0,
+            'uri' => "urn:ld",
+            'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
+            'trace' => 1,
+            'stream_context' => stream_context_create(array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            ))
+        );
+
+        try {
+            $client = new SoapClient("https://" . $ldserver . "/doldmaxservices.wsdl", $options);
+            $client->__setLocation("https://" . $ldserver . "/doldmaxservices.php");
+
+            $result = $client->doFunction($jxml);
+            $resxml = simplexml_load_string($result);
+            $resxml = json_decode(json_encode($resxml), true);
+
+            $data['api_response'] = $resxml;
+        } catch (SoapFault $fault) {
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'message' => "SOAP Fault:<br />fault code: {$fault->faultcode}, fault string: {$fault->faultstring}"
+            ]);
+        }
 
         return response()->json([
             'status' => true,

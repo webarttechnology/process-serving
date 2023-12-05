@@ -155,38 +155,6 @@ class PageManageController extends Controller
                 'caseId' => $case['id']
             ];
         }
-
-        function arrayToXml($data, &$xmlData)
-        {
-            foreach ($data as $key => $value) {
-                if (is_array($value)) {
-                    if (is_numeric($key)) {
-                        // If the key is numeric, use a generic item name
-                        $key = 'item';
-                    }
-                    $subnode = $xmlData->addChild($key);
-                    arrayToXml($value, $subnode);
-                } else {
-                    $xmlData->addChild("$key", htmlspecialchars("$value"));
-                }
-            }
-        }
-
-
-        // Create a new SimpleXMLElement
-        $xmlData = new SimpleXMLElement('<cases/>');
-
-        // Call the function to convert the PHP array to XML
-        arrayToXml($data, $xmlData);
-
-        // Format the XML for readability
-        $dom = new DOMDocument('1.0');
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        $dom->loadXML($xmlData->asXML());
-        echo $dom->saveXML();
-        exit;
-
         return view('client.pending_order', compact('orders'));
     }
 
