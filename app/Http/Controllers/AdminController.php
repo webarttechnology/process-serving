@@ -27,10 +27,18 @@ class AdminController extends Controller
 
     public function update_payment_method(Request $request)
     {
-        $admin = admin::find($request->owner_id);
+
+        $userInfo = admin::with('adminInfo')->find(session('admin_id'));
+
+        if ($userInfo->role == 'owner_admin' || $userInfo->role == 'Admin') {
+            $admin = AdminInfo::where('admin_id', $userInfo->id);
+        } else {
+            $admin = AdminInfo::where('admin_id', $userInfo->owner_id);
+        }
 
         $admin->update([
-            'payment_token' => $request->payment_token
+            'payment_token' => $request->payment_token,
+            'stax_customer_id' => $request->stax_customer_id
         ]);
 
         return redirect('/settings');
@@ -174,7 +182,7 @@ class AdminController extends Controller
             //print_r($clientarr);
 
             if (isset($clientarr['Client']['ClientID']) && $clientarr['Client']['ClientID'] != "") {
-
+                
                 if( $validUser )
                 {
                     $req->session()->put('ClientIDn', $clientarr['Client']['ClientID']);

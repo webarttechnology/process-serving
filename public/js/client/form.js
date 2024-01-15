@@ -292,6 +292,10 @@ $(document).ready(function () {
         class="form-control my-2 ml-2 col-sm-5"
         id="address_${id}_${addressVal}"
         placeholder="Address">
+        <input type="hidden" name="state[${id}][]" id="state${id}_${addressVal}" >
+        <input type="hidden" name="city[${id}][]" id="city${id}_${addressVal}" >
+        <input type="hidden" name="zip[${id}][]" id="zip${id}_${addressVal}" >
+        <input type="hidden" name="unit[${id}][]" id="unit${id}_${addressVal}" >
         <a href="#!" class="col-sm-1 text-right ml-auto" onclick="removeAddress(this, event)" style="color: #000"><i class="fa fa-times" aria-hidden="true"></i></a>
       </div>
     `);
@@ -307,16 +311,20 @@ $(document).ready(function () {
     str += $("#addressFull").val();
 
     if ($("#unitSuite").val() != "") {
+      $(currentElm).next().next().next().next().val($("#unitSuite").val());
       str += ", " + $("#unitSuite").val();
     }
 
     if ($("#cityAddress").val() != "") {
+      $(currentElm).next().next().val($("#cityAddress").val());
       str += ", " + $("#cityAddress").val();
     }
 
     str += ", " + $("#stateAddress").val();
+    $(currentElm).next().val($("#stateAddress").val());
 
     if ($("#zipAddress").val() != "") {
+      $(currentElm).next().next().next().val($("#zipAddress").val());
       str += ", " + $("#zipAddress").val();
     }
 
@@ -1183,6 +1191,28 @@ function addNewPartyToServe(elm) {
   }
 }
 $(document).ready(function () {
+  $("#p_role").on("change", function (e) {
+    if ($(this).val() == "Defendant") {
+      $('input[name="role_type"][value="defendant"]').prop("checked", true);
+      $('input[name="role_type"]').prop("readonly", true);
+    }
+
+    else if ($(this).val() == "Plaintiff") {
+      $('input[name="role_type"]').prop("readonly", true);
+      $('input[name="role_type"][value="plaintiff"]').prop("checked", true);
+    }
+     else {
+      $('input[name="role_type"]').prop("readonly", false);
+     }
+
+    
+  });
+
+  $(".dynamic_se").select2({
+    tags: true,
+    selectOnClose: true,
+  });
+
   function initializeSelect2(selectElementObj) {
     selectElementObj.select2({
       tags: true,
@@ -1679,8 +1709,9 @@ $(document).ready(function (e) {
       url: "final_step",
       data: form,
       success: (response) => {
-        window.location.reload();
+        // window.location.reload();
       },
+      error: () => {},
     });
   });
 });

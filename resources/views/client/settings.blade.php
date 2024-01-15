@@ -198,6 +198,7 @@
         <div class="modal-dialog " role="document">
             <div class="modal-content">
                 <form method="post" id="payment-type-form" action="{{ url('update_payment_method') }}">
+                    @csrf
                     <input type="hidden" name="payment_token" id="payment_token">
                     <input type="hidden" name="stax_customer_id" id="stax_customer_id">
                     <input type="hidden" name="owner_id" id="owner_id" {{ $ownerId }}>
@@ -378,7 +379,7 @@
             }
         });
 
-        var staxjs = new StaxJs("Sayandip-7e0bc1aa119c", {
+        var staxjs = new StaxJs("Kolkata-676a5b21ba31", {
             number: {
                 id: 'card-number', // the html id of the div you want to contain the credit card number field
                 placeholder: '0000 0000 0000 0000', // the placeholder the field should contain
@@ -467,9 +468,7 @@
                     if (result) {
                         $("#payment_token").val(result.id);
                         $("#stax_customer_id").val(result.customer_id);
-                        console.log(result);
-                        // form.submit();
-                        window.location.reload();
+                        form.submit();
                     }
                 })
                 .catch((err) => {

@@ -82,20 +82,20 @@
                                                         <select required class=" form-control jur_select"
                                                             <?php echo null !== session('case_id') ? 'disabled' : ''; ?> name="c_ju">
                                                             <option value="default">Select...</option>
-                                                            @foreach ($jur as $item)
+                                                            @foreach ($jur->Court as $item)
                                                                 @if (isset($ca))
-                                                                    @if ($ca->jurisdiction == $item->court_name)
-                                                                        <option selected value="{{ $item->court_name }}">
-                                                                            {{ $item->court_name }}
+                                                                    @if ($ca->jurisdiction == $item->CourtID)
+                                                                        <option selected value="{{ $item->CourtID }}">
+                                                                            {{ $item->Court }}
                                                                         </option>
                                                                     @else
-                                                                        <option value="{{ $item->court_name }}">
-                                                                            {{ $item->court_name }}
+                                                                        <option value="{{ $item->CourtID }}">
+                                                                            {{ $item->Court }}
                                                                         </option>
                                                                     @endif
                                                                 @else
-                                                                    <option value="{{ $item->court_name }}">
-                                                                        {{ $item->court_name }}
+                                                                    <option value="{{ $item->CourtID }}">
+                                                                        {{ $item->Court }}
                                                                     </option>
                                                                 @endif
                                                             @endforeach
@@ -118,7 +118,7 @@
                                     <thead class="txtryt text-capitalize">
                                         <tr>
                                             <th>
-                                                <h4>Proof of Service Information</h4>
+                                                <h4>Add Attorney (Info Used for Proof of Service)</h4>
                                             </th>
                                             <th width="5%">
                                                 <div class="btnsct">
@@ -739,8 +739,8 @@
                                     <tr class="text-center">
                                         <th class="col-1">Lead Client</th>
                                         <th class="col-5">Name</th>
-                                        <th class="col-4">Role Type</th>
-                                        <th class="col-4">Role</th>
+                                        <th class="col-4">Case Role</th>
+                                        <th class="col-4">Service Role</th>
                                         <th class="col-2">Action</th>
                                     </tr>
                                 </thead>
@@ -1085,7 +1085,7 @@
                                         same documents.</label>
                                 </div>
 
-                                <div class="col-md-12 ml-5 mb-2">
+                                {{-- <div class="col-md-12 ml-5 mb-2">
                                     @if (session('add_check'))
                                         <input class="form-check-input" type="checkbox" name="add_check" value="yes"
                                             checked>
@@ -1096,7 +1096,7 @@
                                     <label class="form-check-label" for="inlineCheckbox3">Check to serve all parties at
                                         the
                                         same address.</label>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-12 ml-5 mb-2">
                                     <input class="form-check-input" type="checkbox" id="servInfoCheck3" name="check_3"
                                         onclick="displayServiceInfo()">
@@ -1728,6 +1728,12 @@
                                                                                             value="{{ $address }}"
                                                                                             oninput="addressVal('#address_{{ session('order_id') }}')"
                                                                                             placeholder="Address">
+                                                                                        <input type="hidden" name="">
+
+                                                                                        <input type="hidden" value="{{ json_decode($c_d->state)[$index] }}" name="state[{{ session('order_id') }}][]" >
+                                                                                        <input type="hidden" value="{{ json_decode($c_d->city)[$index] }}" name="city[{{ session('order_id') }}][]" >
+                                                                                        <input type="hidden" value="{{ json_decode($c_d->zip)[$index] }}" name="zip[{{ session('order_id') }}][]" >
+                                                                                        <input type="hidden" value="{{ json_decode($c_d->unit)[$index] }}" name="unit[{{ session('order_id') }}][]" >
 
                                                                                         @if ($index > 0)
                                                                                             <a href="#!"
@@ -1765,6 +1771,11 @@
                                                                                         class="form-control my-2 ml-2 col-sm-5"
                                                                                         id="address_{{ session('order_id') }}"
                                                                                         placeholder="Address">
+
+                                                                                    <input type="hidden" name="state[{{ session('order_id') }}][]" >
+                                                                                    <input type="hidden" name="city[{{ session('order_id') }}][]" >
+                                                                                    <input type="hidden" name="zip[{{ session('order_id') }}][]" >
+                                                                                    <input type="hidden" name="unit[{{ session('order_id') }}][]" >
                                                                                 </div>
                                                                             @endif
                                                                         </div>
@@ -1987,7 +1998,10 @@
                                                                                                 value="{{ $address }}"
                                                                                                 placeholder="Address">
 
-
+                                                                                            <input type="hidden" value="{{ json_decode($item->state)[$index] }}" name="state[{{ $item->id }}][]" >
+                                                                                            <input type="hidden" value="{{ json_decode($item->city)[$index] }}" name="city[{{ $item->id }}][]" >
+                                                                                            <input type="hidden" value="{{ json_decode($item->zip)[$index] }}" name="zip[{{ $item->id }}][]" >
+                                                                                            <input type="hidden" value="{{ json_decode($item->unit)[$index] }}" name="unit[{{ $item->id }}][]" >
                                                                                             @if ($index > 0)
                                                                                                 <a href="#!"
                                                                                                     class="col-sm-1 text-right ml-auto"
@@ -2025,6 +2039,10 @@
                                                                                             id="address_{{ $item->id }}"
                                                                                             placeholder="Address">
 
+                                                                                            <input type="hidden" name="state[{{ $item->id }}][]" >
+                                                                                            <input type="hidden" name="city[{{ $item->id }}][]" >
+                                                                                            <input type="hidden" name="zip[{{ $item->id }}][]" >
+                                                                                            <input type="hidden" name="unit[{{ $item->id }}][]" >
                                                                                     </div>
                                                                                 @endif
                                                                             </div>
@@ -2262,6 +2280,7 @@
                                                 <ul class="rediolist">
                                                     <input type="hidden" name="attempt_type[]"
                                                         id="attempt_type_{{ $index }}">
+
                                                     <li>
                                                         <label class="radio">
                                                             <input required data-type="routine"
@@ -2270,9 +2289,10 @@
                                                                 value="{{ date('d-m-Y g:i a', strtotime('+ 72 hours')) }}">
                                                             <strong>Routine Service</strong> Attempt by
                                                             <strong>{{ date('l g:i a', strtotime('+ 72 hours')) }}</strong>
-                                                            for $75
+                                                            for $65
                                                         </label>
                                                     </li>
+
                                                     <li>
                                                         <label class="radio">
                                                             <input required data-type="priority"
@@ -2281,9 +2301,10 @@
                                                                 value="{{ date('d-m-Y g:i a', strtotime('+ 48 hours')) }}">
                                                             <strong>Priority Service</strong> Attempt by
                                                             <strong>{{ date('l g:i a', strtotime('+ 48 hours')) }}</strong>
-                                                            for $100
+                                                            for $75
                                                         </label>
                                                     </li>
+
                                                     <li>
                                                         <label class="radio">
                                                             <input required data-type="urgent"
@@ -2295,6 +2316,7 @@
                                                             for $125
                                                         </label>
                                                     </li>
+
                                                     <li>
                                                         <label class="radio">
                                                             <input required data-type="on demand"
@@ -2304,7 +2326,7 @@
                                                             <strong>On Demand Service</strong> Attempt by
                                                             <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong>
                                                             for
-                                                            $175
+                                                            $195
                                                         </label>
                                                     </li>
                                                 </ul>
@@ -2325,7 +2347,7 @@
                                                                     value="{{ date('d-m-Y g:i a', strtotime('+ 72 hours')) }}">
                                                                 <strong>Routine Service</strong> Attempt by
                                                                 <strong>{{ date('l g:i a', strtotime('+ 72 hours')) }}</strong>
-                                                                for $75
+                                                                for $65
                                                             </label>
                                                         </li>
                                                         <li>
@@ -2337,7 +2359,7 @@
                                                                     value="{{ date('d-m-Y g:i a', strtotime('+ 48 hours')) }}">
                                                                 <strong>Priority Service</strong> Attempt by
                                                                 <strong>{{ date('l g:i a', strtotime('+ 48 hours')) }}</strong>
-                                                                for $100
+                                                                for $75
                                                             </label>
                                                         </li>
                                                         <li>
@@ -2362,7 +2384,7 @@
                                                                 <strong>On Demand Service</strong> Attempt by
                                                                 <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong>
                                                                 for
-                                                                $175
+                                                                $195
                                                             </label>
                                                         </li>
                                                     </ul>

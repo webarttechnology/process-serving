@@ -31,6 +31,7 @@ Route::controller(PageManageController::class)
         Route::get('settings', 'settings');
         Route::post('update_payment_method', [AdminController::class, 'update_payment_method'])->name('update_payment_method');
         Route::get('reset_order', [OrderController::class, 'reset_order'])->name('reset_order');
+        Route::get('order_details/{id}', [OrderController::class, 'order_details_view'])->name('order_details_view');
         Route::get('add_case_prev_step', [CcaseController::class, 'previous_step']);
         Route::get('place-order', 'place_order');
         Route::post('update_account_info', [AdminController::class, 'update_info']);
@@ -77,6 +78,8 @@ Route::controller(PageManageController::class)
         Route::get('delete-user/{id}', [UserController::class, 'delete_users'])->name('delete_users');
         Route::get('account-details/{id}', [UserController::class, 'userDetails'])->name('userDetails');
         Route::post('invite-user', [UserController::class, 'inviteUser'])->name('inviteUser');
+
+        Route::get('charge-job/{id}/{amount}', [OrderController::class, 'chargeJob'])->name('chargeJob');
     });
 
 Route::get('email-verify/{id}', [AdminController::class, 'verify']);

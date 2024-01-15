@@ -76,13 +76,8 @@ class AttornyController extends Controller
             'email' => $req->input('email'),
             'phone' => $req->input('phone'),
         ]);
-
-        // AdminInfo::create([
-        //     'admin_id' => $admin->id,
-
-        // ]);
-
-        attorny::create([
+        
+        $attorney = attorny::create([
             'admin_id' => $admin->id,
             'owner_id' => session('admin_id'),
             'temp_password' => $req->input('pass'),
@@ -155,13 +150,22 @@ class AttornyController extends Controller
             $resxml = simplexml_load_string($result);
             $resxml = json_decode(json_encode($resxml), true);
 
+            preg_match('/ID=(\d+)/', $resxml['Detail'], $matches);
+            $ldmaxId = $matches[1];
+
+            $query = attorny::find($attorney->id);
+            $query->ldmax_id = $ldmaxId;
+            $query->save();
+
             $data['api_response'] = $resxml;
         } catch (SoapFault $fault) {
+
             return response()->json([
                 'status' => true,
                 'data' => $data,
                 'message' => "SOAP Fault:<br />fault code: {$fault->faultcode}, fault string: {$fault->faultstring}"
             ]);
+            
         }
 
         return response()->json([

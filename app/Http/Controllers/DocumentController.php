@@ -31,6 +31,7 @@ class DocumentController extends Controller
                     $model = new document();
                     $model->order_id = session('order_id');
                     $model->case_no = session('case_id');
+                    $model->servee_id = $req->post('s_id')[$index];
                     if (isset($req->post('s_id')[$index])) {
                         $model->s_no = $req->post('s_id')[$index];
                     }

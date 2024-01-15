@@ -22,7 +22,7 @@
                                                         <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                             rowspan="1" colspan="1"
                                                             aria-label="Purchased On: activate to sort column ascending">
-                                                            Order #</th>
+                                                            Case ID #</th>
                                                         <th class="sorting" tabindex="0" aria-controls="order-listing"
                                                             rowspan="1" colspan="1"
                                                             aria-label="Customer: activate to sort column ascending">Order
@@ -39,10 +39,61 @@
                                                             rowspan="1" colspan="1"
                                                             aria-label="Status: activate to sort column ascending">Status
                                                         </th>
+                                                        <th class="sorting" tabindex="0" aria-controls="order-listing"
+                                                            rowspan="1" colspan="1"
+                                                            aria-label="Action">Action
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($orders as $order)
+                                                    @foreach ( $resxml['Case'] as $order )
+                                                    @php if( empty($order['orderInfo']) ) continue; @endphp
+                                                        <tr class="odd">
+                                                            <td>{{ $order['orderInfo']->updated_at }}</td>
+                                                            <td>{{$order['CaseID']}}</td>
+                                                            <td>
+                                                                <div class="mb-1">
+                                                                    @if (is_array(json_decode($order['orderInfo']->attempt_type, true)))
+                                                                        @foreach (json_decode($order['orderInfo']->attempt_type, true) as $index => $type)
+                                                                        @php
+                                                                            $time = json_decode($order['orderInfo']->attempt_time, true);
+                                                                        @endphp
+                                                                            <strong style="text-transform: capitalize">
+                                                                                {{ $type }} Service
+                                                                            </strong>
+                                                                            <div>{{ $time[$index] }}</div>
+                                                                            <br>
+                                                                        @endforeach
+                                                                    @else
+                                                                        <strong style="text-transform: capitalize">
+                                                                            {{ $order['orderInfo']->attempt_type }}
+                                                                        </strong>
+                                                                        <div>{{ $order['orderInfo']->attempt_time }}</div>
+                                                                    @endif
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div>
+                                                                    <strong>{{ isset($order['orderInfo']->case->case_title) ? $order['orderInfo']->case->case_title : '' }}</strong>
+                                                                </div>
+                                                                <div>
+                                                                    {{ isset($order['orderInfo']->case->case_no) ? $order['orderInfo']->case->case_no : '' }}
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div>{{ $order['Court'] }}</div>
+                                                            </td>
+                                                            <td>
+                                                                <a href="pending-inrpg.html"> <label
+                                                                        class="badge badge-danger">Pending</label></a>
+                                                            </td>
+                                                            <td>
+                                                                <a href="{{ route('order_details_view', $order['CaseID']) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+
+                                                    {{-- @foreach ($orders as $order)
                                                         <tr class="odd">
                                                             <td><a
                                                                     href="pending-inrpg.html">{{ date('m-d-y', strtotime($order->updated_at)) }}</a>
@@ -85,7 +136,7 @@
                                                                         class="badge badge-danger">Pending</label></a>
                                                             </td>
                                                         </tr>
-                                                    @endforeach
+                                                    @endforeach --}}
                                                 </tbody>
                                             </table>
                                         </div>

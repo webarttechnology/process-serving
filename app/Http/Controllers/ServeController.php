@@ -134,6 +134,10 @@ class ServeController extends Controller
         $sIdArray = $request->input('s_id_s');
         $sAddArray = $request->input('s_add');
         $sNameArray = $request->input('s_add_business_name');
+        $sStateArray = $request->input('state');
+        $sUnitArray = $request->input('unit');
+        $sZipArray = $request->input('zip');
+        $sCityArray = $request->input('city');
         $sTypeArray = $request->input('business_type');
         $sTzArray = $request->input('s_t_z');
         $hTimeArray = $request->input('h_time');
@@ -150,6 +154,10 @@ class ServeController extends Controller
                     $record->address = json_encode($sAddArray[$sId]);
                     $record->type = json_encode($sTypeArray[$sId]);
                     $record->business_name = json_encode($sNameArray[$sId]);
+                    $record->state = json_encode($sStateArray[$sId]);
+                    $record->unit = json_encode($sUnitArray[$sId]);
+                    $record->zip = json_encode($sZipArray[$sId]);
+                    $record->city = json_encode($sCityArray[$sId]);
                     $record->timezone = $sTzArray[$index];
                     $record->h_date = $hTimeArray[$index];
                     $record->dept = $dptArray[$index];
@@ -175,6 +183,10 @@ class ServeController extends Controller
                         'address' => json_encode($sAddArray[session('order_id')]),
                         'type' => json_encode($sTypeArray[session('order_id')]),
                         'business_name' => json_encode($sNameArray[session('order_id')]),
+                        'state' => json_encode($sStateArray[session('order_id')]),
+                        'unit' => json_encode($sUnitArray[session('order_id')]),
+                        'zip' => json_encode($sZipArray[session('order_id')]),
+                        'city' => json_encode($sCityArray[session('order_id')]),
                         'timezone' => $sTzArray,
                         'h_date' => $hTimeArray,
                         'dept' => $dptArray,
@@ -190,6 +202,10 @@ class ServeController extends Controller
                     'address' => json_encode($sAddArray[session('order_id')]),
                     'type' => json_encode($sTypeArray[session('order_id')]),
                     'business_name' => json_encode($sNameArray[session('order_id')]),
+                    'state' => json_encode($sStateArray[session('order_id')]),
+                    'unit' => json_encode($sUnitArray[session('order_id')]),
+                    'zip' => json_encode($sZipArray[session('order_id')]),
+                    'city' => json_encode($sCityArray[session('order_id')]),
                     'timezone' => $sTzArray,
                     'h_date' => $hTimeArray,
                     'dept' => $dptArray,

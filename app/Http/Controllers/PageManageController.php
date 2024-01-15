@@ -5,14 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\admin;
 use App\Models\AdminInfo;
 use App\Models\ccase;
+use App\Models\document;
 use App\Models\order;
+use Carbon\Carbon;
 use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Response;
 use SimpleXMLElement;
+use SoapClient;
+use SoapFault;
 
 class PageManageController extends Controller
 {
@@ -32,8 +37,9 @@ class PageManageController extends Controller
         $userInfo = admin::with('adminInfo')->find(session('admin_id'));
         $ch = curl_init();
 
-        if ($userInfo->role == 'owner_admin') {
+        if ($userInfo->role == 'owner_admin' || $userInfo->role == 'Admin') {
             $customerId = $userInfo->adminInfo->stax_customer_id;
+            // dd($userInfo->adminInfo);
             $ownerId = $userInfo->id;
         } else {
             $ownerInfo = admin::with('adminInfo')->find($userInfo->owner_id);
@@ -41,7 +47,7 @@ class PageManageController extends Controller
             $customerId = $ownerInfo->adminInfo->stax_customer_id;
         }
 
-        curl_setopt($ch, CURLOPT_URL, "https://apiprod.fattlabs.com/customer/" . $customerId . "/payment-method");
+        curl_setopt($ch, CURLOPT_URL, "https://private-anon-013420dd9c-staxapi.apiary-mock.com/customer/" . $customerId . "/payment-method");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -101,11 +107,10 @@ class PageManageController extends Controller
                 ->where(['name' => $ca->attorney])
                 ->first();
         }
-
+        
         $att = DB::table('attornies')->get();
 
-        $jur = DB::table('court_details')->get();
-
+        $jur = XmlCallController::allCourts();
         return view('client.place_order', compact('orderInfo', 'par', 'parties', 'ca', 'jur', 'ca_at', 'att', 'step', 's_d', 'serve'));
     }
 
@@ -146,16 +151,68 @@ class PageManageController extends Controller
 
     public function pending_order()
     {
-        $orders = order::with('case')->where('status', 'pending')->get();
+
+        $jxml = "<?xml version=\"1.0\" ?>
+            <auth>
+                <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
+                <custid>cw</custid>
+                <func>SEARCHCASES</func>
+                <filters>
+                    <filter>
+                        <param>cases.active</param>
+                        <qualifier>=</qualifier>
+                        <value>1</value>
+                    </filter>
+                    <filter>
+                        <param>cases.clientid</param>
+                        <qualifier>like</qualifier>
+                        <value>" . session('ClientIDn') . "</value>
+                    </filter>
+                </filters>
+                <agencylogin>1</agencylogin>
+            </auth>";
+
+        $ldserver = "ldmax.loyalpuppy.com";
+
+        $options = array(
+                'cache_wsdl' => 0,
+                'uri' => "urn:ld",
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
+                'trace' => 1,
+                'stream_context' => stream_context_create(array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                ))
+            );
+
+        try {
+            $client = new SoapClient("https://" . $ldserver . "/doldmaxservices.wsdl", $options);
+            $client->__setLocation("https://" . $ldserver . "/doldmaxservices.php");
+
+            $result = $client->doFunction($jxml);
+
+            $res = simplexml_load_string($result);
+
+            $resxml = json_decode(json_encode($res), true);
+        } catch (SoapFault $fault) {
+            die("SOAP Fault:<br />fault code: {$fault->faultcode}, fault string: {$fault->faultstring}");
+        }
+
+        $orders = order::with('case', 'servees')->where('status', 'pending')->get();
 
         $cases = order::with('case', 'documents', 'parties', 'servees', 'serveAddress')->get()->toArray();
         $data = [];
-        foreach ($cases as $key => $case) {
-            $data = [
-                'caseId' => $case['id']
-            ];
+
+        foreach ($resxml['Case'] as $key => $order) {
+            $ldmaxId = $order['CaseID'];
+
+            $resxml['Case'][$key]['orderInfo'] = order::where('ldmax_id', $ldmaxId)->first();
         }
-        return view('client.pending_order', compact('orders'));
+
+        return view('client.pending_order', compact('orders', 'resxml'));
     }
 
     public function draft_order()
