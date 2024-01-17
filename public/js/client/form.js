@@ -1698,7 +1698,8 @@ $(document).ready(function (e) {
   $(".optradio").click(function () {
     var type = $(this).data("type");
     var index = $(this).data("index");
-    $("#attempt_type_" + index).val(type);
+    var key = $(this).data("key");
+    $("#attempt_type_" + index + "_" + key).val(type);
   });
 
   $("#order_details").on("submit", function (e) {

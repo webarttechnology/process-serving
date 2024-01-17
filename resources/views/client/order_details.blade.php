@@ -16,6 +16,11 @@
                                                     <tr role="row">
                                                         <th class="sorting_desc" tabindex="0"
                                                             aria-controls="order-listing" rowspan="1" colspan="1"
+                                                            aria-label="Job ID" 
+                                                            aria-sort="descending">Job Id
+                                                        </th>
+                                                        <th class="sorting_desc" tabindex="0"
+                                                            aria-controls="order-listing" rowspan="1" colspan="1"
                                                             aria-label="Servee Name"
                                                             aria-sort="descending">Name
                                                         </th>
@@ -37,7 +42,14 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ( $order['Defendants']['Defendant'] as $orderInfo )
+                                                    @php
+                                                        if($orderInfo['Jobs']['Job']['JobNum'] == '4157463')
+                                                        {
+                                                            dd($orderInfo);
+                                                        }
+                                                    @endphp
                                                         <tr class="odd">
+                                                            <td>#{{ $orderInfo['Jobs']['Job']['JobNum'] }}</td>
                                                             <td>{{$orderInfo['Name'] }}</td>
                                                             <td>{{$orderInfo['Jobs']['Job']['JobType']}}</td>
                                                             <td>{{$orderInfo['Jobs']['Job']['HearingDate'] . ' / ' . $orderInfo['Jobs']['Job']['HearingTime']}}</td>

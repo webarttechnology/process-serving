@@ -2332,62 +2332,91 @@
                                                 </ul>
                                             @else
                                                 @foreach ($s_d as $index => $servee)
-                                                    <h4 class="d-block pb-3">When would you like this attempted for
-                                                        <strong>{{ $servee->p_t_serve }}</strong>?
-                                                    </h4>
-                                                    <ul class="rediolist">
-                                                        <input type="hidden" name="attempt_type[]"
-                                                            id="attempt_type_{{ $index }}">
-                                                        <li>
-                                                            <label class="radio">
-                                                                <input required data-type="routine"
-                                                                    data-index="{{ $index }}" type="radio"
-                                                                    class="mr-1 optradio"
-                                                                    name="optradio[{{ $index }}]"
-                                                                    value="{{ date('d-m-Y g:i a', strtotime('+ 72 hours')) }}">
-                                                                <strong>Routine Service</strong> Attempt by
-                                                                <strong>{{ date('l g:i a', strtotime('+ 72 hours')) }}</strong>
-                                                                for $65
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label class="radio">
-                                                                <input required data-type="priority"
-                                                                    data-index="{{ $index }}" type="radio"
-                                                                    class="mr-1 optradio"
-                                                                    name="optradio[{{ $index }}]"
-                                                                    value="{{ date('d-m-Y g:i a', strtotime('+ 48 hours')) }}">
-                                                                <strong>Priority Service</strong> Attempt by
-                                                                <strong>{{ date('l g:i a', strtotime('+ 48 hours')) }}</strong>
-                                                                for $75
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label class="radio">
-                                                                <input required data-type="urgent"
-                                                                    data-index="{{ $index }}" type="radio"
-                                                                    class="mr-1 optradio"
-                                                                    name="optradio[{{ $index }}]"
-                                                                    value="{{ date('d-m-Y g:i a', strtotime('+ 24 hours')) }}">
-                                                                <strong>Urgent Service</strong> Attempt by
-                                                                <strong>{{ date('l g:i a', strtotime('+ 24 hours')) }}</strong>
-                                                                for $125
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label class="radio">
-                                                                <input required data-type="on demand"
-                                                                    data-index="{{ $index }}" type="radio"
-                                                                    class="mr-1 optradio"
-                                                                    name="optradio[{{ $index }}]"
-                                                                    value="{{ date('d-m-Y g:i a', strtotime('+ 4 hours')) }}">
-                                                                <strong>On Demand Service</strong> Attempt by
-                                                                <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong>
-                                                                for
-                                                                $195
-                                                            </label>
-                                                        </li>
-                                                    </ul>
+                                                @php
+                                                    $addresses = json_decode($servee->address, true);
+                                                @endphp
+                                                    @if (!empty($addresses))
+                                                        @foreach ( $addresses as $key => $address )
+                                                        @php
+                                                            // if( !empty($currentIndex) && $index == $currentIndex )
+                                                            // {
+                                                            //     $lastKey = $key;
+                                                            // } elseif( !empty($currentIndex) && $index != $currentIndex) 
+                                                            // {
+                                                            //     $currentIndex = $index;
+                                                                
+                                                            //     if( $lastKey == 0 )
+                                                            //     {
+                                                            //         $lastKey = $key + 1;
+                                                            //     } else {
+                                                            //         $lastKey = $key + $lastKey;
+                                                            //     }
+                                                            // }
+                                                            //  else {
+                                                            //     $currentIndex = $index;
+                                                            //     $lastKey = $key;
+                                                            // }
+                                                        @endphp
+                                                        <h4 class="d-block pb-3">When would you like this attempted for
+                                                            <strong>{{ $servee->p_t_serve }}</strong>-
+                                                            ( <small>{{$address}}</small> )
+                                                            ?
+                                                        </h4>
+                                                            <ul class="rediolist">
+                                                                <input type="hidden" name="attempt_type[{{$index}}][]"
+                                                                    id="attempt_type_{{ $index }}_{{ $key }}">
+                                                                <li>
+                                                                    <label class="radio">
+                                                                        <input required data-type="routine"
+                                                                            data-index="{{ $index }}" data-key="{{ $key }}" type="radio"
+                                                                            class="mr-1 optradio"
+                                                                            name="optradio[{{$index}}][{{ $key }}]"
+                                                                            value="{{ date('d-m-Y g:i a', strtotime('+ 72 hours')) }}">
+                                                                        <strong>Routine Service</strong> Attempt by
+                                                                        <strong>{{ date('l g:i a', strtotime('+ 72 hours')) }}</strong>
+                                                                        for $65
+                                                                    </label>
+                                                                </li>
+                                                                <li>
+                                                                    <label class="radio">
+                                                                        <input required data-type="priority"
+                                                                            data-index="{{ $index }}" data-key="{{ $key }}" type="radio"
+                                                                            class="mr-1 optradio"
+                                                                            name="optradio[{{$index}}][{{ $key }}]"
+                                                                            value="{{ date('d-m-Y g:i a', strtotime('+ 48 hours')) }}">
+                                                                        <strong>Priority Service</strong> Attempt by
+                                                                        <strong>{{ date('l g:i a', strtotime('+ 48 hours')) }}</strong>
+                                                                        for $75
+                                                                    </label>
+                                                                </li>
+                                                                <li>
+                                                                    <label class="radio">
+                                                                        <input required data-type="urgent"
+                                                                            data-index="{{ $index }}" data-key="{{ $key }}" type="radio"
+                                                                            class="mr-1 optradio"
+                                                                            name="optradio[{{$index}}][{{ $key }}]"
+                                                                            value="{{ date('d-m-Y g:i a', strtotime('+ 24 hours')) }}">
+                                                                        <strong>Urgent Service</strong> Attempt by
+                                                                        <strong>{{ date('l g:i a', strtotime('+ 24 hours')) }}</strong>
+                                                                        for $125
+                                                                    </label>
+                                                                </li>
+                                                                <li>
+                                                                    <label class="radio">
+                                                                        <input required data-type="on demand"
+                                                                            data-index="{{ $index }}" data-key="{{ $key }}" type="radio"
+                                                                            class="mr-1 optradio"
+                                                                            name="optradio[{{$index}}][{{ $key }}]"
+                                                                            value="{{ date('d-m-Y g:i a', strtotime('+ 4 hours')) }}">
+                                                                        <strong>On Demand Service</strong> Attempt by
+                                                                        <strong>{{ date('l g:i a', strtotime('+ 4 hours')) }}</strong>
+                                                                        for
+                                                                        $195
+                                                                    </label>
+                                                                </li>
+                                                            </ul>
+                                                        @endforeach
+                                                    @endif
                                                 @endforeach
                                             @endif
                                             <p class="nots">

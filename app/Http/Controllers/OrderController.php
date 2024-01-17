@@ -127,9 +127,20 @@ class OrderController extends Controller
     {
         $order = Order::with('case', 'documents', 'parties', 'servees', 'serveAddress','plaintiffParty', 'defendantParty')->find(session('order_id'));
 
+        $attemptType = [];
+        $attemptTime = [];
+
+        foreach ($req->input('attempt_type') as $key => $arr) {
+            foreach( $arr as $key2 => $val )
+            {
+                $attemptType[] = $val;
+                $attemptTime[] = $req->input('optradio')[$key][$key2];
+            }
+        }
+
         
-        $order->attempt_type = json_encode($req->input('attempt_type'));
-        $order->attempt_time = json_encode($req->input('optradio'));
+        $order->attempt_type = json_encode($attemptType);
+        $order->attempt_time = json_encode($attemptTime);
         $order->internal_reference_number = $req->input('irn');
         $order->notification = $req->input('notification');
         $order->status = 'pending';

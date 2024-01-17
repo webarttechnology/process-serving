@@ -47,7 +47,7 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ( $resxml['Case'] as $order )
-                                                    @php if( empty($order['orderInfo']) ) continue; @endphp
+                                                    @php  if( empty($order['orderInfo']) ) continue; @endphp
                                                         <tr class="odd">
                                                             <td>{{ $order['orderInfo']->updated_at }}</td>
                                                             <td>{{$order['CaseID']}}</td>
@@ -61,6 +61,14 @@
                                                                             <strong style="text-transform: capitalize">
                                                                                 {{ $type }} Service
                                                                             </strong>
+                                                                            @php
+                                                                                try {
+                                                                                    
+                                                                                    $time[$index];
+                                                                                } catch (\Throwable $th) {
+                                                                                    dd($th);
+                                                                                }
+                                                                            @endphp
                                                                             <div>{{ $time[$index] }}</div>
                                                                             <br>
                                                                         @endforeach
