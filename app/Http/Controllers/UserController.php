@@ -183,6 +183,24 @@ class UserController extends Controller
         return redirect()->route('users');
     }
 
+    public function approve_users($id, Request $request)
+    {
+        $user = admin::find($id);
+        $user->open_credit_verify = 1;
+        $user->save();
+        $request->session()->flash('success', 'Open credit request has been approved');
+        return redirect()->route('open_credit_requests');
+    }
+
+    public function reject_users($id, Request $request)
+    {
+        $user = admin::find($id);
+        $user->open_credit_verify = 2;
+        $user->save();
+        $request->session()->flash('error', 'Open credit request has been rejected successfully');
+        return redirect()->route('open_credit_requests');
+    }
+
     public function userDetails($id)
     {
         return admin::with('admin_info_single', 'attorney_info')->where('id', $id)->first();

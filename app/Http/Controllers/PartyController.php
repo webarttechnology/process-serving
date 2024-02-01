@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ccase;
 use App\Models\order;
 use Illuminate\Http\Request;
 use App\Models\party;
@@ -15,7 +16,7 @@ class PartyController extends Controller
     public function add_party(Request $req)
     {
         if ($req->ajax()) {
-
+            $caseInfo = ccase::find(session('case_id'));
             $rules = [
                 'p_type' => 'required|in:person,organization',
                 'p_role' => 'required',
@@ -44,7 +45,7 @@ class PartyController extends Controller
 
             $model = new party();
             $model->order_id = session('order_id');
-            $model->case_no = session('case_id');
+            $model->case_no = $caseInfo->case_no;
             $model->type = $req->input('p_type');
             $model->role_type = $req->input('role_type');
             $model->role = $req->input('p_role');
@@ -55,7 +56,7 @@ class PartyController extends Controller
             $model->save();
 
             if ($req->p_lclient == 'yes') {
-                party::where('case_no', session('case_id'))
+                party::where('case_no', $caseInfo->case_no)
                     ->whereNotIn('id', [$model->id])
                     ->update([
                         'l_client' => 'no',
@@ -90,7 +91,7 @@ class PartyController extends Controller
     public function change_party_lead(Request $req)
     {
         if ($req->ajax()) {
-
+            $caseInfo = ccase::find(session('case_id'));
             $party = party::find($req->party_form_id);
 
             if (empty($party)) return false;
@@ -104,7 +105,7 @@ class PartyController extends Controller
                 $party->l_client = 'yes';
                 $party->save();
 
-                party::where('case_no', session('case_id'))
+                party::where('case_no', $caseInfo->case_no)
                     ->whereNotIn('id', [$req->party_form_id])
                     ->update([
                         'l_client' => 'no',
@@ -115,7 +116,7 @@ class PartyController extends Controller
                 $party->b_code = $req->p_bcode;
                 $party->save();
 
-                party::where('case_no', session('case_id'))
+                party::where('case_no', $caseInfo->case_no)
                     ->whereNotIn('id', [$req->party_form_id])
                     ->update([
                         'b_code' => '',
@@ -137,10 +138,11 @@ class PartyController extends Controller
 
     public function add_partyd(Request $req)
     {
+        $caseInfo = ccase::find(session('case_id'));
         if ($req->ajax()) {
             $model = new party();
             $model->order_id = session('order_id');
-            $model->case_no = session('case_id');
+            $model->case_no = $caseInfo->case_no;
             $model->name = $req->input('party');
             $model->save();
             return response()->json($model);
@@ -150,7 +152,7 @@ class PartyController extends Controller
     public function edit_party(Request $req)
     {
         if ($req->ajax()) {
-
+            $caseInfo = ccase::find(session('case_id'));
             // var_dump($req->post());
             // exit;
             $rules = [
@@ -188,7 +190,7 @@ class PartyController extends Controller
             $model->save();
 
             if ($req->pe_lclient == 'yes') {
-                party::where('case_no', session('case_id'))
+                party::where('case_no', $caseInfo->case_no)
                     ->whereNotIn('id', [$id])
                     ->update([
                         'l_client' => 'no',
@@ -219,17 +221,27 @@ class PartyController extends Controller
         $data = [];
 
         if (!empty(session('case_id'))) {
-            $data = DB::table('parties')
-                ->where(['case_no' => session('case_id')])
+            $caseInfo = ccase::find(session('case_id'));
+
+            if (!empty($caseInfo->case_no)) {
+                $data = DB::table('parties')
+                ->where(['case_no' => $caseInfo->case_no])
                 ->get();
+            } else {
+                $data = DB::table('parties')
+                ->where('order_id', session('order_id'))
+                ->get();
+            }
         }
 
         return response()->json($data);
     }
     public function get_party_all_c()
     {
+        $caseInfo = ccase::find(session('case_id'));
+
         $data = DB::table('parties')
-            ->where(['case_no' => session('case_id')])
+            ->where(['case_no' => $caseInfo->case_no])
             ->whereNotNull('type')
             ->whereNotNull('role')
             ->get();

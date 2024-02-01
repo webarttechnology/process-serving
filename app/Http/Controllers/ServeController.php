@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ccase;
 use App\Models\order;
 use App\Models\party;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class ServeController extends Controller
     public function add_serve(Request $req)
     {
         $req->session()->put('step', 3);
-
+        $caseInfo = ccase::find(session('case_id'));
         $order = order::find(session('order_id'));
         $order->step = 3;
 
@@ -54,14 +55,14 @@ class ServeController extends Controller
         foreach ($req->input('party') as $index => $value) {
 
             $checkNewParty = party::where('order_id', session('order_id'))
-                ->where('case_no', session('case_id'))
+                ->where('case_no', $caseInfo->case_no)
                 ->where('name', $req->input('party')[$index])
                 ->first();
 
             if (!$checkNewParty) {
                 $newServe = party::create([
                     'order_id' => session('order_id'),
-                    'case_no' => session('case_id'),
+                    'case_no' => $caseInfo->case_no,
                     'name' => $req->input('party')[$index],
                     'role' => $req->input('role')[$index]
                 ]);
@@ -130,6 +131,7 @@ class ServeController extends Controller
 
     public function upd_serve(Request $request)
     {
+        $caseInfo = ccase::find(session('case_id'));
         // Retrieve the data from the form inputs
         $sIdArray = $request->input('s_id_s');
         $sAddArray = $request->input('s_add');
@@ -179,7 +181,7 @@ class ServeController extends Controller
                     ->where('order_id', session('order_id'))
                     ->update([
                         'order_id' => session('order_id'),
-                        'case_no' => session('case_id'),
+                        'case_no' => $caseInfo->case_no,
                         'address' => json_encode($sAddArray[session('order_id')]),
                         'type' => json_encode($sTypeArray[session('order_id')]),
                         'business_name' => json_encode($sNameArray[session('order_id')]),
@@ -196,9 +198,11 @@ class ServeController extends Controller
                         // 'status' => 0,
                     ]);
             } else {
+                $caseInfo = ccase::find(session('case_id'));
+
                 DB::table('serve_address')->insert([
                     'order_id' => session('order_id'),
-                    'case_no' => session('case_id'),
+                    'case_no' => $caseInfo->case_no,
                     'address' => json_encode($sAddArray[session('order_id')]),
                     'type' => json_encode($sTypeArray[session('order_id')]),
                     'business_name' => json_encode($sNameArray[session('order_id')]),

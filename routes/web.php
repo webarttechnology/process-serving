@@ -12,6 +12,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderDetailsController;
+use App\Http\Controllers\QuickbookController;
 use Illuminate\Support\Facades\Session;
 
 Route::view('/', 'client.login')->middleware('check_login');
@@ -29,6 +30,9 @@ Route::controller(PageManageController::class)
     ->group(function () {
         Route::get('dashboard', 'dashboard');
         Route::get('settings', 'settings');
+
+        Route::get('open-requests', [AdminController::class, 'open_credit_requests'])->name('open_credit_requests');
+
         Route::post('update_payment_method', [AdminController::class, 'update_payment_method'])->name('update_payment_method');
         Route::get('reset_order', [OrderController::class, 'reset_order'])->name('reset_order');
         Route::get('order_details/{id}', [OrderController::class, 'order_details_view'])->name('order_details_view');
@@ -79,7 +83,19 @@ Route::controller(PageManageController::class)
         Route::get('account-details/{id}', [UserController::class, 'userDetails'])->name('userDetails');
         Route::post('invite-user', [UserController::class, 'inviteUser'])->name('inviteUser');
 
+        Route::get('approve-user-credit/{id}', [UserController::class, 'approve_users'])->name('approve_users');
+        Route::get('reject-user-credit/{id}', [UserController::class, 'reject_users'])->name('reject_users');
+
         Route::get('charge-job/{id}/{amount}', [OrderController::class, 'chargeJob'])->name('chargeJob');
+
+        Route::get('download-ldmax-attatchment/{id}/{filename}', [OrderController::class, 'downloadLdmaxAttatchment'])->name('downloadLdmaxAttatchment');
+        Route::get('download-ldmax-attatchment/{id}', [OrderController::class, 'downloadLdmaxAttatchments3'])->name('downloadLdmaxAttatchments3');
+
+        Route::get('get-order-files/{id}', [OrderController::class, 'getStorageFile'])->name('getStorageFile');
+
+        // Quickbook work
+        Route::get('customer-add-quickbook-callback', [QuickbookController::class, 'handleCallback'])->name('customer_add_quickbook_callback');
+        Route::get('add-quickbook-customer', [QuickbookController::class, 'redirectToQuickBooks'])->name('addCustomer');
     });
 
 Route::get('email-verify/{id}', [AdminController::class, 'verify']);

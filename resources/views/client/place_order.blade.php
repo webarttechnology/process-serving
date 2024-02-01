@@ -54,9 +54,9 @@
                                         <div class="mb-3">
                                             <label for="case-number">Case Number :</label>
                                             <input type="text" class="form-control" id="c_num" name="c_num"
-                                                placeholder="Case Number" value="<?php echo isset($ca) ? $ca->case_no : ''; ?>" required>
+                                                placeholder="Case Number" value="<?php echo isset($ca) ? $ca->case_no : ''; ?>" {{ !empty($ca) && $ca->case_no == '' ? 'disabled' : 'required' }}>
                                             <div class="form-check">
-                                                <input type="checkbox" class="form-check-input ml-0" id="no-attorney">
+                                                <input type="checkbox" class="form-check-input ml-0" {{ !empty($ca) && $ca->case_no == '' ? 'checked' : '' }} id="no-attorney">
                                                 <label class="form-check-label ml-4 mb-0" for="no-attorney">Click here if
                                                     you dont have a case number</label>
                                             </div>
@@ -1203,7 +1203,7 @@
                                                             @php
                                                                 $d_s = DB::table('documents')
                                                                     ->where(['order_id' => session('order_id')])
-                                                                    ->where(['case_no' => session('case_id')])
+                                                                    // ->where(['case_no' => isset($ca->case_no) ? $ca->case_no : ''])
                                                                     ->first();
                                                             @endphp
                                                             <input type="hidden" id="s_id_{{ $item->id }}"
@@ -1241,7 +1241,7 @@
                                                                 @php
                                                                     $d_dd = DB::table('documents')
                                                                         ->where(['order_id' => session('order_id')])
-                                                                        ->where(['case_no' => session('case_id')])
+                                                                        // ->where(['case_no' => isset($ca->case_no) ? $ca->case_no : ''])
                                                                         ->where(['s_d' => 'yes'])
                                                                         ->get();
                                                                 @endphp
@@ -1334,7 +1334,7 @@
                                                             <tr id="ss_d_r_{{ $itemd->id }}">
                                                                 <td>
                                                                     <a style="color: red; text-decoration:none;"
-                                                                        href="uploads/{{ $itemd->document }}"
+                                                                        href="get-order-files/{{ $itemd->id }}"
                                                                         target="_blank">{{ $itemd->document }}</a>
                                                                 </td>
                                                                 <td width='5%'>
@@ -1359,7 +1359,7 @@
                                                 foreach ($s_d as $check) {
                                                     $d_d = DB::table('documents')
                                                         ->where(['order_id' => session('order_id')])
-                                                        ->where(['case_no' => session('case_id')])
+                                                        // ->where(['case_no' => isset($ca->case_no) ? $ca->case_no : ''])
                                                         ->where(['s_no' => $check->id])
                                                         ->get();
 
@@ -1373,7 +1373,7 @@
                                                 @php
                                                     $d_d = DB::table('documents')
                                                         ->where(['order_id' => session('order_id')])
-                                                        ->where(['case_no' => session('case_id')])
+                                                        // ->where(['case_no' => isset($ca->case_no) ? $ca->case_no : ''])
                                                         ->where(['s_no' => $item->id])
                                                         ->get();
                                                 @endphp
@@ -1514,7 +1514,7 @@
                                                                 <tr id="s_d_r_{{ $itemd->id }}">
                                                                     <td>
                                                                         <a style="color: red; text-decoration:none;"
-                                                                            href="uploads/{{ $itemd->document }}"
+                                                                            href="get-order-files/{{ $itemd->id }}"
                                                                             target="_blank">{{ $itemd->document }}</a>
                                                                     </td>
                                                                     <td width='5%'>
@@ -1568,7 +1568,7 @@
                                                     @php
                                                         $d_d_d = DB::table('documents')
                                                             ->where('order_id', session('order_id'))
-                                                            ->where('case_no', session('case_id'))
+                                                            // ->where('case_no', isset($ca->case_no) ? $ca->case_no : '')
                                                             ->when(
                                                                 session('doc_check'),
                                                                 function ($query) {

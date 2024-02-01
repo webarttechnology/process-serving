@@ -8,11 +8,17 @@ use App\Models\attorny;
 use App\Models\document;
 use App\Models\order;
 use App\Models\serve;
+use Aws\S3\S3Client;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SoapClient;
 use SoapFault;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Response;
+
+
 
 class OrderController extends Controller
 {
@@ -74,7 +80,7 @@ class OrderController extends Controller
         $order = order::with('case')->where('status', 'draft')->find($id);
 
         session()->put('order_id', $id);
-        session()->put('case_id', $order->case->case_no);
+        session()->put('case_id', $order->case_id);
         session()->put('step', $order->step);
 
         if( $order->doc_check ) {
@@ -396,10 +402,234 @@ class OrderController extends Controller
             $order = json_decode(json_encode($res), true);
             $order = $order['Case'];
 
+            // dd($order['Defendants']['Defendant']);
+
+            // foreach ($order['Defendants']['Defendant'] as $key => $value) 
+            // {
+            //     if(isset($value['Jobs']['Job']['Attachments']['Attachment']['doctype']))
+            //     {
+            //         if(Str::endsWith($value['Jobs']['Job']['Attachments']['Attachment']['doctype'], '_Proof') )
+            //         {
+            //             echo 1;exit;
+            //             // dd($this->fetchAttatchmentInfo($value['Jobs']['Job']['Attachments']['Attachment']['AttachmentID']));
+            //         }
+            //     } else {
+            //         foreach($value['Jobs']['Job']['Attachments']['Attachment'] as $key3 => $value3)
+            //         {
+            //             if (Str::endsWith($value3['doctype'], '_Proof')) {
+            //                 $this->fetchAttatchmentInfo($value3['AttachmentID'], $value3['FileName']);
+            //             }
+            //         }
+            //     }
+            //     // var_dump($value['Jobs']['Job']['Attachments']);exit;
+            //     // foreach ($value['Jobs']['Job']['Attachments']['Attatchment'] as $key2 => $value2) {
+            //     //     dd($value2);
+            //     // }
+            // }
+            // exit;
+
         } catch (SoapFault $fault) {
             die("SOAP Fault:<br />fault code: {$fault->faultcode}, fault string: {$fault->faultstring}");
         }
 
         return view('client.order_details', compact('order', 'id'));
+    }
+
+    public function downloadFile( $fileName, $fileContent )
+    {
+        $file = fopen($fileName, 'w');
+
+        // dd($fileContent);
+
+        // $fileContent = file_get_contents(public_path('1705402530.pdf'));
+
+        // Check if the file was opened successfully
+        if ($file) {
+            // Write data to the file
+            fwrite($file, base64_decode($fileContent));
+
+            // Close the file
+            fclose($file);
+
+            // Set appropriate headers for file download
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            header('Content-Length: ' . filesize($fileName));
+
+            // Read the file and output its content to the browser
+            readfile($fileName);
+
+            // Optionally, you can delete the file after download
+            unlink($fileName);
+
+            exit; // Stop further execution
+        } else {
+            echo "Unable to open file '$fileName' for writing.";
+        }
+    }
+
+    public function getStorageFile( $documentId )
+    {
+        $document = document::find($documentId);
+
+        if( empty($documentId) ) return redirect('/');
+
+        $credentials = [
+            'key'    => 'DO00H4ZJ2EHUPZJ8MJ9U',
+            'secret' => 'O9lJrSOlYDzHAlt/hpLZkAJw2TBINluJX5J+cjwe8rI',
+        ];
+
+        $region = 'sfo3';
+
+        // Create an S3 client
+        $s3 = new S3Client([
+            'region'      => $region,
+            'credentials' => $credentials,
+            'endpoint'    => 'https://sfo3.digitaloceanspaces.com',
+        ]);
+
+        $bucket = 'cwdocz';
+        $filename = 'apmaas/' . $document->document;
+
+        try {
+            $result = $s3->getObject([
+                'Bucket' => $bucket,
+                'Key'    => $filename,
+            ]);
+
+            // Send appropriate headers for file download
+            header('Content-Type: ' . $result['ContentType']);
+            header('Content-Disposition: inline; filename="' . basename($filename) . '"'); // "inline" opens the file in the browser
+
+            // Output the content of the document
+            echo $result['Body'];
+            exit;
+        } catch (Exception $e) {
+            dd($e);
+        }
+    }
+
+    public function downloadLdmaxAttatchments3( $attatchmentId )
+    {
+        $jxml = "<?xml version=\"1.0\" ?>
+                    <auth>
+                        <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
+                        <custid>cw</custid>
+                        <func>FETCHSCANINFO</func>
+                        <scanid>". $attatchmentId ."</scanid>
+                        <agencylogin>1</agencylogin>
+                    </auth>";
+
+        $ldserver = "ldmax.loyalpuppy.com";
+
+        $options = array(
+            'cache_wsdl' => 0,
+            'uri' => "urn:ld",
+            'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
+            'trace' => 1,
+            'stream_context' => stream_context_create(array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            ))
+        );
+
+        try {
+            $client = new SoapClient("https://" . $ldserver . "/doldmaxservices.wsdl", $options);
+            $client->__setLocation("https://" . $ldserver . "/doldmaxservices.php");
+
+            $result = $client->doFunction($jxml);
+            $res = simplexml_load_string($result);
+            $arr = json_decode(json_encode($res), true);
+
+            $arr = $arr['Scan'];
+            
+            // dd($arr);exit;
+
+            $credentials = [
+                'key'    => $arr['awskey'],
+                'secret' => $arr['awssecretkey'],
+            ];
+
+            $region = $arr['awsregion'];
+
+            // Create an S3 client
+            $s3 = new S3Client([
+                'region'      => $region,
+                'credentials' => $credentials,
+                'endpoint'    => $arr['awsendpoint'],
+            ]);
+
+            // Specify the bucket name and the object key (filename)
+            $bucket = $arr['bucketname'];
+            $filename = $arr['filename'];
+
+            // dd($bucket, $filename, $arr['awskey'], $arr['awssecretkey']);
+
+            // Make an HTTP GET request to retrieve the document
+            try {
+                $result = $s3->getObject([
+                        'Bucket' => $bucket,
+                        'Key'    => $filename,
+                    ]);
+
+                // Send appropriate headers for file download
+                header('Content-Type: ' . $result['ContentType']);
+                header('Content-Disposition: inline; filename="' . basename($filename) . '"'); // "inline" opens the file in the browser
+
+                // Output the content of the document
+                echo $result['Body'];
+                exit;
+            } catch (Exception $e) {
+                dd($e);
+            }
+
+        } catch (SoapFault $fault) {
+        }
+    }
+    
+    public function downloadLdmaxAttatchment( $attatchmentId, $fileName )
+    {
+        $jxml = "<?xml version=\"1.0\" ?>
+                    <auth>
+                        <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
+                        <custid>cw</custid>
+                        <func>FETCHSCAN</func>
+                        <scanid>". $attatchmentId ."</scanid>
+                        <agencylogin>1</agencylogin>
+                    </auth>";
+
+        $ldserver = "ldmax.loyalpuppy.com";
+
+        $options = array(
+            'cache_wsdl' => 0,
+            'uri' => "urn:ld",
+            'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE,
+            'trace' => 1,
+            'stream_context' => stream_context_create(array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            ))
+        );
+
+        try {
+            $client = new SoapClient("https://" . $ldserver . "/doldmaxservices.wsdl", $options);
+            $client->__setLocation("https://" . $ldserver . "/doldmaxservices.php");
+
+            $result = $client->doFunction($jxml);
+            $res = simplexml_load_string($result);
+            $arr = json_decode(json_encode($res), true);
+
+            $fileContent = $arr['Scan']['filedata'];
+
+            $this->downloadFile($fileName, $fileContent);
+
+        } catch (SoapFault $fault) {
+        }
     }
 }

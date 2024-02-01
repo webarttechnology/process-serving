@@ -159,6 +159,13 @@ $userInfo = App\Models\admin::where('id', session('admin_id'))->first();
                     </li>
                     @if ($userInfo->role != 'staff')
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url('open-requests') }}">
+                                <i class="icon-book menu-icon"></i>
+                                <span class="menu-title">Open Credit Requests</span>
+                                <i class="menu-arrow"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ url('users') }}">
                                 <i class="icon-grid menu-icon"></i>
                                 <span class="menu-title">Users</span>

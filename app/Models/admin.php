@@ -20,7 +20,9 @@ class admin extends Model
         'phone',
         'role',
         'attorney',
-        'email_verify_code'
+        'email_verify_code',
+        'open_credit',
+        'open_credit_verify'
     ];
 
     public function adminInfo()

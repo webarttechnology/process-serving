@@ -49,8 +49,8 @@ class CcaseController extends Controller
                     'attorney' => $req->input('c_at'),
                     'order_id' => session('order_id')
                 ]);
-
-            $req->session()->put('case_id', $req->input('c_num'));
+                
+            $req->session()->put('case_id', $existingCase->id);
 
             $order = order::find(session('order_id'));
             $order->case_id = $existingCase->id;
@@ -64,7 +64,7 @@ class CcaseController extends Controller
                 'attorney' => $req->input('c_at'),
             ]);
             
-            $req->session()->put('case_id', $req->input('c_num'));
+            $req->session()->put('case_id', $caseInfo->id);
             
             $order = order::find(session('order_id'));
             $order->case_id = $caseInfo->id;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ccase;
 use Illuminate\Http\Request;
 use App\Models\order_details;
 use Illuminate\Support\Facades\DB;
@@ -12,11 +13,12 @@ class OrderDetailsController extends Controller
     public function order_details(Request $req)
     {
         $existingData = order_details::where('order_id', $req->session()->get('order_id'))->first();
+        $caseInfo = ccase::find(session('case_id'));
 
         if (!$existingData) {
             DB::table('order_details')->insert([
                 'order_id' => session('order_id'),
-                'case_no' => session('case_id'),
+                'case_no' => $caseInfo->case_no,
                 'attempt' => $req->input('optradio'),
                 'irn' => $req->input('irn'),
                 'notification' => $req->input('notification'),
@@ -27,7 +29,7 @@ class OrderDetailsController extends Controller
                 ->where('order_id', session('order_id'))
                 ->update([
                     'order_id' => session('order_id'),
-                    'case_no' => session('case_id'),
+                    'case_no' => $caseInfo->case_no,
                     'attempt' => $req->input('optradio'),
                     'irn' => $req->input('irn'),
                     'notification' => $req->input('notification'),
@@ -44,9 +46,11 @@ class OrderDetailsController extends Controller
     }
     public function order_draft(Request $req)
     {
+        $caseInfo = ccase::find(session('case_id'));
+        
         DB::table('order_details')->insert([
             'order_id' => session('order_id'),
-            'case_no' => session('case_id'),
+            'case_no' => $caseInfo->case_no,
             'attempt' => $req->input('optradio'),
             'irn' => $req->input('irn'),
             'notification' => $req->input('notification'),

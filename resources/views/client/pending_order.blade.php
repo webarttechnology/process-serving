@@ -89,7 +89,7 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div>{{ $order['Court'] }}</div>
+                                                                <div>{{ empty($order['Court']) ? 'Not Available' : $order['Court'] }}</div>
                                                             </td>
                                                             <td>
                                                                 <a href="pending-inrpg.html"> <label

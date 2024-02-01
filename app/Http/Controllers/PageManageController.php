@@ -69,6 +69,7 @@ class PageManageController extends Controller
     {
         $ca_at = null;
         $orderInfo = null;
+        $caseInfo = null;
         $parties = [];
         $par = [];
 
@@ -76,19 +77,35 @@ class PageManageController extends Controller
 
         if (!empty(session('order_id'))) {
             $orderInfo = order::find(session('order_id'));
+            $caseInfo = ccase::find(session('case_id'));
         }
+
 
         if (!empty(session('case_id'))) {
-            $par = DB::table('parties')
-                ->where('case_no', session('case_id'))
-                ->get();
+            if(!empty($caseInfo->case_no))
+            {
+                $par = DB::table('parties')
+                    ->where('case_no', $caseInfo->case_no)
+                    ->get();
+    
+                $parties = DB::table('parties')
+                    ->where(['case_no' => $caseInfo->case_no])
+                    ->whereNotNull('type')
+                    ->whereNotNull('role')
+                    ->get();
+            } else {
+                $par = DB::table('parties')
+                    ->where('order_id', session('order_id'))
+                    ->get();
 
-            $parties = DB::table('parties')
-                ->where(['case_no' => session('case_id')])
-                ->whereNotNull('type')
-                ->whereNotNull('role')
-                ->get();
+                $parties = DB::table('parties')
+                    ->where('order_id', session('order_id'))
+                    ->whereNotNull('type')
+                    ->whereNotNull('role')
+                    ->get();
+            }
         }
+
         $s_d = DB::table('serves')
             ->where(['order_id' => session('order_id')])
             ->get();
@@ -99,7 +116,7 @@ class PageManageController extends Controller
 
         $ca = DB::table('ccases')
             ->where('order_id', session('order_id'))
-            ->orWhere('case_no', session('case_id'))
+            ->orWhere('id', session('case_id'))
             ->first();
 
         if (!empty($ca)) {

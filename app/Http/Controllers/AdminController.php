@@ -15,6 +15,13 @@ use SoapFault;
 
 class AdminController extends Controller
 {
+    public function open_credit_requests()
+    {
+        $users = admin::where('open_credit', 1)->get();
+
+        return view('client.open_credit_requests', compact('users'));
+    }
+
     public function verify($id, Request $req)
     {
         $admin = admin::find($id);
@@ -53,6 +60,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'role' => !empty($request->role) ? $request->role : 'owner_admin',
+            'open_credit' => !empty($request->open_credit) ? 1 : 0,
             'password' => Hash::make($request->password)
         ]);
 
@@ -121,7 +129,11 @@ class AdminController extends Controller
         $email = $_POST['email'];
         $pass = $_POST['password'];
 
+        $notVerified = false;
         $validUser = false;
+        $openCreditUser = false;
+        $creditVerified = false;
+
         $jxml = "<?xml version=\"1.0\" ?>
             <auth>
                 <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
@@ -164,6 +176,18 @@ class AdminController extends Controller
             if (Hash::check($req->post('password'), $user->password)) {
                 if ($user->verified) {
                     $validUser = true;
+
+                    if ($user->open_credit) {
+                        $openCreditUser = true;
+                        $creditVerified = true;
+
+                        if ($user->open_credit_verify == 0 || $user->open_credit_verify == 2) {
+                            $creditVerified = false;
+                        }
+                    }
+                } else {
+                    $validUser = false;
+                    $notVerified = true;
                 }
             }
         }
@@ -181,24 +205,33 @@ class AdminController extends Controller
 
             //print_r($clientarr);
 
-            if (isset($clientarr['Client']['ClientID']) && $clientarr['Client']['ClientID'] != "") {
-                
-                if( $validUser )
-                {
-                    $req->session()->put('ClientIDn', $clientarr['Client']['ClientID']);
-                    $req->session()->put('Clientn', $clientarr['Client']['Client']);
-                    $req->session()->put('Emailn', $clientarr['Client']['Email']);
-                    $req->session()->put('Passwordn', $clientarr['Client']['Password']);
-                    $req->session()->put('admin_login', true);
-                    $req->session()->put('admin_id', $user->id);
-                    $req->session()->put('admin_name', $user->name);
-                    return redirect('dashboard');
-                    
+            if (isset($clientarr['Client']['ClientID']) && $clientarr['Client']['ClientID'] != "" && !$notVerified) {
+
+                if ($validUser) {
+                    if ($openCreditUser && !$creditVerified) {
+                        
+                        if( $user->open_credit_verify == 0 )
+                        {
+                            $req->session()->flash('error', "Your open credit request has not been approved yet");
+                        } else {
+                            $req->session()->flash('error', "Your open credit request has been rejected");
+                        }
+
+                        return redirect('/');
+                    } else {
+                        $req->session()->put('ClientIDn', $clientarr['Client']['ClientID']);
+                        $req->session()->put('Clientn', $clientarr['Client']['Client']);
+                        $req->session()->put('Emailn', $clientarr['Client']['Email']);
+                        $req->session()->put('Passwordn', $clientarr['Client']['Password']);
+                        $req->session()->put('admin_login', true);
+                        $req->session()->put('admin_id', $user->id);
+                        $req->session()->put('admin_name', $user->name);
+                        return redirect('dashboard');
+                    }
                 } else {
                     $req->session()->flash('error', "You need to register to Process Serving first to login");
                     return redirect('/');
                 }
-
             } else if ($validUser) {
                 $options = array(
                     'cache_wsdl' => 0,
@@ -233,23 +266,23 @@ class AdminController extends Controller
                             <agencylogin>1</agencylogin>
                         </auth>";
 
-                    // <auth>
-                    //     <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
-                    //     <custid>cw</custid>
-                    //     <func>ADDNEWCLIENT</func>
-                    //     <newclientlogin>registerworking@yopmail.com</newclientlogin>
-                    //     <newclientpassword>123456</newclientpassword>
-                    //     <newclientname>Countrywide Test</newclientname>
-                    //     <newclientaddress>Agarpara, South Station Road</newclientaddress>
-                    //     <newclientaddress1>Agarpara, South Station Road</newclientaddress1>
-                    //     <newclientcity>Kolkata</newclientcity>
-                    //     <newclientstate>West Bengal</newclientstate>
-                    //     <newclientzip>700109</newclientzip>
-                    //     <newclientphone>1233456678</newclientphone>
-                    //     <newclientfax></newclientfax>
-                    //     <newclientemail>registerworking@yopmail.com</newclientemail>
-                    //     <agencylogin>1</agencylogin>
-                    // </auth>";
+                // <auth>
+                //     <ldapikey>ASKLHKDN21341KDJ332323Z32</ldapikey>
+                //     <custid>cw</custid>
+                //     <func>ADDNEWCLIENT</func>
+                //     <newclientlogin>registerworking@yopmail.com</newclientlogin>
+                //     <newclientpassword>123456</newclientpassword>
+                //     <newclientname>Countrywide Test</newclientname>
+                //     <newclientaddress>Agarpara, South Station Road</newclientaddress>
+                //     <newclientaddress1>Agarpara, South Station Road</newclientaddress1>
+                //     <newclientcity>Kolkata</newclientcity>
+                //     <newclientstate>West Bengal</newclientstate>
+                //     <newclientzip>700109</newclientzip>
+                //     <newclientphone>1233456678</newclientphone>
+                //     <newclientfax></newclientfax>
+                //     <newclientemail>registerworking@yopmail.com</newclientemail>
+                //     <agencylogin>1</agencylogin>
+                // </auth>";
 
                 try {
                     $client = new SoapClient("https://" . $ldserver . "/doldmaxservices.wsdl", $options);
@@ -260,8 +293,7 @@ class AdminController extends Controller
                     $resxml = json_decode(json_encode($resxml), true);
                     // echo $resxml->ClientID;exit;
 
-                    if($resxml['Code'] != 'FAIL' )
-                    {
+                    if ($resxml['Code'] != 'FAIL') {
                         $req->session()->put('ClientIDn', $resxml['ClientID']);
                         $req->session()->put('Clientn', $user->name);
                         $req->session()->put('Emailn', $user->email);
@@ -269,12 +301,11 @@ class AdminController extends Controller
                         $req->session()->put('admin_login', true);
                         $req->session()->put('admin_id', $user->id);
                         $req->session()->put('admin_name', $user->name);
-    
+
                         return redirect('dashboard');
                     }
                     $req->session()->flash('error', $resxml['Detail']);
                     return redirect('/');
-
                 } catch (SoapFault $fault) {
 
                     // dd(1, $fault);
@@ -282,8 +313,13 @@ class AdminController extends Controller
                     return redirect('/');
                 }
             } else {
-                $req->session()->flash('error', "Please enter valid credentials");
-                return redirect('/');
+                if ($notVerified) {
+                    $req->session()->flash('error', "Your account is not verified yet");
+                    return redirect('/');
+                } else {
+                    $req->session()->flash('error', "Please enter valid credentials");
+                    return redirect('/');
+                }
             }
         } catch (SoapFault $fault) {
             $req->session()->flash('error', "SOAP Fault:<br />fault code: {$fault->faultcode}, fault string: {$fault->faultstring}");
